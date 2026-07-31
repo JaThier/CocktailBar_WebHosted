@@ -1,5 +1,6 @@
 {
   "barName": "Alex Cocktail Bar",
+  "barPassword": "alex123",
   "isOpen": true,
   "firebase": {
     "apiKey": "demo-api-key",

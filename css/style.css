@@ -196,6 +196,108 @@ h3 {
   color: #6b7280;
 }
 
+.access-panel {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+}
+
+.tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  background: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  font: inherit;
+}
+
+.tab-button.active {
+  background: #0f766e;
+  color: #fff;
+  border-color: #0f766e;
+}
+
+.tab-content {
+  display: grid;
+  gap: 1rem;
+}
+
+.editor-list,
+.inventory-list,
+.order-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.editor-card,
+.inventory-item,
+.order-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.9rem;
+  padding: 0.9rem;
+  background: #fffdf9;
+}
+
+.editor-grid {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.editor-row {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.editor-row input[type="text"],
+.editor-row textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+}
+
+.editor-actions,
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.danger-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  background: #dc2626;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.inventory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.order-card {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.order-card strong {
+  color: #0f766e;
+}
+
 @media (min-width: 700px) {
   .cocktail-layout {
     grid-template-columns: minmax(220px, 320px) 1fr;

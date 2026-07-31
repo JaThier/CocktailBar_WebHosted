@@ -21,6 +21,7 @@ const cartItemsElement = document.querySelector('#cart-items');
 const cartCountElement = document.querySelector('#cart-count');
 const orderButton = document.querySelector('#order-button');
 const filterGroup = document.querySelector('#filter-group');
+const barLink = document.querySelector('#bar-link');
 
 function parseBarKey() {
   const params = new URLSearchParams(window.location.search);
@@ -228,6 +229,18 @@ function handleOrder() {
     console.info('Firebase-Konfiguration vorhanden:', firebaseClient.config);
   }
 
+  const order = {
+    id: `order-${Date.now()}`,
+    guestName,
+    items: state.cart.map((item) => ({ id: item.id, name: item.name })),
+    createdAt: new Date().toISOString(),
+  };
+
+  const storageKey = `cocktailbar-orders-${state.barKey}`;
+  const existingOrders = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  existingOrders.push(order);
+  localStorage.setItem(storageKey, JSON.stringify(existingOrders));
+
   alert(`Bestellung gesendet:\n${message}`);
   state.cart = [];
   renderCart();
@@ -237,6 +250,11 @@ async function init() {
   try {
     const barKey = parseBarKey();
     state.barKey = barKey;
+    if (barLink) {
+      const barUrl = new URL('./bar.html', window.location.href);
+      barUrl.searchParams.set('bar', barKey);
+      barLink.href = barUrl.toString();
+    }
     const config = await loadConfig(barKey);
     state.config = config;
 
