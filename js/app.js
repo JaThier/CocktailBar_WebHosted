@@ -28,6 +28,23 @@ function parseBarKey() {
   return params.get('bar') || 'default';
 }
 
+function getStorageKey(key, barKey = state.barKey) {
+  return `cocktailbar-${key}-${barKey}`;
+}
+
+function getCocktailsFromStorage(barKey) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(getStorageKey('state', barKey)) || 'null');
+    if (Array.isArray(saved?.cocktails)) {
+      return saved.cocktails;
+    }
+  } catch (error) {
+    console.warn('Gespeicherte Cocktails konnten nicht gelesen werden.', error);
+  }
+
+  return null;
+}
+
 async function loadConfig(barKey) {
   const candidates = [
     `./config/${barKey}.json`,
@@ -262,7 +279,13 @@ async function init() {
     barEyebrowElement.textContent = config.barName || 'Cocktail Bar';
     barNameElement.textContent = config.barName || 'Cocktail Bar';
     barStatusElement.textContent = config.isOpen === false ? 'Bar aktuell geschlossen' : 'Bar geöffnet';
-    state.cocktails = Array.isArray(config.cocktails) ? config.cocktails : [];
+
+    const storedCocktails = getCocktailsFromStorage(barKey);
+    state.cocktails = Array.isArray(storedCocktails) && storedCocktails.length
+      ? storedCocktails
+      : Array.isArray(config.cocktails)
+        ? config.cocktails
+        : [];
 
     if (orderButton) {
       if (config.isOpen === false) {
