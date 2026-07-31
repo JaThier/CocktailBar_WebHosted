@@ -7,6 +7,7 @@ const state = {
   filter: 'all',
   cart: [],
   barKey: 'default',
+  selectedCocktailId: null,
 };
 
 const guestNameInput = document.querySelector('#guest-name');
@@ -14,6 +15,7 @@ const barNameElement = document.querySelector('#bar-name');
 const barEyebrowElement = document.querySelector('#bar-eyebrow');
 const barStatusElement = document.querySelector('#bar-status');
 const cocktailListElement = document.querySelector('#cocktail-list');
+const cocktailDetailElement = document.querySelector('#cocktail-detail');
 const cocktailCountElement = document.querySelector('#cocktail-count');
 const cartItemsElement = document.querySelector('#cart-items');
 const cartCountElement = document.querySelector('#cart-count');
@@ -89,48 +91,91 @@ function getFilteredCocktails() {
   return state.cocktails;
 }
 
-function getCocktailImageMarkup(cocktail, barKey) {
-  const imageName = `${cocktail.name}.jpg`;
-  const localImagePath = `./config/images/${barKey}/${encodeURIComponent(imageName)}`;
-  const fallbackImage = /^https?:\/\//i.test(cocktail.image || '') || (cocktail.image || '').startsWith('data:') || (cocktail.image || '').startsWith('blob:')
-    ? cocktail.image
-    : '';
+function getCocktailImageMarkup(cocktail) {
   const safeAlt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
-  const safeFallbackImage = (fallbackImage || '').replace(/"/g, '&quot;');
+  const localImagePath = `./config/images/${state.barKey}/${encodeURIComponent(`${cocktail.name}.jpg`)}`;
+  const remoteImage = cocktail.image || '';
+  const imageSource = localImagePath;
 
-  return `<img src="${localImagePath}" alt="${safeAlt}" onerror="this.onerror=null; this.src='${safeFallbackImage}';" />`;
+  return `<img src="${imageSource}" alt="${safeAlt}" onerror="this.onerror=null; this.src='${remoteImage}';" />`;
+}
+
+function getCocktailDescription(cocktail) {
+  if (cocktail.description) {
+    return cocktail.description;
+  }
+
+  const ingredients = Array.isArray(cocktail.ingredients) && cocktail.ingredients.length
+    ? cocktail.ingredients.join(', ')
+    : 'frische Zutaten';
+
+  return `${cocktail.name} ist ein ${cocktail.alcoholic ? 'alkoholischer' : 'alkoholfreier'} Cocktail mit ${ingredients}.`;
+}
+
+function renderCocktailDetail() {
+  if (!cocktailDetailElement) {
+    return;
+  }
+
+  const selectedCocktail = state.filteredCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || state.filteredCocktails[0] || null;
+
+  if (!selectedCocktail) {
+    cocktailDetailElement.innerHTML = '<p class="empty-state">Keine Cocktails in dieser Ansicht.</p>';
+    return;
+  }
+
+  cocktailDetailElement.innerHTML = `
+    <div class="cocktail-detail-title">
+      <h3>${selectedCocktail.name}</h3>
+      <span class="badge">${selectedCocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
+    </div>
+    ${getCocktailImageMarkup(selectedCocktail)}
+    <p>${getCocktailDescription(selectedCocktail)}</p>
+    <p><strong>Zutaten:</strong> ${Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben'}</p>
+  `;
 }
 
 function renderCocktails() {
   state.filteredCocktails = getFilteredCocktails();
-  cocktailCountElement.textContent = `${state.filteredCocktails.length}`;
+
+  if (cocktailCountElement) {
+    cocktailCountElement.textContent = `${state.filteredCocktails.length}`;
+  }
 
   if (!state.filteredCocktails.length) {
-    cocktailListElement.innerHTML = '<p class="empty-state">Keine Cocktails in dieser Ansicht.</p>';
+    if (cocktailListElement) {
+      cocktailListElement.innerHTML = '<p class="empty-state">Keine Cocktails in dieser Ansicht.</p>';
+    }
+    renderCocktailDetail();
+    return;
+  }
+
+  if (!state.selectedCocktailId || !state.filteredCocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
+    state.selectedCocktailId = state.filteredCocktails[0].id;
+  }
+
+  if (!cocktailListElement) {
+    renderCocktailDetail();
     return;
   }
 
   cocktailListElement.innerHTML = state.filteredCocktails
     .map((cocktail) => `
-      <article class="cocktail-card ${cocktail.available === false ? 'disabled' : ''}">
-        ${getCocktailImageMarkup(cocktail, state.barKey)}
-        <div class="cocktail-content">
-          <div class="cocktail-topline">
-            <h3>${cocktail.name}</h3>
-            <span class="badge">${cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
-          </div>
-          <p>${cocktail.ingredients.join(' · ')}</p>
-          <button class="secondary-button" type="button" data-id="${cocktail.id}" ${cocktail.available === false ? 'disabled' : ''}>
-            ${cocktail.available === false ? 'Ausverkauft' : 'Zum Warenkorb'}
-          </button>
-        </div>
-      </article>
+      <button class="cocktail-list-item ${state.selectedCocktailId === cocktail.id ? 'active' : ''} ${cocktail.available === false ? 'disabled' : ''}" type="button" data-id="${cocktail.id}">
+        <span>${cocktail.name}</span>
+        <span class="badge">${cocktail.available === false ? 'Ausverkauft' : cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
+      </button>
     `)
     .join('');
 
   cocktailListElement.querySelectorAll('button[data-id]').forEach((button) => {
-    button.addEventListener('click', () => addToCart(button.dataset.id));
+    button.addEventListener('click', () => {
+      state.selectedCocktailId = button.dataset.id;
+      renderCocktails();
+    });
   });
+
+  renderCocktailDetail();
 }
 
 function renderCart() {
