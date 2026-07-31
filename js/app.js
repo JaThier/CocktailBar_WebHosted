@@ -48,6 +48,10 @@ async function loadConfig(barKey) {
 }
 
 function renderFilters() {
+  if (!filterGroup) {
+    return;
+  }
+
   const filters = [
     { key: 'all', label: 'Alle' },
     { key: 'alcoholic', label: 'Alkoholisch' },
@@ -130,6 +134,10 @@ function renderCocktails() {
 }
 
 function renderCart() {
+  if (!cartItemsElement || !cartCountElement) {
+    return;
+  }
+
   if (!state.cart.length) {
     cartItemsElement.innerHTML = 'Noch nichts ausgewählt.';
     cartCountElement.textContent = '0';
@@ -153,6 +161,10 @@ function addToCart(cocktailId) {
 }
 
 function handleOrder() {
+  if (!guestNameInput || !orderButton) {
+    return;
+  }
+
   const guestName = guestNameInput.value.trim();
   if (!state.cart.length) {
     alert('Wähle zuerst mindestens einen Cocktail aus.');
@@ -189,23 +201,29 @@ async function init() {
     barStatusElement.textContent = config.isOpen === false ? 'Bar aktuell geschlossen' : 'Bar geöffnet';
     state.cocktails = Array.isArray(config.cocktails) ? config.cocktails : [];
 
-    if (config.isOpen === false) {
-      orderButton.style.display = 'none';
-      barStatusElement.textContent = 'Bar aktuell geschlossen';
-    } else {
-      orderButton.style.display = 'inline-flex';
+    if (orderButton) {
+      if (config.isOpen === false) {
+        orderButton.style.display = 'none';
+        barStatusElement.textContent = 'Bar aktuell geschlossen';
+      } else {
+        orderButton.style.display = 'inline-flex';
+      }
     }
 
     renderFilters();
     renderCocktails();
     renderCart();
 
-    guestNameInput.value = localStorage.getItem('guestName') || '';
-    guestNameInput.addEventListener('input', (event) => {
-      localStorage.setItem('guestName', event.target.value);
-    });
+    if (guestNameInput) {
+      guestNameInput.value = localStorage.getItem('guestName') || '';
+      guestNameInput.addEventListener('input', (event) => {
+        localStorage.setItem('guestName', event.target.value);
+      });
+    }
 
-    orderButton.addEventListener('click', handleOrder);
+    if (orderButton) {
+      orderButton.addEventListener('click', handleOrder);
+    }
   } catch (error) {
     barStatusElement.textContent = error.message;
     cocktailListElement.innerHTML = '<p class="empty-state">Die Konfiguration konnte nicht geladen werden.</p>';

@@ -15,7 +15,7 @@ body {
 }
 
 .app-shell {
-  max-width: 860px;
+  max-width: 920px;
   margin: 0 auto;
   padding: 1rem;
   display: grid;
@@ -35,6 +35,7 @@ body {
   justify-content: space-between;
   align-items: start;
   gap: 1rem;
+  padding: 1.25rem 1.25rem 1.1rem;
 }
 
 .eyebrow {
@@ -79,11 +80,16 @@ h3 {
   color: #fff;
 }
 
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .filter-chip {
   background: #e5e7eb;
   color: #374151;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 .filter-chip.active {
@@ -124,6 +130,7 @@ h3 {
   border-radius: 1rem;
   overflow: hidden;
   background: #fffdf9;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
 }
 
 .cocktail-card img {
