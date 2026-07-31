@@ -10,6 +10,7 @@ const state = {
 
 const guestNameInput = document.querySelector('#guest-name');
 const barNameElement = document.querySelector('#bar-name');
+const barEyebrowElement = document.querySelector('#bar-eyebrow');
 const barStatusElement = document.querySelector('#bar-status');
 const cocktailListElement = document.querySelector('#cocktail-list');
 const cocktailCountElement = document.querySelector('#cocktail-count');
@@ -168,6 +169,7 @@ async function init() {
     state.config = config;
 
     document.title = config.barName || 'Cocktail Bar';
+    barEyebrowElement.textContent = config.barName || 'Cocktail Bar';
     barNameElement.textContent = config.barName || 'Cocktail Bar';
     barStatusElement.textContent = config.isOpen === false ? 'Bar aktuell geschlossen' : 'Bar geöffnet';
     state.cocktails = Array.isArray(config.cocktails) ? config.cocktails : [];
