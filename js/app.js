@@ -6,6 +6,7 @@ const state = {
   filteredCocktails: [],
   filter: 'all',
   cart: [],
+  barKey: 'default',
 };
 
 const guestNameInput = document.querySelector('#guest-name');
@@ -84,6 +85,18 @@ function getFilteredCocktails() {
   return state.cocktails;
 }
 
+function getCocktailImageMarkup(cocktail, barKey) {
+  const imageName = `${cocktail.name}.jpg`;
+  const localImagePath = `./config/images/${barKey}/${encodeURIComponent(imageName)}`;
+  const fallbackImage = /^https?:\/\//i.test(cocktail.image || '') || (cocktail.image || '').startsWith('data:') || (cocktail.image || '').startsWith('blob:')
+    ? cocktail.image
+    : '';
+  const safeAlt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
+  const safeFallbackImage = (fallbackImage || '').replace(/"/g, '&quot;');
+
+  return `<img src="${localImagePath}" alt="${safeAlt}" onerror="this.onerror=null; this.src='${safeFallbackImage}';" />`;
+}
+
 function renderCocktails() {
   state.filteredCocktails = getFilteredCocktails();
   cocktailCountElement.textContent = `${state.filteredCocktails.length}`;
@@ -96,7 +109,7 @@ function renderCocktails() {
   cocktailListElement.innerHTML = state.filteredCocktails
     .map((cocktail) => `
       <article class="cocktail-card ${cocktail.available === false ? 'disabled' : ''}">
-        <img src="${cocktail.image}" alt="${cocktail.name}" />
+        ${getCocktailImageMarkup(cocktail, state.barKey)}
         <div class="cocktail-content">
           <div class="cocktail-topline">
             <h3>${cocktail.name}</h3>
@@ -165,7 +178,9 @@ function handleOrder() {
 
 async function init() {
   try {
-    const config = await loadConfig(parseBarKey());
+    const barKey = parseBarKey();
+    state.barKey = barKey;
+    const config = await loadConfig(barKey);
     state.config = config;
 
     document.title = config.barName || 'Cocktail Bar';
