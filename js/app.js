@@ -5,11 +5,28 @@ const state = {
   config: null,
   cocktails: [],
   filteredCocktails: [],
-  filter: 'all',
+  activeFilterKeys: [],
   cart: [],
   barKey: 'default',
   selectedCocktailId: null,
 };
+
+const cocktailPropertyOptions = [
+  'Erfrischend',
+  'Exotisch',
+  'Aromatisch',
+  'Fruchtig',
+  'Würzig',
+  'Spritzig',
+  'Cremig',
+  'Raffiniert',
+  'Klassiker',
+  'Classy',
+  'Bitter',
+  'Süß',
+  'Sauer',
+  'Bartenders Favourite',
+];
 
 const guestNameInput = document.querySelector('#guest-name');
 const barNameElement = document.querySelector('#bar-name');
@@ -55,46 +72,116 @@ async function loadConfig(barKey) {
   throw new Error('Es konnte keine Konfiguration gefunden werden.');
 }
 
+function normalizeCocktailProperties(cocktail) {
+  if (!cocktail || !Array.isArray(cocktail.properties)) {
+    return [];
+  }
+
+  return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
+}
+
+function getAvailablePropertyFilters() {
+  const propertyValues = new Set(cocktailPropertyOptions);
+
+  state.cocktails.forEach((cocktail) => {
+    normalizeCocktailProperties(cocktail).forEach((property) => propertyValues.add(property));
+  });
+
+  return Array.from(propertyValues).sort((left, right) => left.localeCompare(right));
+}
+
+function isFilterActive(filterKey) {
+  return state.activeFilterKeys.includes(filterKey);
+}
+
+function toggleFilter(filterKey) {
+  if (filterKey === 'all') {
+    state.activeFilterKeys = [];
+    renderFilters();
+    renderCocktails();
+    return;
+  }
+
+  if (filterKey === 'alcoholic' || filterKey === 'non-alcoholic') {
+    const alcoholFilterIndex = state.activeFilterKeys.findIndex((key) => key === 'alcoholic' || key === 'non-alcoholic');
+    const isSameFilterActive = alcoholFilterIndex >= 0 && state.activeFilterKeys[alcoholFilterIndex] === filterKey;
+
+    if (alcoholFilterIndex >= 0) {
+      state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== 'alcoholic' && key !== 'non-alcoholic');
+    }
+
+    if (!isSameFilterActive) {
+      state.activeFilterKeys.push(filterKey);
+    }
+
+    renderFilters();
+    renderCocktails();
+    return;
+  }
+
+  if (isFilterActive(filterKey)) {
+    state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== filterKey);
+  } else {
+    state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== 'all');
+    state.activeFilterKeys.push(filterKey);
+  }
+
+  renderFilters();
+  renderCocktails();
+}
+
 function renderFilters() {
   if (!filterGroup) {
     return;
   }
 
+  const propertyFilters = getAvailablePropertyFilters();
   const filters = [
     { key: 'all', label: 'Alle' },
     { key: 'alcoholic', label: 'Alkoholisch' },
     { key: 'non-alcoholic', label: 'Alkoholfrei' },
+    ...propertyFilters.map((property) => ({ key: property, label: property })),
   ];
 
   filterGroup.innerHTML = filters
-    .map(
-      (filter) => `
-        <button class="filter-chip ${state.filter === filter.key ? 'active' : ''}" data-filter="${filter.key}" type="button">
+    .map((filter) => {
+      const isActive = filter.key === 'all'
+        ? state.activeFilterKeys.length === 0
+        : isFilterActive(filter.key);
+
+      return `
+        <button class="filter-chip ${isActive ? 'active' : ''}" data-filter="${filter.key}" type="button">
           ${filter.label}
         </button>
-      `
-    )
+      `;
+    })
     .join('');
 
   filterGroup.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', () => {
-      state.filter = button.dataset.filter;
-      renderFilters();
-      renderCocktails();
+      toggleFilter(button.dataset.filter);
     });
   });
 }
 
 function getFilteredCocktails() {
-  if (state.filter === 'alcoholic') {
-    return state.cocktails.filter((cocktail) => cocktail.alcoholic);
+  let filteredCocktails = state.cocktails;
+
+  const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
+
+  if (alcoholFilter === 'alcoholic') {
+    filteredCocktails = filteredCocktails.filter((cocktail) => cocktail.alcoholic);
+  } else if (alcoholFilter === 'non-alcoholic') {
+    filteredCocktails = filteredCocktails.filter((cocktail) => !cocktail.alcoholic);
   }
 
-  if (state.filter === 'non-alcoholic') {
-    return state.cocktails.filter((cocktail) => !cocktail.alcoholic);
+  const propertyFilters = state.activeFilterKeys.filter((filterKey) => filterKey !== 'alcoholic' && filterKey !== 'non-alcoholic');
+
+  if (propertyFilters.length) {
+    filteredCocktails = filteredCocktails.filter((cocktail) => propertyFilters.every((property) => normalizeCocktailProperties(cocktail).includes(property)));
   }
 
-  return state.cocktails;
+  return filteredCocktails;
 }
 
 function getCocktailImageMarkup(cocktail) {
