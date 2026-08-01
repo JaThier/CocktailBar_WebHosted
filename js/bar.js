@@ -5,6 +5,7 @@ import {
   deleteCocktail,
   listenToCocktails,
 } from './firebase.js';
+import { generateCocktailId } from './cocktail-utils.js';
 
 const state = {
   barKey: 'default',
@@ -312,6 +313,7 @@ function bindContentEvents() {
 
       const patch = {
         name: nameInput?.value.trim() || 'Neuer Cocktail',
+        id: generateCocktailId(nameInput?.value || 'Neuer Cocktail'),
         ingredients: (ingredientsInput?.value || '')
           .split(',')
           .map((item) => item.trim())

@@ -1,4 +1,5 @@
 import { createFirebaseClient, listenToCocktails } from './firebase.js';
+import { generateCocktailId } from './cocktail-utils.js';
 
 const state = {
   config: null,
@@ -98,7 +99,8 @@ function getFilteredCocktails() {
 
 function getCocktailImageMarkup(cocktail) {
   const safeAlt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
-  const localImagePath = `./config/images/${state.barKey}/${encodeURIComponent(`${cocktail.name}.jpg`)}`;
+  const slug = generateCocktailId(cocktail.name || cocktail.id || 'cocktail');
+  const localImagePath = `./config/images/${state.barKey}/${slug}.jpg`;
   const remoteImage = cocktail.image || '';
   const imageSource = localImagePath;
 
