@@ -92,9 +92,35 @@ h3 {
   margin: 0;
 }
 
+.filter-chip-all {
+  background: #e0f2fe;
+  color: #0f3d5f;
+}
+
+.filter-chip-alcohol {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.filter-chip-property {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
 .filter-chip.active {
-  background: #0f766e;
   color: #fff;
+}
+
+.filter-chip-all.active {
+  background: #0f766e;
+}
+
+.filter-chip-alcohol.active {
+  background: #f59e0b;
+}
+
+.filter-chip-property.active {
+  background: #7c3aed;
 }
 
 .field {

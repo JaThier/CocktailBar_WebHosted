@@ -149,8 +149,22 @@ function renderFilters() {
         ? state.activeFilterKeys.length === 0
         : isFilterActive(filter.key);
 
+      let filterClass = 'filter-chip';
+
+      if (filter.key === 'all') {
+        filterClass += ' filter-chip-all';
+      } else if (filter.key === 'alcoholic' || filter.key === 'non-alcoholic') {
+        filterClass += ' filter-chip-alcohol';
+      } else {
+        filterClass += ' filter-chip-property';
+      }
+
+      if (isActive) {
+        filterClass += ' active';
+      }
+
       return `
-        <button class="filter-chip ${isActive ? 'active' : ''}" data-filter="${filter.key}" type="button">
+        <button class="${filterClass}" data-filter="${filter.key}" type="button">
           ${filter.label}
         </button>
       `;
