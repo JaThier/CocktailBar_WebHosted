@@ -318,7 +318,12 @@ function renderCocktailsTab() {
           alcoholic: true,
           available: true,
         };
-        await addCocktail(state.config?.barId || state.barKey, newCocktail);
+        const savedCocktail = await addCocktail(state.config?.barId || state.barKey, newCocktail);
+        if (savedCocktail?.id) {
+          state.cocktails = [...state.cocktails.filter((cocktail) => cocktail.id !== savedCocktail.id), savedCocktail];
+          state.selectedCocktailId = savedCocktail.id;
+          renderContent();
+        }
       } catch (error) {
         console.error('Cocktail konnte nicht gespeichert werden.', error);
         alert('Cocktail konnte nicht gespeichert werden.');
@@ -343,6 +348,85 @@ function renderInventoryTab() {
       `).join('') : '<p class="empty-state">Noch keine Zutaten vorhanden.</p>'}
     </div>
   `;
+}
+
+async function addIngredientToInventory(ingredientName) {
+  const normalizedIngredient = String(ingredientName || '').trim();
+  if (!normalizedIngredient) {
+    return;
+  }
+
+  const nextInventoryState = {
+    ...state.inventory,
+    [normalizedIngredient]: true,
+  };
+  state.inventory = nextInventoryState;
+
+  try {
+    await updateInventory(state.config?.barId || state.barKey, {
+      [normalizedIngredient]: true,
+    });
+  } catch (error) {
+    console.error('Zutat konnte nicht in Firebase gespeichert werden.', error);
+    alert('Zutat konnte nicht in Firebase gespeichert werden.');
+  }
+}
+
+async function syncIngredientsToInventory(ingredientNames) {
+  const normalizedIngredients = Array.from(new Set(
+    (ingredientNames || [])
+      .map((ingredient) => String(ingredient || '').trim())
+      .filter(Boolean)
+  ));
+
+  if (!normalizedIngredients.length) {
+    return;
+  }
+
+  const inventoryPatch = normalizedIngredients.reduce((result, ingredient) => {
+    result[ingredient] = true;
+    return result;
+  }, {});
+
+  state.inventory = {
+    ...state.inventory,
+    ...inventoryPatch,
+  };
+
+  try {
+    await updateInventory(state.config?.barId || state.barKey, inventoryPatch);
+  } catch (error) {
+    console.error('Zutaten konnten nicht in Firebase gespeichert werden.', error);
+    alert('Zutaten konnten nicht in Firebase gespeichert werden.');
+  }
+}
+
+async function pruneUnusedIngredients() {
+  const usedIngredients = Array.from(new Set(
+    state.cocktails.flatMap((cocktail) => Array.isArray(cocktail.ingredients) ? cocktail.ingredients : [])
+  )).filter(Boolean);
+
+  const inventoryPatch = Object.keys(state.inventory || {}).reduce((result, ingredient) => {
+    if (!usedIngredients.includes(ingredient)) {
+      result[ingredient] = null;
+    }
+    return result;
+  }, {});
+
+  if (!Object.keys(inventoryPatch).length) {
+    return;
+  }
+
+  state.inventory = Object.fromEntries(
+    Object.entries(state.inventory || {}).filter(([ingredient]) => usedIngredients.includes(ingredient))
+  );
+
+  try {
+    await updateInventory(state.config?.barId || state.barKey, inventoryPatch);
+  } catch (error) {
+    console.error('Nicht verwendete Zutaten konnten nicht bereinigt werden.', error);
+    alert('Nicht verwendete Zutaten konnten nicht bereinigt werden.');
+  }
 }
 
 function renderOrdersTab() {
@@ -453,6 +537,10 @@ function bindContentEvents() {
       return;
     }
 
+    if (button.id === 'add-cocktail') {
+      return;
+    }
+
     if (button.dataset.role === 'select-cocktail') {
       state.selectedCocktailId = button.dataset.id;
       renderContent();
@@ -469,7 +557,6 @@ function bindContentEvents() {
       const nameInput = card.querySelector('[data-field="name"]');
       const ingredientsInput = card.querySelector('[data-field="ingredients"]');
       const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
-      const availableInput = card.querySelector('[data-field="available"]');
 
       const patch = {
         name: nameInput?.value.trim() || 'Neuer Cocktail',
@@ -483,6 +570,7 @@ function bindContentEvents() {
       };
 
       try {
+        await syncIngredientsToInventory(patch.ingredients);
         await updateCocktailInFirebase(cocktailId, patch);
         card.classList.remove('is-dirty');
       } catch (error) {
@@ -496,6 +584,7 @@ function bindContentEvents() {
       try {
         await deleteCocktail(state.config?.barId || state.barKey, button.dataset.id);
         state.cocktails = state.cocktails.filter((cocktail) => cocktail.id !== button.dataset.id);
+        await pruneUnusedIngredients();
         renderContent();
       } catch (error) {
         console.error('Cocktail konnte nicht gelöscht werden.', error);
