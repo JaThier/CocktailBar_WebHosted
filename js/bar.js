@@ -4,6 +4,8 @@ import {
   updateCocktail,
   deleteCocktail,
   listenToCocktails,
+  listenToInventory,
+  updateInventory,
 } from './firebase.js';
 import { generateCocktailId } from './cocktail-utils.js';
 
@@ -90,18 +92,11 @@ function resetBarState() {
 }
 
 function loadStoredState() {
-  const saved = JSON.parse(localStorage.getItem(getStorageKey('state')) || 'null');
   const savedOrders = JSON.parse(localStorage.getItem(getStorageKey('orders')) || 'null');
-
-  state.inventory = saved?.inventory && typeof saved.inventory === 'object' ? saved.inventory : {};
   state.orders = Array.isArray(savedOrders) ? savedOrders : [];
 }
 
 function saveState() {
-  localStorage.setItem(getStorageKey('state'), JSON.stringify({
-    inventory: state.inventory,
-    orders: state.orders,
-  }));
   localStorage.setItem(getStorageKey('orders'), JSON.stringify(state.orders));
 }
 
@@ -149,6 +144,16 @@ function setActiveTab(tab) {
 
 function getAllIngredients() {
   return Array.from(new Set(state.cocktails.flatMap((cocktail) => Array.isArray(cocktail.ingredients) ? cocktail.ingredients : []))).sort();
+}
+
+function isCocktailAvailable(cocktail) {
+  const ingredients = Array.isArray(cocktail?.ingredients) ? cocktail.ingredients : [];
+
+  if (!ingredients.length) {
+    return true;
+  }
+
+  return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
 }
 
 function getCocktailImageCandidates(cocktail) {
@@ -248,12 +253,15 @@ function renderCocktailsTab() {
     </div>
     <div class="cocktail-layout">
       <div class="cocktail-list" aria-label="Cocktail-Liste">
-        ${state.cocktails.length ? state.cocktails.map((cocktail) => `
-          <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${cocktail.available === false ? 'disabled' : ''}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
-            <span>${cocktail.name || 'Unbenannter Cocktail'}</span>
-            <span class="badge">${cocktail.available === false ? 'Ausverkauft' : cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
-          </button>
-        `).join('') : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
+        ${state.cocktails.length ? state.cocktails.map((cocktail) => {
+          const isAvailable = isCocktailAvailable(cocktail);
+          return `
+            <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${isAvailable ? '' : 'disabled'}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
+              <span>${cocktail.name || 'Unbenannter Cocktail'}</span>
+              <span class="badge">${isAvailable ? (cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei') : 'Nicht verfügbar'}</span>
+            </button>
+          `;
+        }).join('') : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
       </div>
       <div class="cocktail-detail-panel">
         ${selectedCocktail ? `
@@ -284,9 +292,6 @@ function renderCocktailsTab() {
                 </div>
                 <label>
                   <input type="checkbox" data-field="alcoholic" ${selectedCocktail.alcoholic ? 'checked' : ''} /> Alkoholisch
-                </label>
-                <label>
-                  <input type="checkbox" data-field="available" ${selectedCocktail.available !== false ? 'checked' : ''} /> Verfügbar
                 </label>
               </div>
             </div>
@@ -416,7 +421,7 @@ function bindContentEvents() {
     card.classList.add('is-dirty');
   });
 
-  tabContentElement.addEventListener('change', (event) => {
+  tabContentElement.addEventListener('change', async (event) => {
     const target = event.target;
     const card = target.closest('.editor-card');
 
@@ -426,8 +431,19 @@ function bindContentEvents() {
     }
 
     if (target.dataset.ingredient) {
-      state.inventory[target.dataset.ingredient] = target.checked;
-      saveState();
+      const nextInventoryState = {
+        ...state.inventory,
+        [target.dataset.ingredient]: target.checked,
+      };
+      state.inventory = nextInventoryState;
+      try {
+        await updateInventory(state.config?.barId || state.barKey, {
+          [target.dataset.ingredient]: target.checked,
+        });
+      } catch (error) {
+        console.error('Inventar konnte nicht gespeichert werden.', error);
+        alert('Inventar konnte nicht gespeichert werden.');
+      }
     }
   });
 
@@ -464,7 +480,6 @@ function bindContentEvents() {
           .filter(Boolean),
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         alcoholic: alcoholicInput?.checked || false,
-        available: availableInput?.checked !== false,
       };
 
       try {
@@ -535,6 +550,11 @@ async function init() {
 
     listenToCocktails(state.config.barId || state.barKey, (cocktails) => {
       state.cocktails = Array.isArray(cocktails) ? cocktails : [];
+      renderContent();
+    });
+
+    listenToInventory(state.config.barId || state.barKey, (inventory) => {
+      state.inventory = inventory && typeof inventory === 'object' ? inventory : {};
       renderContent();
     });
 

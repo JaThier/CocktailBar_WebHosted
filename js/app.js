@@ -1,9 +1,10 @@
-import { createFirebaseClient, listenToCocktails } from './firebase.js';
+import { createFirebaseClient, listenToCocktails, listenToInventory } from './firebase.js';
 import { generateCocktailId } from './cocktail-utils.js';
 
 const state = {
   config: null,
   cocktails: [],
+  inventory: {},
   filteredCocktails: [],
   activeFilterKeys: [],
   cart: [],
@@ -78,6 +79,16 @@ function normalizeCocktailProperties(cocktail) {
   }
 
   return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
+}
+
+function isCocktailAvailable(cocktail) {
+  const ingredients = Array.isArray(cocktail?.ingredients) ? cocktail.ingredients : [];
+
+  if (!ingredients.length) {
+    return true;
+  }
+
+  return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
 }
 
 function getAvailablePropertyFilters() {
@@ -179,7 +190,7 @@ function renderFilters() {
 }
 
 function getFilteredCocktails() {
-  let filteredCocktails = state.cocktails;
+  let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail));
 
   const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
 
@@ -382,6 +393,13 @@ async function init() {
 
     listenToCocktails(config.barId || barKey, (cocktails) => {
       state.cocktails = Array.isArray(cocktails) ? cocktails : [];
+      renderFilters();
+      renderCocktails();
+      renderCart();
+    });
+
+    listenToInventory(config.barId || barKey, (inventory) => {
+      state.inventory = inventory && typeof inventory === 'object' ? inventory : {};
       renderFilters();
       renderCocktails();
       renderCart();
