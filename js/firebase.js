@@ -64,7 +64,7 @@ export async function addCocktail(barId, cocktailData) {
   const newCocktailRef = push(cocktailsRef);
   const nextCocktail = {
     ...cocktailData,
-    id: cocktailData?.id || newCocktailRef.key || `cocktail-${Date.now()}`,
+    id: newCocktailRef.key,
     createdAt: cocktailData?.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -113,9 +113,10 @@ export function listenToCocktails(barId, callback) {
 
     if (snapshot.exists()) {
       snapshot.forEach((child) => {
+        const cocktail = child.val() || {};
         cocktails.push({
+          ...cocktail,
           id: child.key,
-          ...child.val(),
         });
       });
     }

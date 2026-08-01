@@ -170,15 +170,12 @@ function renderCocktailsTab() {
   tabContentElement.querySelector('#add-cocktail').addEventListener('click', async () => {
     try {
       const newCocktail = {
-        id: `cocktail-${Date.now()}`,
         name: 'Neuer Cocktail',
         ingredients: [],
         alcoholic: true,
         available: true,
       };
-      const createdCocktail = await addCocktail(state.config?.barId || state.barKey, newCocktail);
-      state.cocktails = [...state.cocktails, createdCocktail];
-      renderCocktailsTab();
+      await addCocktail(state.config?.barId || state.barKey, newCocktail);
     } catch (error) {
       console.error('Cocktail konnte nicht gespeichert werden.', error);
       alert('Cocktail konnte nicht gespeichert werden.');
