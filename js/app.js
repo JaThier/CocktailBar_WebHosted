@@ -1,4 +1,4 @@
-import { createFirebaseClient } from './firebase.js';
+import { createFirebaseClient, listenToCocktails } from './firebase.js';
 
 const state = {
   config: null,
@@ -30,19 +30,6 @@ function parseBarKey() {
 
 function getStorageKey(key, barKey = state.barKey) {
   return `cocktailbar-${key}-${barKey}`;
-}
-
-function getCocktailsFromStorage(barKey) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(getStorageKey('state', barKey)) || 'null');
-    if (Array.isArray(saved?.cocktails)) {
-      return saved.cocktails;
-    }
-  } catch (error) {
-    console.warn('Gespeicherte Cocktails konnten nicht gelesen werden.', error);
-  }
-
-  return null;
 }
 
 async function loadConfig(barKey) {
@@ -274,18 +261,12 @@ async function init() {
     }
     const config = await loadConfig(barKey);
     state.config = config;
+    createFirebaseClient(config);
 
     document.title = config.barName || 'Cocktail Bar';
     barEyebrowElement.textContent = config.barName || 'Cocktail Bar';
     barNameElement.textContent = config.barName || 'Cocktail Bar';
     barStatusElement.textContent = config.isOpen === false ? 'Bar aktuell geschlossen' : 'Bar geöffnet';
-
-    const storedCocktails = getCocktailsFromStorage(barKey);
-    state.cocktails = Array.isArray(storedCocktails) && storedCocktails.length
-      ? storedCocktails
-      : Array.isArray(config.cocktails)
-        ? config.cocktails
-        : [];
 
     if (orderButton) {
       if (config.isOpen === false) {
@@ -295,6 +276,13 @@ async function init() {
         orderButton.style.display = 'inline-flex';
       }
     }
+
+    listenToCocktails(config.barId || barKey, (cocktails) => {
+      state.cocktails = Array.isArray(cocktails) ? cocktails : [];
+      renderFilters();
+      renderCocktails();
+      renderCart();
+    });
 
     renderFilters();
     renderCocktails();
@@ -312,7 +300,9 @@ async function init() {
     }
   } catch (error) {
     barStatusElement.textContent = error.message;
-    cocktailListElement.innerHTML = '<p class="empty-state">Die Konfiguration konnte nicht geladen werden.</p>';
+    if (cocktailListElement) {
+      cocktailListElement.innerHTML = '<p class="empty-state">Die Konfiguration konnte nicht geladen werden.</p>';
+    }
   }
 }
 

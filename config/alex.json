@@ -1,48 +1,9 @@
 {
+  "barId": "alex",
   "barName": "Alex Cocktail Bar",
   "barPassword": "alex123",
-  "isOpen": true,
   "firebase": {
-    "apiKey": "demo-api-key",
-    "authDomain": "cocktailbar-demo.firebaseapp.com",
-    "databaseURL": "https://cocktailbar-demo-default-rtdb.europe-west1.firebasedatabase.app",
-    "projectId": "cocktailbar-demo",
-    "storageBucket": "cocktailbar-demo.appspot.com",
-    "messagingSenderId": "1234567890",
-    "appId": "1:1234567890:web:abcdef123456"
-  },
-  "cocktails": [
-    {
-      "id": "margarita",
-      "name": "Margarita",
-      "ingredients": ["Tequila", "Limette", "Triple Sec"],
-      "alcoholic": true,
-      "image": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80",
-      "available": true
-    },
-    {
-      "id": "mojito",
-      "name": "Mojito",
-      "ingredients": ["Minze", "Limette", "Rum", "Wasser"] ,
-      "alcoholic": true,
-      "image": "https://images.unsplash.com/photo-1571066811602-716837d681de?auto=format&fit=crop&w=800&q=80",
-      "available": true
-    },
-    {
-      "id": "virgin-pina",
-      "name": "Virgin Pina Colada",
-      "ingredients": ["Ananas", "Kokos", "Limette"],
-      "alcoholic": false,
-      "image": "https://images.unsplash.com/photo-1546173159-315ecef4b2e5?auto=format&fit=crop&w=800&q=80",
-      "available": true
-    },
-    {
-      "id": "sunset",
-      "name": "Sunset Spritz",
-      "ingredients": ["Orange", "Soda", "Sirup"],
-      "alcoholic": false,
-      "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
-      "available": false
-    }
-  ]
+    "apiKey": "AIzaSyDc3QdnrioPTS22h010cEfe5TS_hdbunqs",
+    "databaseURL": "https://test-abf47-default-rtdb.europe-west1.firebasedatabase.app"
+  }
 }

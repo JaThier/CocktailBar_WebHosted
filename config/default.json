@@ -1,18 +1,9 @@
 {
+  "barId": "default",
   "barName": "Private Cocktail Bar",
   "barPassword": "cocktailbar",
-  "isOpen": true,
   "firebase": {
-    "databaseURL": "https://example-default-rtdb.firebaseio.com"
-  },
-  "cocktails": [
-    {
-      "id": "classic",
-      "name": "Classic Spritz",
-      "ingredients": ["Orange", "Soda", "Minze"],
-      "alcoholic": false,
-      "image": "https://images.unsplash.com/photo-1571104508998-2f6f8d2f3d1c?auto=format&fit=crop&w=800&q=80",
-      "available": true
-    }
-  ]
+    "apiKey": "AIzaSyDc3QdnrioPTS22h010cEfe5TS_hdbunqs",
+    "databaseURL": "https://test-abf47-default-rtdb.europe-west1.firebasedatabase.app"
+  }
 }
