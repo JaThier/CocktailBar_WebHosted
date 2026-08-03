@@ -239,6 +239,14 @@ function normalizeCocktailProperties(cocktail) {
   return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function renderCocktailsTab() {
   const ingredients = getAllIngredients();
 
@@ -281,7 +289,11 @@ function renderCocktailsTab() {
                 </label>
                 <label class="editor-row">
                   <span>Zutaten (mit Komma trennen)</span>
-                  <textarea data-field="ingredients" rows="3">${(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(', ') : '').replace(/"/g, '&quot;')}</textarea>
+                  <textarea data-field="ingredients" rows="3">${escapeHtml(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(', ') : '')}</textarea>
+                </label>
+                <label class="editor-row">
+                  <span>Kommentar für die Bestellübersicht</span>
+                  <textarea data-field="comment" rows="3">${escapeHtml(selectedCocktail.comment || '')}</textarea>
                 </label>
                 <div class="editor-row">
                   <span>Eigenschaften</span>
@@ -321,6 +333,7 @@ function renderCocktailsTab() {
           ingredients: [],
           alcoholic: true,
           available: true,
+          comment: '',
         };
         const savedCocktail = await addCocktail(state.config?.barId || state.barKey, newCocktail);
         if (savedCocktail?.id) {
@@ -526,8 +539,8 @@ function renderOrdersTab() {
           <div class="order-card">
             <div class="order-detail-header">
               <div>
-                <strong>${selectedOrder.guestName || 'Kunde'}</strong>
-                <div>${(selectedOrder.items || []).map((item) => item.name).join(', ')}</div>
+                <strong>${escapeHtml(selectedOrder.guestName || 'Kunde')}</strong>
+                <div>${escapeHtml((selectedOrder.items || []).map((item) => item.name).join(', '))}</div>
                 <small>${new Date(selectedOrder.createdAt).toLocaleString('de-DE')}</small>
               </div>
               <span class="badge">${getOrderStatusLabel(selectedOrder)}</span>
@@ -538,9 +551,10 @@ function renderOrdersTab() {
                   <div class="order-image-host" data-order-image-host></div>
                 </div>
                 <div class="order-detail-content">
-                  <h4>${selectedCocktail.name || 'Cocktail'}</h4>
-                  <p>${selectedCocktail.description || (selectedCocktail.alcoholic ? 'Ein klassischer alkoholischer Cocktail.' : 'Ein frischer alkoholfreier Cocktail.')}</p>
-                  <p><strong>Rezept:</strong> ${(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben')}</p>
+                  <h4>${escapeHtml(selectedCocktail.name || 'Cocktail')}</h4>
+                  <p>${escapeHtml(selectedCocktail.description || (selectedCocktail.alcoholic ? 'Ein klassischer alkoholischer Cocktail.' : 'Ein frischer alkoholfreier Cocktail.'))}</p>
+                  <p><strong>Rezept:</strong> ${escapeHtml(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben')}</p>
+                  ${selectedCocktail.comment ? `<p><strong>Kommentar:</strong> ${escapeHtml(selectedCocktail.comment)}</p>` : ''}
                 </div>
               </div>
             ` : '<p class="empty-state">Zu dieser Bestellung ist kein Cocktail mehr verfügbar.</p>'}
@@ -669,6 +683,7 @@ function bindContentEvents() {
 
       const nameInput = card.querySelector('[data-field="name"]');
       const ingredientsInput = card.querySelector('[data-field="ingredients"]');
+      const commentInput = card.querySelector('[data-field="comment"]');
       const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
 
       const patch = {
@@ -680,6 +695,7 @@ function bindContentEvents() {
           .filter(Boolean),
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         alcoholic: alcoholicInput?.checked || false,
+        comment: commentInput?.value.trim() || '',
       };
 
       try {
