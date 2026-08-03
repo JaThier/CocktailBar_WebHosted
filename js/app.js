@@ -133,6 +133,23 @@ function toggleFilter(filterKey) {
     return;
   }
 
+  if (filterKey.startsWith('strength:')) {
+    const strengthFilterIndex = state.activeFilterKeys.findIndex((key) => key.startsWith('strength:'));
+    const isSameFilterActive = strengthFilterIndex >= 0 && state.activeFilterKeys[strengthFilterIndex] === filterKey;
+
+    if (strengthFilterIndex >= 0) {
+      state.activeFilterKeys = state.activeFilterKeys.filter((key) => !key.startsWith('strength:'));
+    }
+
+    if (!isSameFilterActive) {
+      state.activeFilterKeys.push(filterKey);
+    }
+
+    renderFilters();
+    renderCocktails();
+    return;
+  }
+
   if (filterKey === 'alcoholic' || filterKey === 'non-alcoholic') {
     const alcoholFilterIndex = state.activeFilterKeys.findIndex((key) => key === 'alcoholic' || key === 'non-alcoholic');
     const isSameFilterActive = alcoholFilterIndex >= 0 && state.activeFilterKeys[alcoholFilterIndex] === filterKey;
@@ -167,10 +184,17 @@ function renderFilters() {
   }
 
   const propertyFilters = getAvailablePropertyFilters();
+  const strengthFilters = [
+    { key: 'strength:mild', label: 'mild' },
+    { key: 'strength:ausgewogen', label: 'ausgewogen' },
+    { key: 'strength:intensiv', label: 'intensiv' },
+  ];
+
   const filters = [
     { key: 'all', label: 'Alle' },
     { key: 'alcoholic', label: 'Alkoholisch' },
     { key: 'non-alcoholic', label: 'Alkoholfrei' },
+    ...strengthFilters,
     ...propertyFilters.map((property) => ({ key: property, label: property })),
   ];
 
@@ -186,6 +210,8 @@ function renderFilters() {
         filterClass += ' filter-chip-all';
       } else if (filter.key === 'alcoholic' || filter.key === 'non-alcoholic') {
         filterClass += ' filter-chip-alcohol';
+      } else if (filter.key.startsWith('strength:')) {
+        filterClass += ' filter-chip-strength';
       } else {
         filterClass += ' filter-chip-property';
       }
@@ -221,6 +247,13 @@ function getFilteredCocktails() {
   }
 
   const propertyFilters = state.activeFilterKeys.filter((filterKey) => filterKey !== 'alcoholic' && filterKey !== 'non-alcoholic');
+
+  const strengthFilter = state.activeFilterKeys.find((filterKey) => filterKey.startsWith('strength:'));
+
+  if (strengthFilter) {
+    const selectedStrength = strengthFilter.replace('strength:', '');
+    filteredCocktails = filteredCocktails.filter((cocktail) => (cocktail.strength || 'ausgewogen') === selectedStrength);
+  }
 
   if (propertyFilters.length) {
     filteredCocktails = filteredCocktails.filter((cocktail) => propertyFilters.every((property) => normalizeCocktailProperties(cocktail).includes(property)));

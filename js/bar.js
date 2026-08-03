@@ -372,6 +372,14 @@ function renderCocktailsTab() {
                     `).join('')}
                   </div>
                 </div>
+                <label class="editor-row">
+                  <span>Stärke</span>
+                  <select data-field="strength">
+                    <option value="mild" ${selectedCocktail.strength === 'mild' ? 'selected' : ''}>mild</option>
+                    <option value="ausgewogen" ${selectedCocktail.strength === 'ausgewogen' || !selectedCocktail.strength ? 'selected' : ''}>ausgewogen</option>
+                    <option value="intensiv" ${selectedCocktail.strength === 'intensiv' ? 'selected' : ''}>intensiv</option>
+                  </select>
+                </label>
                 <label>
                   <input type="checkbox" data-field="alcoholic" ${selectedCocktail.alcoholic ? 'checked' : ''} /> Alkoholisch
                 </label>
@@ -399,6 +407,7 @@ function renderCocktailsTab() {
           ingredients: [],
           alcoholic: true,
           available: true,
+          strength: 'ausgewogen',
           comment: '',
         };
         const savedCocktail = await addCocktail(state.config?.barId || state.barKey, newCocktail);
@@ -761,6 +770,7 @@ function bindContentEvents() {
       const nameInput = card.querySelector('[data-field="name"]');
       const commentInput = card.querySelector('[data-field="comment"]');
       const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
+      const strengthInput = card.querySelector('[data-field="strength"]');
       const ingredientRows = Array.from(card.querySelectorAll('[data-ingredient-index]'));
 
       const ingredients = ingredientRows
@@ -783,6 +793,7 @@ function bindContentEvents() {
         ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         alcoholic: alcoholicInput?.checked || false,
+        strength: strengthInput?.value || 'ausgewogen',
         comment: commentInput?.value.trim() || '',
       };
 

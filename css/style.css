@@ -107,6 +107,11 @@ h3 {
   color: #5b21b6;
 }
 
+.filter-chip-strength {
+  background: #ffc3d5;
+  color: #8a0d52;
+}
+
 .filter-chip.active {
   color: #fff;
 }
@@ -121,6 +126,10 @@ h3 {
 
 .filter-chip-property.active {
   background: #7c3aed;
+}
+
+.filter-chip-strength.active {
+  background: #f31859;
 }
 
 .field {
