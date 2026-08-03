@@ -694,9 +694,20 @@ function bindContentEvents() {
     }
 
     if (button.dataset.action === 'remove') {
+      const cocktailId = button.dataset.id;
+      const targetCocktail = state.cocktails.find((cocktail) => cocktail.id === cocktailId);
+      if (!targetCocktail) {
+        return;
+      }
+
+      const confirmed = window.confirm(`Cocktail „${targetCocktail.name || 'Unbenannter Cocktail'}“ wirklich entfernen?`);
+      if (!confirmed) {
+        return;
+      }
+
       try {
-        await deleteCocktail(state.config?.barId || state.barKey, button.dataset.id);
-        state.cocktails = state.cocktails.filter((cocktail) => cocktail.id !== button.dataset.id);
+        await deleteCocktail(state.config?.barId || state.barKey, cocktailId);
+        state.cocktails = state.cocktails.filter((cocktail) => cocktail.id !== cocktailId);
         await pruneUnusedIngredients();
         renderContent();
       } catch (error) {
