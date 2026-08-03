@@ -81,8 +81,28 @@ function normalizeCocktailProperties(cocktail) {
   return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
 }
 
+function getIngredientNames(cocktail) {
+  if (!Array.isArray(cocktail?.ingredients)) {
+    return [];
+  }
+
+  return cocktail.ingredients
+    .map((ingredient) => {
+      if (typeof ingredient === 'string') {
+        return ingredient.trim();
+      }
+
+      if (ingredient && typeof ingredient === 'object') {
+        return String(ingredient.name || '').trim();
+      }
+
+      return '';
+    })
+    .filter(Boolean);
+}
+
 function isCocktailAvailable(cocktail) {
-  const ingredients = Array.isArray(cocktail?.ingredients) ? cocktail.ingredients : [];
+  const ingredients = getIngredientNames(cocktail);
 
   if (!ingredients.length) {
     return true;
@@ -224,8 +244,8 @@ function getCocktailDescription(cocktail) {
     return cocktail.description;
   }
 
-  const ingredients = Array.isArray(cocktail.ingredients) && cocktail.ingredients.length
-    ? cocktail.ingredients.join(', ')
+  const ingredients = getIngredientNames(cocktail).length
+    ? getIngredientNames(cocktail).join(', ')
     : 'frische Zutaten';
 
   return `${cocktail.name} ist ein ${cocktail.alcoholic ? 'alkoholischer' : 'alkoholfreier'} Cocktail mit ${ingredients}.`;
@@ -268,7 +288,7 @@ function renderCocktailDetail() {
     </div>
     ${getCocktailImageMarkup(selectedCocktail)}
     <p>${getCocktailDescription(selectedCocktail)}</p>
-    <p><strong>Zutaten:</strong> ${Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben'}</p>
+    <p><strong>Zutaten:</strong> ${getIngredientNames(selectedCocktail).length ? getIngredientNames(selectedCocktail).join(' · ') : 'Keine Angaben'}</p>
     <div class="customer-order-panel">
       <label class="field">
         <span>Name oder Tisch</span>

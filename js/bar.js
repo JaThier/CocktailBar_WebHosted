@@ -147,11 +147,11 @@ function setActiveTab(tab) {
 }
 
 function getAllIngredients() {
-  return Array.from(new Set(state.cocktails.flatMap((cocktail) => Array.isArray(cocktail.ingredients) ? cocktail.ingredients : []))).sort();
+  return Array.from(new Set(state.cocktails.flatMap((cocktail) => getIngredientNameList(cocktail)))).sort();
 }
 
 function isCocktailAvailable(cocktail) {
-  const ingredients = Array.isArray(cocktail?.ingredients) ? cocktail.ingredients : [];
+  const ingredients = getIngredientNameList(cocktail);
 
   if (!ingredients.length) {
     return true;
@@ -247,6 +247,63 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
+function parseIngredientDetail(detailValue) {
+  const trimmed = String(detailValue || '').trim();
+
+  if (!trimmed) {
+    return { amount: '', unit: '' };
+  }
+
+  const amountMatch = trimmed.match(/^([0-9.,/]+(?:\s+[0-9.,/]+)*)\s*(.*)$/);
+
+  if (!amountMatch) {
+    return { amount: '', unit: trimmed };
+  }
+
+  return {
+    amount: amountMatch[1].trim(),
+    unit: amountMatch[2].trim(),
+  };
+}
+
+function normalizeIngredients(cocktail) {
+  if (!cocktail || !Array.isArray(cocktail.ingredients)) {
+    return [];
+  }
+
+  return cocktail.ingredients
+    .map((ingredient) => {
+      if (typeof ingredient === 'string') {
+        return { name: ingredient, amount: '', unit: '' };
+      }
+
+      if (ingredient && typeof ingredient === 'object') {
+        return {
+          name: String(ingredient.name || '').trim(),
+          amount: String(ingredient.amount || '').trim(),
+          unit: String(ingredient.unit || '').trim(),
+        };
+      }
+
+      return { name: '', amount: '', unit: '' };
+    })
+    .filter((ingredient) => ingredient.name || ingredient.amount || ingredient.unit);
+}
+
+function getIngredientNameList(cocktail) {
+  return normalizeIngredients(cocktail)
+    .map((ingredient) => ingredient.name)
+    .filter(Boolean);
+}
+
+function getIngredientDisplayEntries(cocktail) {
+  return normalizeIngredients(cocktail).map((ingredient) => {
+    const detailParts = [ingredient.amount, ingredient.unit].filter(Boolean);
+    const detailText = detailParts.join(' ');
+    return [ingredient.name, detailText].filter(Boolean).join(' · ');
+  });
+}
+
 function renderCocktailsTab() {
   const ingredients = getAllIngredients();
 
@@ -287,10 +344,19 @@ function renderCocktailsTab() {
                   <span>Name</span>
                   <input type="text" data-field="name" value="${(selectedCocktail.name || '').replace(/"/g, '&quot;')}" />
                 </label>
-                <label class="editor-row">
-                  <span>Zutaten (mit Komma trennen)</span>
-                  <textarea data-field="ingredients" rows="3">${escapeHtml(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(', ') : '')}</textarea>
-                </label>
+                <div class="editor-row">
+                  <span>Zutaten</span>
+                  <div class="ingredient-list" data-ingredient-list>
+                    ${normalizeIngredients(selectedCocktail).length ? normalizeIngredients(selectedCocktail).map((ingredient, index) => `
+                      <div class="ingredient-row" data-ingredient-index="${index}">
+                        <input type="text" data-field="ingredient-name" value="${escapeHtml(ingredient.name)}" placeholder="Name" />
+                        <input type="text" data-field="ingredient-detail" value="${escapeHtml([ingredient.amount, ingredient.unit].filter(Boolean).join(' '))}" placeholder="Menge / Einheit" />
+                        <button class="danger-button" data-action="remove-ingredient" type="button">×</button>
+                      </div>
+                    `).join('') : '<p class="empty-state">Noch keine Zutaten angelegt.</p>'}
+                    <button class="secondary-button" data-action="add-ingredient" type="button">+</button>
+                  </div>
+                </div>
                 <label class="editor-row">
                   <span>Kommentar für die Bestellübersicht</span>
                   <textarea data-field="comment" rows="3">${escapeHtml(selectedCocktail.comment || '')}</textarea>
@@ -392,7 +458,17 @@ async function addIngredientToInventory(ingredientName) {
 async function syncIngredientsToInventory(ingredientNames) {
   const normalizedIngredients = Array.from(new Set(
     (ingredientNames || [])
-      .map((ingredient) => String(ingredient || '').trim())
+      .map((ingredient) => {
+        if (typeof ingredient === 'string') {
+          return ingredient.trim();
+        }
+
+        if (ingredient && typeof ingredient === 'object') {
+          return String(ingredient.name || '').trim();
+        }
+
+        return '';
+      })
       .filter(Boolean)
   ));
 
@@ -420,7 +496,7 @@ async function syncIngredientsToInventory(ingredientNames) {
 
 async function pruneUnusedIngredients() {
   const usedIngredients = Array.from(new Set(
-    state.cocktails.flatMap((cocktail) => Array.isArray(cocktail.ingredients) ? cocktail.ingredients : [])
+    state.cocktails.flatMap((cocktail) => getIngredientNameList(cocktail))
   )).filter(Boolean);
 
   const inventoryPatch = Object.keys(state.inventory || {}).reduce((result, ingredient) => {
@@ -553,7 +629,8 @@ function renderOrdersTab() {
                 <div class="order-detail-content">
                   <h4>${escapeHtml(selectedCocktail.name || 'Cocktail')}</h4>
                   <p>${escapeHtml(selectedCocktail.description || (selectedCocktail.alcoholic ? 'Ein klassischer alkoholischer Cocktail.' : 'Ein frischer alkoholfreier Cocktail.'))}</p>
-                  <p><strong>Rezept:</strong> ${escapeHtml(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben')}</p>
+                  <p><strong>Rezept:</strong></p>
+                  <div>${getIngredientDisplayEntries(selectedCocktail).length ? getIngredientDisplayEntries(selectedCocktail).map((entry) => `<div>${escapeHtml(entry)}</div>`).join('') : '<div>Keine Angaben</div>'}</div>
                   ${selectedCocktail.comment ? `<p><strong>Kommentar:</strong> ${escapeHtml(selectedCocktail.comment)}</p>` : ''}
                 </div>
               </div>
@@ -682,17 +759,28 @@ function bindContentEvents() {
       }
 
       const nameInput = card.querySelector('[data-field="name"]');
-      const ingredientsInput = card.querySelector('[data-field="ingredients"]');
       const commentInput = card.querySelector('[data-field="comment"]');
       const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
+      const ingredientRows = Array.from(card.querySelectorAll('[data-ingredient-index]'));
+
+      const ingredients = ingredientRows
+        .map((row) => {
+          const name = row.querySelector('[data-field="ingredient-name"]')?.value?.trim() || '';
+          const detailValue = row.querySelector('[data-field="ingredient-detail"]')?.value?.trim() || '';
+          const { amount, unit } = parseIngredientDetail(detailValue);
+
+          if (!name && !amount && !unit) {
+            return null;
+          }
+
+          return { name, amount, unit };
+        })
+        .filter(Boolean);
 
       const patch = {
         name: nameInput?.value.trim() || 'Neuer Cocktail',
         id: generateCocktailId(nameInput?.value || 'Neuer Cocktail'),
-        ingredients: (ingredientsInput?.value || '')
-          .split(',')
-          .map((item) => item.trim())
-          .filter(Boolean),
+        ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         alcoholic: alcoholicInput?.checked || false,
         comment: commentInput?.value.trim() || '',
@@ -705,6 +793,49 @@ function bindContentEvents() {
       } catch (error) {
         console.error('Cocktail konnte nicht gespeichert werden.', error);
         alert('Cocktail konnte nicht gespeichert werden.');
+      }
+      return;
+    }
+
+    if (button.dataset.action === 'add-ingredient') {
+      const card = button.closest('.editor-card');
+      if (!card) {
+        return;
+      }
+
+      const list = card.querySelector('[data-ingredient-list]');
+      if (!list) {
+        return;
+      }
+
+      const currentRows = list.querySelectorAll('[data-ingredient-index]');
+      const nextIndex = currentRows.length;
+      const rowMarkup = `
+        <div class="ingredient-row" data-ingredient-index="${nextIndex}">
+          <input type="text" data-field="ingredient-name" value="" placeholder="Name" />
+          <input type="text" data-field="ingredient-detail" value="" placeholder="Menge / Einheit" />
+          <button class="danger-button" data-action="remove-ingredient" type="button">×</button>
+        </div>
+      `;
+
+      const addButton = list.querySelector('[data-action="add-ingredient"]');
+      if (addButton) {
+        addButton.insertAdjacentHTML('beforebegin', rowMarkup);
+      } else {
+        list.insertAdjacentHTML('beforeend', rowMarkup);
+      }
+      card.classList.add('is-dirty');
+      return;
+    }
+
+    if (button.dataset.action === 'remove-ingredient') {
+      const row = button.closest('[data-ingredient-index]');
+      if (row) {
+        row.remove();
+        const card = button.closest('.editor-card');
+        if (card) {
+          card.classList.add('is-dirty');
+        }
       }
       return;
     }

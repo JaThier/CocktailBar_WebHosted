@@ -357,12 +357,34 @@ h3 {
   gap: 0.35rem;
 }
 
+.ingredient-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ingredient-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(90px, 0.7fr) auto;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.ingredient-row input[type="text"] {
+  min-width: 0;
+}
+
 .editor-row input[type="text"],
 .editor-row textarea {
   border: 1px solid #d1d5db;
   border-radius: 0.7rem;
   padding: 0.65rem 0.75rem;
   font: inherit;
+}
+
+@media (max-width: 700px) {
+  .ingredient-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .editor-actions,
