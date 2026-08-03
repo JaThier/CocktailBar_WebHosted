@@ -5,7 +5,10 @@ import {
   deleteCocktail,
   listenToCocktails,
   listenToInventory,
+  listenToOrders,
   updateInventory,
+  updateOrder,
+  deleteOrder,
 } from './firebase.js';
 import { generateCocktailId } from './cocktail-utils.js';
 
@@ -17,6 +20,7 @@ const state = {
   orders: [],
   activeTab: 'cocktails',
   selectedCocktailId: null,
+  selectedOrderId: null,
 };
 
 const cocktailPropertyOptions = [
@@ -429,25 +433,128 @@ async function pruneUnusedIngredients() {
   }
 }
 
+function getOrderStatusLabel(order) {
+  if (order?.status === 'done') {
+    return 'Fertig';
+  }
+
+  if (order?.status === 'in_progress') {
+    return 'In Bearbeitung';
+  }
+
+  return 'Offen';
+}
+
+function attachOrderImage(selectedOrder) {
+  const detailPanel = tabContentElement?.querySelector('.order-detail-panel');
+  if (!detailPanel) {
+    return;
+  }
+
+  const imageHost = detailPanel.querySelector('[data-order-image-host]');
+  if (!imageHost) {
+    return;
+  }
+
+  const firstItem = Array.isArray(selectedOrder?.items) ? selectedOrder.items[0] : null;
+  const cocktail = state.cocktails.find((item) => item.id === firstItem?.id) || null;
+
+  if (!cocktail) {
+    imageHost.innerHTML = '';
+    return;
+  }
+
+  const candidates = getCocktailImageCandidates(cocktail);
+  if (!candidates.length) {
+    imageHost.innerHTML = '';
+    return;
+  }
+
+  let index = 0;
+  const image = document.createElement('img');
+  image.className = 'editor-image';
+  image.alt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
+
+  const tryNextCandidate = () => {
+    if (index >= candidates.length) {
+      imageHost.innerHTML = '';
+      return;
+    }
+
+    image.src = candidates[index];
+    index += 1;
+  };
+
+  image.onerror = tryNextCandidate;
+  image.onload = () => {
+    imageHost.innerHTML = '';
+    imageHost.appendChild(image);
+  };
+
+  tryNextCandidate();
+}
+
 function renderOrdersTab() {
+  if (!state.orders.length) {
+    state.selectedOrderId = null;
+  } else if (!state.orders.some((order) => order.id === state.selectedOrderId)) {
+    state.selectedOrderId = state.orders[0].id;
+  }
+
+  const selectedOrder = state.orders.find((order) => order.id === state.selectedOrderId) || null;
+  const firstItem = Array.isArray(selectedOrder?.items) ? selectedOrder.items[0] : null;
+  const selectedCocktail = firstItem
+    ? state.cocktails.find((cocktail) => cocktail.id === firstItem.id) || null
+    : null;
+
   tabContentElement.innerHTML = `
     <div class="section-title">
       <h3>Bestellungen</h3>
       <span>${state.orders.length}</span>
     </div>
-    <div class="order-list">
-      ${state.orders.length ? state.orders.map((order) => `
-        <div class="order-card">
-          <strong>${order.guestName || 'Kunde'}</strong>
-          <div>${order.items.map((item) => item.name).join(', ')}</div>
-          <small>${new Date(order.createdAt).toLocaleString('de-DE')}</small>
-          <div class="order-actions">
-            <button class="danger-button" data-action="delete-order" data-id="${order.id}" type="button">Löschen</button>
+    <div class="order-layout">
+      <div class="cocktail-list" aria-label="Bestell-Liste">
+        ${state.orders.length ? state.orders.map((order) => `
+          <button class="cocktail-list-item ${selectedOrder?.id === order.id ? 'active' : ''}" type="button" data-role="select-order" data-id="${order.id}">
+            <span>${order.guestName || 'Kunde'}</span>
+            <span class="badge">${getOrderStatusLabel(order)}</span>
+          </button>
+        `).join('') : '<p class="empty-state">Noch keine Bestellungen.</p>'}
+      </div>
+      <div class="order-detail-panel">
+        ${selectedOrder ? `
+          <div class="order-card">
+            <div class="order-detail-header">
+              <div>
+                <strong>${selectedOrder.guestName || 'Kunde'}</strong>
+                <div>${(selectedOrder.items || []).map((item) => item.name).join(', ')}</div>
+                <small>${new Date(selectedOrder.createdAt).toLocaleString('de-DE')}</small>
+              </div>
+              <span class="badge">${getOrderStatusLabel(selectedOrder)}</span>
+            </div>
+            ${selectedCocktail ? `
+              <div class="order-detail-main">
+                <div class="editor-image-column">
+                  <div class="order-image-host" data-order-image-host></div>
+                </div>
+                <div class="order-detail-content">
+                  <h4>${selectedCocktail.name || 'Cocktail'}</h4>
+                  <p>${selectedCocktail.description || (selectedCocktail.alcoholic ? 'Ein klassischer alkoholischer Cocktail.' : 'Ein frischer alkoholfreier Cocktail.')}</p>
+                  <p><strong>Rezept:</strong> ${(Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben')}</p>
+                </div>
+              </div>
+            ` : '<p class="empty-state">Zu dieser Bestellung ist kein Cocktail mehr verfügbar.</p>'}
+            <div class="order-actions">
+              <button class="primary-button" data-action="finish-order" data-id="${selectedOrder.id}" type="button">In Bearbeitung</button>
+              <button class="danger-button" data-action="delete-order" data-id="${selectedOrder.id}" type="button">Entfernen</button>
+            </div>
           </div>
-        </div>
-      `).join('') : '<p class="empty-state">Noch keine Bestellungen.</p>'}
+        ` : '<p class="empty-state">Noch keine Bestellungen.</p>'}
+      </div>
     </div>
   `;
+
+  attachOrderImage(selectedOrder);
 }
 
 function renderContent() {
@@ -547,6 +654,12 @@ function bindContentEvents() {
       return;
     }
 
+    if (button.dataset.role === 'select-order') {
+      state.selectedOrderId = button.dataset.id;
+      renderContent();
+      return;
+    }
+
     if (button.dataset.action === 'save') {
       const card = button.closest('.editor-card');
       const cocktailId = card?.dataset.cocktailId;
@@ -593,10 +706,45 @@ function bindContentEvents() {
       return;
     }
 
+    if (button.dataset.action === 'finish-order') {
+      const orderId = button.dataset.id;
+      const targetOrder = state.orders.find((order) => order.id === orderId);
+      if (!targetOrder) {
+        return;
+      }
+
+      const confirmed = window.confirm(`Bestellung von ${targetOrder.guestName || 'Kunde'} in Bearbeitung setzen?`);
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        await updateOrder(state.config?.barId || state.barKey, orderId, { ...targetOrder, status: 'in_progress' });
+      } catch (error) {
+        console.error('Bestellung konnte nicht aktualisiert werden.', error);
+        alert('Bestellung konnte nicht aktualisiert werden.');
+      }
+      return;
+    }
+
     if (button.dataset.action === 'delete-order') {
-      state.orders = state.orders.filter((order) => order.id !== button.dataset.id);
-      saveState();
-      renderContent();
+      const orderId = button.dataset.id;
+      const targetOrder = state.orders.find((order) => order.id === orderId);
+      if (!targetOrder) {
+        return;
+      }
+
+      const confirmed = window.confirm(`Bestellung von ${targetOrder.guestName || 'Kunde'} wirklich entfernen?`);
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        await deleteOrder(state.config?.barId || state.barKey, orderId);
+      } catch (error) {
+        console.error('Bestellung konnte nicht entfernt werden.', error);
+        alert('Bestellung konnte nicht entfernt werden.');
+      }
     }
   });
 }
@@ -644,6 +792,11 @@ async function init() {
 
     listenToInventory(state.config.barId || state.barKey, (inventory) => {
       state.inventory = inventory && typeof inventory === 'object' ? inventory : {};
+      renderContent();
+    });
+
+    listenToOrders(state.config.barId || state.barKey, (orders) => {
+      state.orders = Array.isArray(orders) ? orders : [];
       renderContent();
     });
 
