@@ -10,7 +10,7 @@ import {
   updateOrder,
   deleteOrder,
 } from './firebase.js';
-import { generateCocktailId } from './cocktail-utils.js';
+import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
 
 const state = {
   barKey: 'default',
@@ -793,7 +793,7 @@ function bindContentEvents() {
         ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         alcoholic: alcoholicInput?.checked || false,
-        strength: strengthInput?.value || 'ausgewogen',
+        strength: normalizeStrength(strengthInput?.value),
         comment: commentInput?.value.trim() || '',
       };
 

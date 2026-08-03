@@ -1,5 +1,5 @@
 import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
-import { generateCocktailId } from './cocktail-utils.js';
+import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
 
 const state = {
   config: null,
@@ -246,13 +246,17 @@ function getFilteredCocktails() {
     filteredCocktails = filteredCocktails.filter((cocktail) => !cocktail.alcoholic);
   }
 
-  const propertyFilters = state.activeFilterKeys.filter((filterKey) => filterKey !== 'alcoholic' && filterKey !== 'non-alcoholic');
+  const propertyFilters = state.activeFilterKeys.filter((filterKey) => {
+    return filterKey !== 'alcoholic'
+      && filterKey !== 'non-alcoholic'
+      && !filterKey.startsWith('strength:');
+  });
 
   const strengthFilter = state.activeFilterKeys.find((filterKey) => filterKey.startsWith('strength:'));
 
   if (strengthFilter) {
     const selectedStrength = strengthFilter.replace('strength:', '');
-    filteredCocktails = filteredCocktails.filter((cocktail) => (cocktail.strength || 'ausgewogen') === selectedStrength);
+    filteredCocktails = filteredCocktails.filter((cocktail) => normalizeStrength(cocktail.strength) === selectedStrength);
   }
 
   if (propertyFilters.length) {
