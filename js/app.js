@@ -1,15 +1,33 @@
-import { createFirebaseClient, listenToCocktails } from './firebase.js';
+import { createFirebaseClient, listenToCocktails, listenToInventory } from './firebase.js';
 import { generateCocktailId } from './cocktail-utils.js';
 
 const state = {
   config: null,
   cocktails: [],
+  inventory: {},
   filteredCocktails: [],
-  filter: 'all',
+  activeFilterKeys: [],
   cart: [],
   barKey: 'default',
   selectedCocktailId: null,
 };
+
+const cocktailPropertyOptions = [
+  'Erfrischend',
+  'Exotisch',
+  'Aromatisch',
+  'Fruchtig',
+  'Würzig',
+  'Spritzig',
+  'Cremig',
+  'Raffiniert',
+  'Klassiker',
+  'Classy',
+  'Bitter',
+  'Süß',
+  'Sauer',
+  'Bartenders Favourite',
+];
 
 const guestNameInput = document.querySelector('#guest-name');
 const barNameElement = document.querySelector('#bar-name');
@@ -55,46 +73,140 @@ async function loadConfig(barKey) {
   throw new Error('Es konnte keine Konfiguration gefunden werden.');
 }
 
+function normalizeCocktailProperties(cocktail) {
+  if (!cocktail || !Array.isArray(cocktail.properties)) {
+    return [];
+  }
+
+  return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
+}
+
+function isCocktailAvailable(cocktail) {
+  const ingredients = Array.isArray(cocktail?.ingredients) ? cocktail.ingredients : [];
+
+  if (!ingredients.length) {
+    return true;
+  }
+
+  return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
+}
+
+function getAvailablePropertyFilters() {
+  const propertyValues = new Set(cocktailPropertyOptions);
+
+  state.cocktails.forEach((cocktail) => {
+    normalizeCocktailProperties(cocktail).forEach((property) => propertyValues.add(property));
+  });
+
+  return Array.from(propertyValues).sort((left, right) => left.localeCompare(right));
+}
+
+function isFilterActive(filterKey) {
+  return state.activeFilterKeys.includes(filterKey);
+}
+
+function toggleFilter(filterKey) {
+  if (filterKey === 'all') {
+    state.activeFilterKeys = [];
+    renderFilters();
+    renderCocktails();
+    return;
+  }
+
+  if (filterKey === 'alcoholic' || filterKey === 'non-alcoholic') {
+    const alcoholFilterIndex = state.activeFilterKeys.findIndex((key) => key === 'alcoholic' || key === 'non-alcoholic');
+    const isSameFilterActive = alcoholFilterIndex >= 0 && state.activeFilterKeys[alcoholFilterIndex] === filterKey;
+
+    if (alcoholFilterIndex >= 0) {
+      state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== 'alcoholic' && key !== 'non-alcoholic');
+    }
+
+    if (!isSameFilterActive) {
+      state.activeFilterKeys.push(filterKey);
+    }
+
+    renderFilters();
+    renderCocktails();
+    return;
+  }
+
+  if (isFilterActive(filterKey)) {
+    state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== filterKey);
+  } else {
+    state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== 'all');
+    state.activeFilterKeys.push(filterKey);
+  }
+
+  renderFilters();
+  renderCocktails();
+}
+
 function renderFilters() {
   if (!filterGroup) {
     return;
   }
 
+  const propertyFilters = getAvailablePropertyFilters();
   const filters = [
     { key: 'all', label: 'Alle' },
     { key: 'alcoholic', label: 'Alkoholisch' },
     { key: 'non-alcoholic', label: 'Alkoholfrei' },
+    ...propertyFilters.map((property) => ({ key: property, label: property })),
   ];
 
   filterGroup.innerHTML = filters
-    .map(
-      (filter) => `
-        <button class="filter-chip ${state.filter === filter.key ? 'active' : ''}" data-filter="${filter.key}" type="button">
+    .map((filter) => {
+      const isActive = filter.key === 'all'
+        ? state.activeFilterKeys.length === 0
+        : isFilterActive(filter.key);
+
+      let filterClass = 'filter-chip';
+
+      if (filter.key === 'all') {
+        filterClass += ' filter-chip-all';
+      } else if (filter.key === 'alcoholic' || filter.key === 'non-alcoholic') {
+        filterClass += ' filter-chip-alcohol';
+      } else {
+        filterClass += ' filter-chip-property';
+      }
+
+      if (isActive) {
+        filterClass += ' active';
+      }
+
+      return `
+        <button class="${filterClass}" data-filter="${filter.key}" type="button">
           ${filter.label}
         </button>
-      `
-    )
+      `;
+    })
     .join('');
 
   filterGroup.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', () => {
-      state.filter = button.dataset.filter;
-      renderFilters();
-      renderCocktails();
+      toggleFilter(button.dataset.filter);
     });
   });
 }
 
 function getFilteredCocktails() {
-  if (state.filter === 'alcoholic') {
-    return state.cocktails.filter((cocktail) => cocktail.alcoholic);
+  let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail));
+
+  const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
+
+  if (alcoholFilter === 'alcoholic') {
+    filteredCocktails = filteredCocktails.filter((cocktail) => cocktail.alcoholic);
+  } else if (alcoholFilter === 'non-alcoholic') {
+    filteredCocktails = filteredCocktails.filter((cocktail) => !cocktail.alcoholic);
   }
 
-  if (state.filter === 'non-alcoholic') {
-    return state.cocktails.filter((cocktail) => !cocktail.alcoholic);
+  const propertyFilters = state.activeFilterKeys.filter((filterKey) => filterKey !== 'alcoholic' && filterKey !== 'non-alcoholic');
+
+  if (propertyFilters.length) {
+    filteredCocktails = filteredCocktails.filter((cocktail) => propertyFilters.every((property) => normalizeCocktailProperties(cocktail).includes(property)));
   }
 
-  return state.cocktails;
+  return filteredCocktails;
 }
 
 function getCocktailImageMarkup(cocktail) {
@@ -281,6 +393,13 @@ async function init() {
 
     listenToCocktails(config.barId || barKey, (cocktails) => {
       state.cocktails = Array.isArray(cocktails) ? cocktails : [];
+      renderFilters();
+      renderCocktails();
+      renderCart();
+    });
+
+    listenToInventory(config.barId || barKey, (inventory) => {
+      state.inventory = inventory && typeof inventory === 'object' ? inventory : {};
       renderFilters();
       renderCocktails();
       renderCart();

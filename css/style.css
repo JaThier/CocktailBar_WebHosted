@@ -92,9 +92,35 @@ h3 {
   margin: 0;
 }
 
+.filter-chip-all {
+  background: #e0f2fe;
+  color: #0f3d5f;
+}
+
+.filter-chip-alcohol {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.filter-chip-property {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
 .filter-chip.active {
-  background: #0f766e;
   color: #fff;
+}
+
+.filter-chip-all.active {
+  background: #0f766e;
+}
+
+.filter-chip-alcohol.active {
+  background: #f59e0b;
+}
+
+.filter-chip-property.active {
+  background: #7c3aed;
 }
 
 .field {
@@ -121,6 +147,14 @@ h3 {
 .cocktail-layout {
   display: grid;
   gap: 1rem;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .cocktail-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .cocktail-list {
@@ -205,6 +239,7 @@ h3 {
 .tab-list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
@@ -246,9 +281,69 @@ h3 {
   background: #fffdf9;
 }
 
+.editor-card {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.editor-main-layout {
+  display: grid;
+  grid-template-columns: minmax(120px, 150px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.editor-image-column {
+  display: flex;
+  justify-content: center;
+}
+
+.editor-card img,
+.editor-image {
+  width: 100%;
+  max-width: 140px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 0.9rem;
+  display: block;
+  margin: 0;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.editor-image-host {
+  min-height: 1px;
+}
+
 .editor-grid {
   display: grid;
   gap: 0.6rem;
+}
+
+.property-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.property-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #f9fafb;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 800px) {
+  .editor-main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-image-column {
+    justify-content: flex-start;
+  }
 }
 
 .editor-row {

@@ -127,3 +127,35 @@ export function listenToCocktails(barId, callback) {
     callback([]);
   });
 }
+
+function getInventoryPath(barId) {
+  const safeBarId = String(barId || 'default').trim() || 'default';
+  return `bars/${encodeURIComponent(safeBarId)}/inventory`;
+}
+
+export async function updateInventory(barId, inventoryData) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+
+  const inventoryRef = ref(client.database, getInventoryPath(barId));
+  await update(inventoryRef, inventoryData);
+  return inventoryData;
+}
+
+export function listenToInventory(barId, callback) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    callback({});
+    return () => {};
+  }
+
+  const inventoryRef = ref(client.database, getInventoryPath(barId));
+  return onValue(inventoryRef, (snapshot) => {
+    callback(snapshot.exists() ? snapshot.val() || {} : {});
+  }, (error) => {
+    console.error('Inventardaten konnten nicht geladen werden.', error);
+    callback({});
+  });
+}
