@@ -1,4 +1,4 @@
-import { createFirebaseClient, listenToCocktails, listenToInventory } from './firebase.js';
+import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
 import { generateCocktailId } from './cocktail-utils.js';
 
 const state = {
@@ -29,7 +29,8 @@ const cocktailPropertyOptions = [
   'Bartenders Favourite',
 ];
 
-const guestNameInput = document.querySelector('#guest-name');
+let guestNameInput = null;
+let orderButton = null;
 const barNameElement = document.querySelector('#bar-name');
 const barEyebrowElement = document.querySelector('#bar-eyebrow');
 const barStatusElement = document.querySelector('#bar-status');
@@ -38,7 +39,6 @@ const cocktailDetailElement = document.querySelector('#cocktail-detail');
 const cocktailCountElement = document.querySelector('#cocktail-count');
 const cartItemsElement = document.querySelector('#cart-items');
 const cartCountElement = document.querySelector('#cart-count');
-const orderButton = document.querySelector('#order-button');
 const filterGroup = document.querySelector('#filter-group');
 const barLink = document.querySelector('#bar-link');
 
@@ -231,6 +231,24 @@ function getCocktailDescription(cocktail) {
   return `${cocktail.name} ist ein ${cocktail.alcoholic ? 'alkoholischer' : 'alkoholfreier'} Cocktail mit ${ingredients}.`;
 }
 
+function bindCustomerOrderControls() {
+  guestNameInput = document.querySelector('#guest-name');
+  orderButton = document.querySelector('#order-button');
+
+  if (guestNameInput) {
+    guestNameInput.value = localStorage.getItem('guestName') || '';
+    guestNameInput.addEventListener('input', (event) => {
+      localStorage.setItem('guestName', event.target.value);
+    });
+  }
+
+  if (orderButton) {
+    orderButton.replaceWith(orderButton.cloneNode(true));
+    orderButton = document.querySelector('#order-button');
+    orderButton.addEventListener('click', handleOrder);
+  }
+}
+
 function renderCocktailDetail() {
   if (!cocktailDetailElement) {
     return;
@@ -251,7 +269,16 @@ function renderCocktailDetail() {
     ${getCocktailImageMarkup(selectedCocktail)}
     <p>${getCocktailDescription(selectedCocktail)}</p>
     <p><strong>Zutaten:</strong> ${Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben'}</p>
+    <div class="customer-order-panel">
+      <label class="field">
+        <span>Name oder Tisch</span>
+        <input id="guest-name" type="text" placeholder="Name oder Tischnummer" value="${(localStorage.getItem('guestName') || '').replace(/"/g, '&quot;')}" />
+      </label>
+      <button id="order-button" class="primary-button" type="button">Bestellen</button>
+    </div>
   `;
+
+  bindCustomerOrderControls();
 }
 
 function renderCocktails() {
@@ -324,14 +351,16 @@ function addToCart(cocktailId) {
   renderCart();
 }
 
-function handleOrder() {
+async function handleOrder() {
   if (!guestNameInput || !orderButton) {
     return;
   }
 
+  const selectedCocktail = state.filteredCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || state.filteredCocktails[0] || null;
   const guestName = guestNameInput.value.trim();
-  if (!state.cart.length) {
-    alert('Wähle zuerst mindestens einen Cocktail aus.');
+
+  if (!selectedCocktail) {
+    alert('Wähle zuerst einen Cocktail aus.');
     return;
   }
 
@@ -340,28 +369,24 @@ function handleOrder() {
     return;
   }
 
-  const firebaseClient = createFirebaseClient(state.config);
-  const message = `Bestellung von ${guestName}: ${state.cart.map((item) => item.name).join(', ')}`;
-
-  if (firebaseClient.isConfigured) {
-    console.info('Firebase-Konfiguration vorhanden:', firebaseClient.config);
+  const confirmed = window.confirm(`"${selectedCocktail.name}" wirklich bestellen?`);
+  if (!confirmed) {
+    return;
   }
 
-  const order = {
-    id: `order-${Date.now()}`,
-    guestName,
-    items: state.cart.map((item) => ({ id: item.id, name: item.name })),
-    createdAt: new Date().toISOString(),
-  };
+  try {
+    await addOrder(state.config?.barId || state.barKey, {
+      guestName,
+      items: [{ id: selectedCocktail.id, name: selectedCocktail.name }],
+      createdAt: new Date().toISOString(),
+      status: 'pending',
+    });
 
-  const storageKey = `cocktailbar-orders-${state.barKey}`;
-  const existingOrders = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  existingOrders.push(order);
-  localStorage.setItem(storageKey, JSON.stringify(existingOrders));
-
-  alert(`Bestellung gesendet:\n${message}`);
-  state.cart = [];
-  renderCart();
+    alert(`Bestellung gesendet:\n${selectedCocktail.name} für ${guestName}`);
+  } catch (error) {
+    console.error('Bestellung konnte nicht gespeichert werden.', error);
+    alert('Bestellung konnte nicht gespeichert werden.');
+  }
 }
 
 async function init() {
@@ -408,17 +433,6 @@ async function init() {
     renderFilters();
     renderCocktails();
     renderCart();
-
-    if (guestNameInput) {
-      guestNameInput.value = localStorage.getItem('guestName') || '';
-      guestNameInput.addEventListener('input', (event) => {
-        localStorage.setItem('guestName', event.target.value);
-      });
-    }
-
-    if (orderButton) {
-      orderButton.addEventListener('click', handleOrder);
-    }
   } catch (error) {
     barStatusElement.textContent = error.message;
     if (cocktailListElement) {

@@ -133,6 +133,11 @@ function getInventoryPath(barId) {
   return `bars/${encodeURIComponent(safeBarId)}/inventory`;
 }
 
+function getOrdersPath(barId) {
+  const safeBarId = String(barId || 'default').trim() || 'default';
+  return `bars/${encodeURIComponent(safeBarId)}/orders`;
+}
+
 export async function updateInventory(barId, inventoryData) {
   const client = getActiveClient();
   if (!client.isConfigured || !client.database) {
@@ -157,5 +162,80 @@ export function listenToInventory(barId, callback) {
   }, (error) => {
     console.error('Inventardaten konnten nicht geladen werden.', error);
     callback({});
+  });
+}
+
+export async function addOrder(barId, orderData) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+
+  const ordersRef = ref(client.database, getOrdersPath(barId));
+  const newOrderRef = push(ordersRef);
+  const nextOrder = {
+    ...orderData,
+    id: newOrderRef.key,
+    createdAt: orderData?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: orderData?.status || 'pending',
+  };
+
+  await set(newOrderRef, nextOrder);
+  return nextOrder;
+}
+
+export async function updateOrder(barId, orderId, orderData) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+
+  const orderRef = ref(client.database, `${getOrdersPath(barId)}/${encodeURIComponent(orderId)}`);
+  const nextOrder = {
+    ...orderData,
+    id: orderData?.id || orderId,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await update(orderRef, nextOrder);
+  return nextOrder;
+}
+
+export async function deleteOrder(barId, orderId) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+
+  const orderRef = ref(client.database, `${getOrdersPath(barId)}/${encodeURIComponent(orderId)}`);
+  await remove(orderRef);
+}
+
+export function listenToOrders(barId, callback) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    callback([]);
+    return () => {};
+  }
+
+  const ordersRef = ref(client.database, getOrdersPath(barId));
+  return onValue(ordersRef, (snapshot) => {
+    const orders = [];
+
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+        const order = child.val() || {};
+        orders.push({
+          ...order,
+          id: child.key,
+        });
+      });
+    }
+
+    callback(orders);
+  }, (error) => {
+    console.error('Bestellungen konnten nicht geladen werden.', error);
+    callback([]);
   });
 }
