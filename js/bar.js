@@ -312,7 +312,6 @@ function renderCocktailsTab() {
         ` : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
       </div>
     </div>
-    <p class="empty-state">Verfügbare Zutaten aus der Liste: ${ingredients.length ? ingredients.join(', ') : 'noch keine'}</p>
   `;
 
   attachCocktailImages();
