@@ -11,3 +11,9 @@ export function generateCocktailId(name) {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '') || 'cocktail';
 }
+
+export function normalizeStrength(value) {
+  return String(value || 'ausgewogen')
+    .toLowerCase()
+    .trim();
+}

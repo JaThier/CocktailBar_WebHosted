@@ -1,5 +1,5 @@
 import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
-import { generateCocktailId } from './cocktail-utils.js';
+import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
 
 const state = {
   config: null,
@@ -81,8 +81,28 @@ function normalizeCocktailProperties(cocktail) {
   return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
 }
 
+function getIngredientNames(cocktail) {
+  if (!Array.isArray(cocktail?.ingredients)) {
+    return [];
+  }
+
+  return cocktail.ingredients
+    .map((ingredient) => {
+      if (typeof ingredient === 'string') {
+        return ingredient.trim();
+      }
+
+      if (ingredient && typeof ingredient === 'object') {
+        return String(ingredient.name || '').trim();
+      }
+
+      return '';
+    })
+    .filter(Boolean);
+}
+
 function isCocktailAvailable(cocktail) {
-  const ingredients = Array.isArray(cocktail?.ingredients) ? cocktail.ingredients : [];
+  const ingredients = getIngredientNames(cocktail);
 
   if (!ingredients.length) {
     return true;
@@ -108,6 +128,23 @@ function isFilterActive(filterKey) {
 function toggleFilter(filterKey) {
   if (filterKey === 'all') {
     state.activeFilterKeys = [];
+    renderFilters();
+    renderCocktails();
+    return;
+  }
+
+  if (filterKey.startsWith('strength:')) {
+    const strengthFilterIndex = state.activeFilterKeys.findIndex((key) => key.startsWith('strength:'));
+    const isSameFilterActive = strengthFilterIndex >= 0 && state.activeFilterKeys[strengthFilterIndex] === filterKey;
+
+    if (strengthFilterIndex >= 0) {
+      state.activeFilterKeys = state.activeFilterKeys.filter((key) => !key.startsWith('strength:'));
+    }
+
+    if (!isSameFilterActive) {
+      state.activeFilterKeys.push(filterKey);
+    }
+
     renderFilters();
     renderCocktails();
     return;
@@ -147,10 +184,17 @@ function renderFilters() {
   }
 
   const propertyFilters = getAvailablePropertyFilters();
+  const strengthFilters = [
+    { key: 'strength:mild', label: 'mild' },
+    { key: 'strength:ausgewogen', label: 'ausgewogen' },
+    { key: 'strength:intensiv', label: 'intensiv' },
+  ];
+
   const filters = [
     { key: 'all', label: 'Alle' },
     { key: 'alcoholic', label: 'Alkoholisch' },
     { key: 'non-alcoholic', label: 'Alkoholfrei' },
+    ...strengthFilters,
     ...propertyFilters.map((property) => ({ key: property, label: property })),
   ];
 
@@ -166,6 +210,8 @@ function renderFilters() {
         filterClass += ' filter-chip-all';
       } else if (filter.key === 'alcoholic' || filter.key === 'non-alcoholic') {
         filterClass += ' filter-chip-alcohol';
+      } else if (filter.key.startsWith('strength:')) {
+        filterClass += ' filter-chip-strength';
       } else {
         filterClass += ' filter-chip-property';
       }
@@ -200,7 +246,18 @@ function getFilteredCocktails() {
     filteredCocktails = filteredCocktails.filter((cocktail) => !cocktail.alcoholic);
   }
 
-  const propertyFilters = state.activeFilterKeys.filter((filterKey) => filterKey !== 'alcoholic' && filterKey !== 'non-alcoholic');
+  const propertyFilters = state.activeFilterKeys.filter((filterKey) => {
+    return filterKey !== 'alcoholic'
+      && filterKey !== 'non-alcoholic'
+      && !filterKey.startsWith('strength:');
+  });
+
+  const strengthFilter = state.activeFilterKeys.find((filterKey) => filterKey.startsWith('strength:'));
+
+  if (strengthFilter) {
+    const selectedStrength = strengthFilter.replace('strength:', '');
+    filteredCocktails = filteredCocktails.filter((cocktail) => normalizeStrength(cocktail.strength) === selectedStrength);
+  }
 
   if (propertyFilters.length) {
     filteredCocktails = filteredCocktails.filter((cocktail) => propertyFilters.every((property) => normalizeCocktailProperties(cocktail).includes(property)));
@@ -224,8 +281,8 @@ function getCocktailDescription(cocktail) {
     return cocktail.description;
   }
 
-  const ingredients = Array.isArray(cocktail.ingredients) && cocktail.ingredients.length
-    ? cocktail.ingredients.join(', ')
+  const ingredients = getIngredientNames(cocktail).length
+    ? getIngredientNames(cocktail).join(', ')
     : 'frische Zutaten';
 
   return `${cocktail.name} ist ein ${cocktail.alcoholic ? 'alkoholischer' : 'alkoholfreier'} Cocktail mit ${ingredients}.`;
@@ -268,7 +325,7 @@ function renderCocktailDetail() {
     </div>
     ${getCocktailImageMarkup(selectedCocktail)}
     <p>${getCocktailDescription(selectedCocktail)}</p>
-    <p><strong>Zutaten:</strong> ${Array.isArray(selectedCocktail.ingredients) ? selectedCocktail.ingredients.join(' · ') : 'Keine Angaben'}</p>
+    <p><strong>Zutaten:</strong> ${getIngredientNames(selectedCocktail).length ? getIngredientNames(selectedCocktail).join(' · ') : 'Keine Angaben'}</p>
     <div class="customer-order-panel">
       <label class="field">
         <span>Name oder Tisch</span>
