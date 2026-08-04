@@ -11,6 +11,7 @@ import {
   deleteOrder,
 } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates } from './shared.js';
 
 const state = {
   barKey: 'default',
@@ -49,41 +50,6 @@ const passwordInput = document.querySelector('#bar-password');
 const dashboardElement = document.querySelector('#bar-dashboard');
 const tabContentElement = document.querySelector('#tab-content');
 const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
-
-function parseBarKey() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('bar') || 'default';
-}
-
-function getConfigCandidates(barKey) {
-  const pageBaseUrl = new URL('./', window.location.href);
-
-  return [
-    `./config/${barKey}.json`,
-    `/config/${barKey}.json`,
-    new URL(`./config/${barKey}.json`, pageBaseUrl).toString(),
-    `./config/default.json`,
-    `/config/default.json`,
-    new URL('./config/default.json', pageBaseUrl).toString(),
-  ];
-}
-
-async function loadConfig(barKey) {
-  const candidates = getConfigCandidates(barKey);
-
-  for (const candidate of candidates) {
-    try {
-      const response = await fetch(candidate, { cache: 'no-store' });
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (error) {
-      console.warn(`Konfiguration konnte nicht geladen werden: ${candidate}`, error);
-    }
-  }
-
-  throw new Error('Keine Konfiguration gefunden.');
-}
 
 function getStorageKey(key) {
   return `cocktailbar-${key}-${state.barKey}`;
@@ -150,40 +116,6 @@ function getAllIngredients() {
   return Array.from(new Set(state.cocktails.flatMap((cocktail) => getIngredientNameList(cocktail)))).sort();
 }
 
-function isCocktailAvailable(cocktail) {
-  const ingredients = getIngredientNameList(cocktail);
-
-  if (!ingredients.length) {
-    return true;
-  }
-
-  return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
-}
-
-function getCocktailImageCandidates(cocktail) {
-  const barFolder = state.config?.barId || state.barKey;
-  const baseNames = [];
-  const nameBase = generateCocktailId(cocktail?.name || cocktail?.id || 'cocktail');
-  const idBase = generateCocktailId(cocktail?.id || 'cocktail');
-
-  [nameBase, idBase, cocktail?.id || 'cocktail'].forEach((value) => {
-    const normalized = String(value || '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-
-    if (normalized && !baseNames.includes(normalized)) {
-      baseNames.push(normalized);
-    }
-  });
-
-  return baseNames.flatMap((baseName) => [
-    `./config/images/${barFolder}/${baseName}.jpg`,
-    `./config/images/${barFolder}/${baseName}.png`,
-  ]);
-}
-
 function attachCocktailImages() {
   const cards = tabContentElement?.querySelectorAll('.editor-card') || [];
 
@@ -200,7 +132,7 @@ function attachCocktailImages() {
       return;
     }
 
-    const candidates = getCocktailImageCandidates(cocktail);
+    const candidates = getCocktailImageCandidates(cocktail, state.config?.barId || state.barKey);
     if (!candidates.length) {
       imageHost.innerHTML = '';
       return;
@@ -229,22 +161,6 @@ function attachCocktailImages() {
 
     tryNextCandidate();
   });
-}
-
-function normalizeCocktailProperties(cocktail) {
-  if (!cocktail || !Array.isArray(cocktail.properties)) {
-    return [];
-  }
-
-  return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
-}
-
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
 
 function parseIngredientDetail(detailValue) {
@@ -323,7 +239,7 @@ function renderCocktailsTab() {
     <div class="cocktail-layout">
       <div class="cocktail-list" aria-label="Cocktail-Liste">
         ${state.cocktails.length ? state.cocktails.map((cocktail) => {
-          const isAvailable = isCocktailAvailable(cocktail);
+          const isAvailable = isCocktailAvailable(cocktail, state.inventory);
           return `
             <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${isAvailable ? '' : 'disabled'}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
               <span>${cocktail.name || 'Unbenannter Cocktail'}</span>
@@ -566,7 +482,7 @@ function attachOrderImage(selectedOrder) {
     return;
   }
 
-  const candidates = getCocktailImageCandidates(cocktail);
+  const candidates = getCocktailImageCandidates(cocktail, state.config?.barId || state.barKey);
   if (!candidates.length) {
     imageHost.innerHTML = '';
     return;

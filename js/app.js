@@ -1,5 +1,6 @@
 import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable } from './shared.js';
 
 const state = {
   config: null,
@@ -46,73 +47,8 @@ const cocktailSectionTitleElement = document.querySelector('#cocktail-section-ti
 const guestViewTabButtons = Array.from(document.querySelectorAll('[data-guest-view-tab]'));
 const barLink = document.querySelector('#bar-link');
 
-function parseBarKey() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('bar') || 'default';
-}
-
 function getStorageKey(key, barKey = state.barKey) {
   return `cocktailbar-${key}-${barKey}`;
-}
-
-async function loadConfig(barKey) {
-  const candidates = [
-    `./config/${barKey}.json`,
-    `/config/${barKey}.json`,
-    `./config/default.json`,
-    `/config/default.json`,
-  ];
-
-  for (const candidate of candidates) {
-    try {
-      const response = await fetch(candidate, { cache: 'no-store' });
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (error) {
-      console.warn(`Konfiguration konnte nicht geladen werden: ${candidate}`, error);
-    }
-  }
-
-  throw new Error('Es konnte keine Konfiguration gefunden werden.');
-}
-
-function normalizeCocktailProperties(cocktail) {
-  if (!cocktail || !Array.isArray(cocktail.properties)) {
-    return [];
-  }
-
-  return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
-}
-
-function getIngredientNames(cocktail) {
-  if (!Array.isArray(cocktail?.ingredients)) {
-    return [];
-  }
-
-  return cocktail.ingredients
-    .map((ingredient) => {
-      if (typeof ingredient === 'string') {
-        return ingredient.trim();
-      }
-
-      if (ingredient && typeof ingredient === 'object') {
-        return String(ingredient.name || '').trim();
-      }
-
-      return '';
-    })
-    .filter(Boolean);
-}
-
-function isCocktailAvailable(cocktail) {
-  const ingredients = getIngredientNames(cocktail);
-
-  if (!ingredients.length) {
-    return true;
-  }
-
-  return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
 }
 
 function isDailyCocktail(cocktail) {
@@ -275,7 +211,7 @@ function renderFilters() {
 }
 
 function getFilteredCocktails() {
-  let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail));
+  let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail, state.inventory));
 
   if (state.guestView === 'daily') {
     return filteredCocktails.filter((cocktail) => isDailyCocktail(cocktail));
