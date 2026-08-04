@@ -30,6 +30,41 @@ body {
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
+.filter-panel {
+  padding: 0;
+  overflow: clip;
+}
+
+.filter-panel-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.filter-panel-summary::-webkit-details-marker {
+  display: none;
+}
+
+.filter-panel-summary::after {
+  content: '▾';
+  font-size: 1rem;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.filter-panel[open] .filter-panel-summary::after {
+  transform: rotate(180deg);
+}
+
+.filter-panel-body {
+  padding: 0 1rem 1rem;
+}
+
 .topbar {
   display: flex;
   justify-content: space-between;
