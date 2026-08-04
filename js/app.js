@@ -8,6 +8,7 @@ const state = {
   inventory: {},
   filteredCocktails: [],
   activeFilterKeys: [],
+  searchQuery: '',
   guestView: 'full',
   cart: [],
   barKey: 'default',
@@ -41,6 +42,7 @@ const cocktailDetailElement = document.querySelector('#cocktail-detail');
 const cocktailCountElement = document.querySelector('#cocktail-count');
 const cartItemsElement = document.querySelector('#cart-items');
 const cartCountElement = document.querySelector('#cart-count');
+const filterSearchInput = document.querySelector('#filter-search');
 const filterGroup = document.querySelector('#filter-group');
 const guestFilterPanel = document.querySelector('#guest-filter-panel');
 const cocktailSectionTitleElement = document.querySelector('#cocktail-section-title');
@@ -79,6 +81,32 @@ function setGuestView(view) {
 
   renderFilters();
   renderCocktails();
+}
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function matchesSearchQuery(cocktail, query) {
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) {
+    return true;
+  }
+
+  const haystack = normalizeSearchText([
+    cocktail?.name || '',
+    getIngredientNames(cocktail).join(' '),
+  ].join(' '));
+
+  if (haystack.includes(normalizedQuery)) {
+    return true;
+  }
+
+  const tokens = normalizedQuery.split(' ').filter(Boolean);
+  return tokens.length > 1 && tokens.every((token) => haystack.includes(token));
 }
 
 function getAvailablePropertyFilters() {
@@ -240,6 +268,10 @@ function getFilteredCocktails() {
 
   if (propertyFilters.length) {
     filteredCocktails = filteredCocktails.filter((cocktail) => propertyFilters.every((property) => normalizeCocktailProperties(cocktail).includes(property)));
+  }
+
+  if (state.searchQuery) {
+    filteredCocktails = filteredCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
   }
 
   return filteredCocktails;
@@ -453,6 +485,14 @@ async function init() {
 
     if (cocktailSectionTitleElement) {
       cocktailSectionTitleElement.textContent = 'Cocktails';
+    }
+
+    if (filterSearchInput) {
+      filterSearchInput.value = state.searchQuery;
+      filterSearchInput.addEventListener('input', (event) => {
+        state.searchQuery = event.target.value;
+        renderCocktails();
+      });
     }
 
     if (orderButton) {
