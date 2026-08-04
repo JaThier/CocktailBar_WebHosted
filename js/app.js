@@ -1,5 +1,6 @@
 import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable } from './shared.js';
 
 const state = {
   config: null,
@@ -7,6 +8,8 @@ const state = {
   inventory: {},
   filteredCocktails: [],
   activeFilterKeys: [],
+  searchQuery: '',
+  guestView: 'full',
   cart: [],
   barKey: 'default',
   selectedCocktailId: null,
@@ -39,76 +42,71 @@ const cocktailDetailElement = document.querySelector('#cocktail-detail');
 const cocktailCountElement = document.querySelector('#cocktail-count');
 const cartItemsElement = document.querySelector('#cart-items');
 const cartCountElement = document.querySelector('#cart-count');
+const filterSearchInput = document.querySelector('#filter-search');
 const filterGroup = document.querySelector('#filter-group');
+const guestFilterPanel = document.querySelector('#guest-filter-panel');
+const cocktailSectionTitleElement = document.querySelector('#cocktail-section-title');
+const guestViewTabButtons = Array.from(document.querySelectorAll('[data-guest-view-tab]'));
 const barLink = document.querySelector('#bar-link');
-
-function parseBarKey() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('bar') || 'default';
-}
 
 function getStorageKey(key, barKey = state.barKey) {
   return `cocktailbar-${key}-${barKey}`;
 }
 
-async function loadConfig(barKey) {
-  const candidates = [
-    `./config/${barKey}.json`,
-    `/config/${barKey}.json`,
-    `./config/default.json`,
-    `/config/default.json`,
-  ];
+function isDailyCocktail(cocktail) {
+  return cocktail?.daily === true;
+}
 
-  for (const candidate of candidates) {
-    try {
-      const response = await fetch(candidate, { cache: 'no-store' });
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (error) {
-      console.warn(`Konfiguration konnte nicht geladen werden: ${candidate}`, error);
+function setGuestView(view) {
+  if (state.guestView === view) {
+    return;
+  }
+
+  state.guestView = view;
+
+  guestViewTabButtons.forEach((button) => {
+    button.classList.toggle('active', button.dataset.guestViewTab === view);
+  });
+
+  if (guestFilterPanel) {
+    guestFilterPanel.hidden = view === 'daily';
+    if (view === 'daily') {
+      guestFilterPanel.open = false;
     }
   }
 
-  throw new Error('Es konnte keine Konfiguration gefunden werden.');
-}
-
-function normalizeCocktailProperties(cocktail) {
-  if (!cocktail || !Array.isArray(cocktail.properties)) {
-    return [];
+  if (cocktailSectionTitleElement) {
+    cocktailSectionTitleElement.textContent = view === 'daily' ? 'Tageskarte' : 'Cocktails';
   }
 
-  return cocktail.properties.filter(Boolean).map((property) => String(property).trim()).filter(Boolean);
+  renderFilters();
+  renderCocktails();
 }
 
-function getIngredientNames(cocktail) {
-  if (!Array.isArray(cocktail?.ingredients)) {
-    return [];
-  }
-
-  return cocktail.ingredients
-    .map((ingredient) => {
-      if (typeof ingredient === 'string') {
-        return ingredient.trim();
-      }
-
-      if (ingredient && typeof ingredient === 'object') {
-        return String(ingredient.name || '').trim();
-      }
-
-      return '';
-    })
-    .filter(Boolean);
+function normalizeSearchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
 }
 
-function isCocktailAvailable(cocktail) {
-  const ingredients = getIngredientNames(cocktail);
-
-  if (!ingredients.length) {
+function matchesSearchQuery(cocktail, query) {
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) {
     return true;
   }
 
-  return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
+  const haystack = normalizeSearchText([
+    cocktail?.name || '',
+    getIngredientNames(cocktail).join(' '),
+  ].join(' '));
+
+  if (haystack.includes(normalizedQuery)) {
+    return true;
+  }
+
+  const tokens = normalizedQuery.split(' ').filter(Boolean);
+  return tokens.length > 1 && tokens.every((token) => haystack.includes(token));
 }
 
 function getAvailablePropertyFilters() {
@@ -183,6 +181,11 @@ function renderFilters() {
     return;
   }
 
+  if (state.guestView === 'daily') {
+    filterGroup.innerHTML = '';
+    return;
+  }
+
   const propertyFilters = getAvailablePropertyFilters();
   const strengthFilters = [
     { key: 'strength:mild', label: 'mild' },
@@ -236,7 +239,11 @@ function renderFilters() {
 }
 
 function getFilteredCocktails() {
-  let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail));
+  let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail, state.inventory));
+
+  if (state.guestView === 'daily') {
+    return filteredCocktails.filter((cocktail) => isDailyCocktail(cocktail));
+  }
 
   const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
 
@@ -261,6 +268,10 @@ function getFilteredCocktails() {
 
   if (propertyFilters.length) {
     filteredCocktails = filteredCocktails.filter((cocktail) => propertyFilters.every((property) => normalizeCocktailProperties(cocktail).includes(property)));
+  }
+
+  if (state.searchQuery) {
+    filteredCocktails = filteredCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
   }
 
   return filteredCocktails;
@@ -463,6 +474,26 @@ async function init() {
     barEyebrowElement.textContent = config.barName || 'Cocktail Bar';
     barNameElement.textContent = config.barName || 'Cocktail Bar';
     barStatusElement.textContent = config.isOpen === false ? 'Bar aktuell geschlossen' : 'Bar geöffnet';
+
+    guestViewTabButtons.forEach((button) => {
+      button.addEventListener('click', () => setGuestView(button.dataset.guestViewTab));
+    });
+
+    if (guestFilterPanel) {
+      guestFilterPanel.hidden = state.guestView === 'daily';
+    }
+
+    if (cocktailSectionTitleElement) {
+      cocktailSectionTitleElement.textContent = 'Cocktails';
+    }
+
+    if (filterSearchInput) {
+      filterSearchInput.value = state.searchQuery;
+      filterSearchInput.addEventListener('input', (event) => {
+        state.searchQuery = event.target.value;
+        renderCocktails();
+      });
+    }
 
     if (orderButton) {
       if (config.isOpen === false) {

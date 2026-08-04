@@ -1,0 +1,4071 @@
+{
+  "cocktails": {
+    "adria-look": {
+      "alcoholic": true,
+      "comment": "mit Sekt auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": true,
+      "id": "adria-look",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Sekt",
+          "unit": ""
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Adria Look",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "angels-face": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": true,
+      "id": "angels-face",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Maracujalikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Apricot Brandy",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Mangosirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Angel's Face",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "aperol-spritz": {
+      "alcoholic": true,
+      "comment": "Prosecco/Soda = 2/1, Orange",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": true,
+      "id": "aperol-spritz",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Aperol",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Prosecco",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Soda",
+          "unit": ""
+        }
+      ],
+      "name": "Aperol Spritz",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "autumn-blues": {
+      "alcoholic": true,
+      "comment": "Zuckersirup mit Zimt zu Zimtsirup mischen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "autumn-blues",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "4,5",
+          "name": "Apfelsaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Eiweiß",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Zimt",
+          "unit": ""
+        }
+      ],
+      "name": "Autumn Blues",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "autumn-pear": {
+      "alcoholic": true,
+      "comment": "Zimtstange und Thymian nur Garnitur",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "autumn-pear",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Lillet",
+          "unit": "cl"
+        },
+        {
+          "amount": "12",
+          "name": "Birnensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Tonic Water",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Zimtstange",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Birne",
+          "unit": ""
+        }
+      ],
+      "name": "Autumn Pear",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "avada-kedavra": {
+      "alcoholic": true,
+      "comment": "in seperatem Glas mixen, anzünden und über Eiswürfel giesen, Rosmarinzwei flambieren und ins Glas stecken",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "avada-kedavra",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Vanillelikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        }
+      ],
+      "name": "Avada Kedavra",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "azalea": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "azalea",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Azalea",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "bee-sting": {
+      "alcoholic": true,
+      "comment": "Glasrand mit Honig einschmieren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "bee-sting",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Melonenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "0,5",
+          "name": "Honig",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Bee Sting",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "billionaire": {
+      "alcoholic": true,
+      "comment": "im Glas rühren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": true,
+      "id": "billionaire",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Bourbon",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Billionaire",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "black-death": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": true,
+      "id": "black-death",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "8",
+          "name": "Blutorangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Black Death",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "blue-eyes": {
+      "alcoholic": true,
+      "comment": "mit Ginger Ale auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": true,
+      "id": "blue-eyes",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Vermouth Bianco",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Ginger Ale",
+          "unit": ""
+        }
+      ],
+      "name": "Blue Eyes",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "blue-lady": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "blue-lady",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Blue Lady",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "blue-lagoon": {
+      "alcoholic": true,
+      "comment": "Zitronenscheibe",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "blue-lagoon",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "12",
+          "name": "Limonade",
+          "unit": "cl"
+        }
+      ],
+      "name": "Blue Lagoon",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "blue-ocean": {
+      "alcoholic": true,
+      "comment": "mit Limonade auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "blue-ocean",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Grapefruitsaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Maracujasirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zitronenlimonade",
+          "unit": ""
+        }
+      ],
+      "name": "Blue Ocean",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "caipirinha": {
+      "alcoholic": true,
+      "comment": "Limette in Scheiben/Schnitzen und mit Rohrzucker stößeln",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "caipirinha",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Cachaca",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Limette",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Rohrzucker",
+          "unit": ""
+        }
+      ],
+      "name": "Caipirinha",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "captain-jack-sparrow": {
+      "alcoholic": true,
+      "comment": "viel Eis, nach Verzehr laut rufen: \"Why´s the Rum gone???\", Salzrand",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "captain-jack-sparrow",
+      "ingredients": [
+        {
+          "amount": "1",
+          "name": "Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Eis",
+          "unit": ""
+        }
+      ],
+      "name": "Captain Jack Sparrow",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "cherry-cobbler": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "cherry-cobbler",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Sherry",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Kirschlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Ananassaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Cherry Cobbler",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "chilcano-de-guinda": {
+      "alcoholic": true,
+      "comment": "mit Zitronenlimonade auffüllen, Je nach Geschmack Ginger Ale",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "chilcano-de-guinda",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Kirschlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zitronenlimonade",
+          "unit": ""
+        }
+      ],
+      "name": "Chilcano de Guinda",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "cinnamon-maple": {
+      "alcoholic": true,
+      "comment": "mit Zimt bepudern",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "cinnamon-maple",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Ahornsirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zimt",
+          "unit": ""
+        }
+      ],
+      "name": "Cinnamon Maple",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "cocoskiss": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "cocoskiss",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Kokoslikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Maracujasirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Ananassaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Cocoskiss",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "corcovado": {
+      "alcoholic": true,
+      "comment": "mit Limonade auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "corcovado",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Whiskeylikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Limonade",
+          "unit": ""
+        }
+      ],
+      "name": "Corcovado",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "cosmopolitan": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "cosmopolitan",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Cranberrysaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Limettensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Cosmopolitan",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "cuba-libre": {
+      "alcoholic": true,
+      "comment": "mit Cola auffüllen, Limettenscheibe",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "cuba-libre",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Cola",
+          "unit": ""
+        }
+      ],
+      "name": "Cuba Libre",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "cuban-diplomat": {
+      "alcoholic": true,
+      "comment": "Spritzer an Angostura Bitter, Spritzer Ingwersirup, mit Ginger Beer auffüllen, in Leinenanzug trinken, Tumbler",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "cuban-diplomat",
+      "ingredients": [
+        {
+          "amount": "",
+          "name": "Ginger Beer",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Ingwersirup",
+          "unit": ""
+        },
+        {
+          "amount": "5",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        }
+      ],
+      "name": "Cuban Diplomat",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "daiquiri": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "daiquiri",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Daiquiri",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "dark-and-stormy": {
+      "alcoholic": true,
+      "comment": "mit Ginger Beer auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "dark-and-stormy",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Ginger Beer",
+          "unit": ""
+        },
+        {
+          "amount": "2",
+          "name": "Limettensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Dark and Stormy",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "eldorado": {
+      "alcoholic": true,
+      "comment": "1cl Creme de Banane",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "eldorado",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Bananensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Ananassaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Eldorado",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "electric-ice-tea": {
+      "alcoholic": true,
+      "comment": "mit Limonade auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "electric-ice-tea",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        }
+      ],
+      "name": "Electric Ice Tea",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "elisabeth": {
+      "alcoholic": true,
+      "comment": "1cl Zitronensaft",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "elisabeth",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Apricot Brandy",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Elisabeth",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "espresso-martini": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "espresso-martini",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Espresso",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Kaffeelikör",
+          "unit": "cl"
+        }
+      ],
+      "name": "Espresso Martini",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "frozen-campari-o": {
+      "alcoholic": true,
+      "comment": "im Mixer mit Eis, zunächst Campari, dann O",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "frozen-campari-o",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Campari",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Orangensaft",
+          "unit": ""
+        }
+      ],
+      "name": "Frozen Campari O",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "frozen-daiquiri": {
+      "alcoholic": true,
+      "comment": "mit Eis im Mixer, Obst als Zusatz möglich",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "frozen-daiquiri",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "2,5",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Frozen Daiquiri",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "frozen-lime": {
+      "alcoholic": true,
+      "comment": "im Mixer mit Eis, (Limettensaft)",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "frozen-lime",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Soda",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Frozen Lime",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "frozen-orange": {
+      "alcoholic": true,
+      "comment": "im Mixer mit Eis, (Limettensaft)",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "frozen-orange",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "14",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Frozen Orange",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "frozen-pina-colada": {
+      "alcoholic": true,
+      "comment": "im Mixer mit Eis",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "frozen-pina-colada",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Kokossirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Frozen Pina Colada",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "frozen-strawberry": {
+      "alcoholic": true,
+      "comment": "im Mixer mit Eis, auch mit anderen Beeren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "frozen-strawberry",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Frozen Strawberry",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "gin-basil-smash": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "gin-basil-smash",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Basilikum",
+          "unit": ""
+        }
+      ],
+      "name": "Gin Basil Smash",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "gin-tonic": {
+      "alcoholic": true,
+      "comment": "mit Tonic Water auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "gin-tonic",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Tonic Water",
+          "unit": ""
+        }
+      ],
+      "name": "Gin Tonic",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "ginger-winter": {
+      "alcoholic": true,
+      "comment": "Zimt mit shaken",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "ginger-winter",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Apfelsaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Ginger Ale",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Zimt",
+          "unit": ""
+        }
+      ],
+      "name": "Ginger Winter",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "golden-hour": {
+      "alcoholic": true,
+      "comment": "Original: statt Tequila Sotol verwenden",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "golden-hour",
+      "ingredients": [
+        {
+          "amount": "4,5",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Aperol",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Limettensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Golden Hour",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "grasshopper": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "grasshopper",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Peppermint",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Creme de Cacao, white",
+          "unit": "cl"
+        },
+        {
+          "amount": "4-6",
+          "name": "Sahne",
+          "unit": "cl"
+        }
+      ],
+      "name": "Grasshopper",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "green-eyes": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "green-eyes",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "12",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Green Eyes",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "green-light": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "green-light",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Melonenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Maracujasirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Eiweiß",
+          "unit": ""
+        }
+      ],
+      "name": "Green Light",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "green-poison": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "green-poison",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Kokossirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Maracujasaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Green Poison",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "green-sex-machine": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "green-sex-machine",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Melonenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Sekt",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Rose´s Lime Juice",
+          "unit": "cl"
+        }
+      ],
+      "name": "Green Sex Machine",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "harvey-wallbanger": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "harvey-wallbanger",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Vanillelikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Harvey Wallbanger",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "hemmingway-sour": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "hemmingway-sour",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "8",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Hemmingway Sour",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "horses-neck": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "horses-neck",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        },
+        {
+          "amount": "12",
+          "name": "Ginger Ale",
+          "unit": "cl"
+        }
+      ],
+      "name": "Horse's Neck",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "hugo": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "hugo",
+      "ingredients": [
+        {
+          "amount": "10",
+          "name": "Sekt",
+          "unit": "cl"
+        },
+        {
+          "amount": "2-3",
+          "name": "Holunderblütensirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Hugo",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "irish-lady": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "irish-lady",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Apricot Brandy",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Erdbeersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Tonicwater",
+          "unit": ""
+        }
+      ],
+      "name": "Irish Lady",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "jack-frost": {
+      "alcoholic": true,
+      "comment": "Glasrand mit Kokosflocken dekorieren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "jack-frost",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Kokossirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Kokoscreme",
+          "unit": "cl"
+        }
+      ],
+      "name": "Jack Frost",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "jungle-juice": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "jungle-juice",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Maracuja Liqueur",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Creme de Banana",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Sahne",
+          "unit": "cl"
+        },
+        {
+          "amount": "8",
+          "name": "Ananassaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Jungle Juice",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "kamikaze": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "kamikaze",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Kamikaze",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "kilimanjaro": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "kilimanjaro",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Amarula",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "12",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Kilimanjaro",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "ladykiller": {
+      "alcoholic": true,
+      "comment": "1cl Limettensaft",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "ladykiller",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Pfirsichlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "7",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Ladykiller",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "limoncello-spritz": {
+      "alcoholic": true,
+      "comment": "Prosecco/Soda = 2/1",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "limoncello-spritz",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Limoncello",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Prosecco",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Soda",
+          "unit": ""
+        }
+      ],
+      "name": "Limoncello Spritz",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "long-island-ice-tea": {
+      "alcoholic": true,
+      "comment": "2,5cl Zitronensaft, 3cl Gomme Sirup, Cola, (Orangensaft)",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "long-island-ice-tea",
+      "ingredients": [
+        {
+          "amount": "1,5",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Cointreau",
+          "unit": "cl"
+        }
+      ],
+      "name": "Long Island Ice Tea",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "lynchburg-lemonade": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "lynchburg-lemonade",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Limonade",
+          "unit": ""
+        }
+      ],
+      "name": "Lynchburg Lemonade",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "mai-tai": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "mai-tai",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Mandelsirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Mai-Tai",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "malibu-sunrise": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "malibu-sunrise",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Malibu",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "12",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Malibu Sunrise",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "manhatten": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "manhatten",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Wermut",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        }
+      ],
+      "name": "Manhatten",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "margarita": {
+      "alcoholic": true,
+      "comment": "Salz",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "margarita",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Margarita",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "margarita-azul": {
+      "alcoholic": true,
+      "comment": "zunächst Dry Shake wegen Honig",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "margarita-azul",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Honig",
+          "unit": "cl"
+        }
+      ],
+      "name": "Margarita Azul",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "martinez": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "martinez",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Wermut rot",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Kirschlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        }
+      ],
+      "name": "Martinez",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "martini": {
+      "alcoholic": true,
+      "comment": "Olive",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "martini",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Wermut",
+          "unit": "cl"
+        }
+      ],
+      "name": "Martini",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "melon-ball": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "melon-ball",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Melonenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Ananassaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Melon Ball",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "melon-lime-drop": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "melon-lime-drop",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Melonenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zucker",
+          "unit": ""
+        }
+      ],
+      "name": "Melon Lime Drop",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "melon-sour": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "melon-sour",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Melonenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Limettensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Melon Sour",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "mirabelly-gin": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "mirabelly-gin",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Mirabellenschnaps",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Tonic Water",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Mirabelly Gin",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "mojito": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "mojito",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Soda",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Rohrzucker",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Limette",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Minze",
+          "unit": ""
+        }
+      ],
+      "name": "Mojito",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "moscow-mule": {
+      "alcoholic": true,
+      "comment": "halbe Limetten",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "moscow-mule",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Ginger Beer",
+          "unit": ""
+        }
+      ],
+      "name": "Moscow Mule",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "mudslide": {
+      "alcoholic": true,
+      "comment": "Schokolade raspeln als Garnitur",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "mudslide",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Vodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Kaffeelikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Baileys",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Schokolade",
+          "unit": ""
+        }
+      ],
+      "name": "Mudslide",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "negroni": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "negroni",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Campari",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Wermut rot",
+          "unit": "cl"
+        }
+      ],
+      "name": "Negroni",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "one-love": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "one-love",
+      "ingredients": [
+        {
+          "amount": "",
+          "name": "Wodka",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Cointreau",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Blue Curacao",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Limettensaft",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Orangensaft",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Grenadine",
+          "unit": ""
+        }
+      ],
+      "name": "One Love",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "peachy-gin": {
+      "alcoholic": true,
+      "comment": "Limette, mit Tonic Water auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "peachy-gin",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Pfirsichlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Tonic Water",
+          "unit": ""
+        }
+      ],
+      "name": "Peachy Gin",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pear-tonic": {
+      "alcoholic": true,
+      "comment": "Birnensaft mit Zimtstange köcheln, Zimtstange danach mit Birne und Thymian zum garnieren verwenden",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pear-tonic",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "5",
+          "name": "Birnensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Tonic Water",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Zimtstange",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Thymian",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Birne",
+          "unit": ""
+        }
+      ],
+      "name": "Pear Tonic",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pepper-eater": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pepper-eater",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Traubensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Pepper Eater",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pina-colada": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pina-colada",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Kokossirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Sahne",
+          "unit": "cl"
+        }
+      ],
+      "name": "Pina Colada",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pink-vodka-sour": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pink-vodka-sour",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Wodka Hibiskus",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Eiweiß",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Hibiskusblüte",
+          "unit": ""
+        }
+      ],
+      "name": "Pink Vodka Sour",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pitu-samba": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pitu-samba",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Cachaca",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Strawberry Liqueur",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Mandelsirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Pitu Samba",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "planters-punch": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "planters-punch",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Planters Punch",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pomegranate-vodka-sour-flamed": {
+      "alcoholic": true,
+      "comment": "Zweig Rosmarin als Deko flambieren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pomegranate-vodka-sour-flamed",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Granatapfelsirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Eiweiß",
+          "unit": ""
+        }
+      ],
+      "name": "Pomegranate Vodka Sour Flamed",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "pomme-damour": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "pomme-damour",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Calvados",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Strawberry Liqueur",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Sekt",
+          "unit": "cl"
+        }
+      ],
+      "name": "Pomme d'amour",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "porn-star-martini": {
+      "alcoholic": true,
+      "comment": "1,5 Passionsfrüchte shaken, 0,5 Passionsfrucht dekorieren, Vanillesirup zu Passoa rationieren, Bonus: Champagnerglas dazu servieren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "porn-star-martini",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Vanillesirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Passionsfrüchte",
+          "unit": ""
+        }
+      ],
+      "name": "Porn Star Martini",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "purple-orange": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "purple-orange",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Purple Orange",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "purple-rain": {
+      "alcoholic": true,
+      "comment": "Spritzer an Zitronensaft, mit Zitronenlimonade auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "purple-rain",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zitronensaft",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Zitronenlimonade",
+          "unit": ""
+        }
+      ],
+      "name": "Purple Rain",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "red-honey": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "red-honey",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Whiskeylikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Red Honey",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "rio-grande": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "rio-grande",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Pfirsichlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "12",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Rio Grande",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "royal-clover-club": {
+      "alcoholic": true,
+      "comment": "1/2 Zitrone, 1 Eigelb",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "royal-clover-club",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zitrone",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Eigelb",
+          "unit": ""
+        }
+      ],
+      "name": "Royal Clover Club",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "santa-sour": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "santa-sour",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cranberrysirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Eiweiß",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Sternanis",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Zimt",
+          "unit": ""
+        }
+      ],
+      "name": "Santa Sour",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "scotch-and-peach": {
+      "alcoholic": true,
+      "comment": "am besten Scotch",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "scotch-and-peach",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Pfirsichlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Erdbeersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Scotch and Peach",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "second-love": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "second-love",
+      "ingredients": [
+        {
+          "amount": "",
+          "name": "Tonic Water",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Blue Curacao Sirup",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Limettensaft",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Orangensaft",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Grenadine",
+          "unit": ""
+        }
+      ],
+      "name": "Second Love",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "sex-on-the-beach": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "sex-on-the-beach",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Pfirsichlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Cranberrysaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Sex on the beach",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "sidecar": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "sidecar",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Weinbrand",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Sidecar",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "simply-red": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "simply-red",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "rotes Orangenlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Maracujasaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Simply Red",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "singapore-sling": {
+      "alcoholic": true,
+      "comment": "mit Soda auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "singapore-sling",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cherry Brandy",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Soda",
+          "unit": ""
+        }
+      ],
+      "name": "Singapore Sling",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "sleeping-beauty": {
+      "alcoholic": true,
+      "comment": "Long drink glas",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "sleeping-beauty",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Vanillelikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Himbeerlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Zitronenlimonade",
+          "unit": ""
+        }
+      ],
+      "name": "Sleeping Beauty",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "smoked-cherry": {
+      "alcoholic": true,
+      "comment": "1 dash Angustora",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "smoked-cherry",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Campari",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Kirschlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Wermut trocken",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Weinbrand",
+          "unit": "cl"
+        }
+      ],
+      "name": "Smoked Cherry",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "springtime-cooler": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "springtime-cooler",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Springtime Cooler",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "squeaky-wheel": {
+      "alcoholic": true,
+      "comment": "Orangenrad",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "squeaky-wheel",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Mezcal",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Campari",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Kaffeelikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Amaretto",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Angustorabitter",
+          "unit": ""
+        }
+      ],
+      "name": "Squeaky Wheel",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "sweet-dreams": {
+      "alcoholic": true,
+      "comment": "nach Ermessen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "sweet-dreams",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Cranberrysirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Holunderblütensirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Sweet Dreams",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "swimming-pool": {
+      "alcoholic": true,
+      "comment": "1cl Sahne",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "swimming-pool",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Kokossirup",
+          "unit": "cl"
+        }
+      ],
+      "name": "Swimming Pool",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "tequila-sunrise": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "tequila-sunrise",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "9",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1,5",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Tequila Sunrise",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "the-caledonian": {
+      "alcoholic": true,
+      "comment": "mit Bitter Lemon auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "the-caledonian",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Whiskeylikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Bitter Lemon",
+          "unit": ""
+        }
+      ],
+      "name": "The Caledonian",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "the-untouchable": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "the-untouchable",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Bourbon",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Whiskeylikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Maracujalikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Mandelsirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Cola",
+          "unit": ""
+        }
+      ],
+      "name": "The Untouchable",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "titanic": {
+      "alcoholic": false,
+      "comment": "Großer Eisblock",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "titanic",
+      "ingredients": [
+        {
+          "amount": "",
+          "name": "Wasser",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Eis",
+          "unit": ""
+        }
+      ],
+      "name": "Titanic",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "touch-down": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "touch-down",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Apricot Brandy",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Maracujasaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Limettensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Touch Down",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "tropic-caipi": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "tropic-caipi",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Cachaca",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Maracujasaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Limette",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Rohrzucker",
+          "unit": ""
+        }
+      ],
+      "name": "Tropic Caipi",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "tropical-derby": {
+      "alcoholic": true,
+      "comment": "1cl Zitronensaft",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "tropical-derby",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "8",
+          "name": "Orangensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "8",
+          "name": "Maracujasaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "8",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Tropical Derby",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "tropicana-colada": {
+      "alcoholic": true,
+      "comment": "6cl Maracujasaft",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "tropicana-colada",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Cachaca",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Creme de Banana",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Kokossirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Tropicana Colada",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "tully-ginger": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "tully-ginger",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Ginger Ale",
+          "unit": ""
+        }
+      ],
+      "name": "Tully Ginger",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "tuned-ice-coffee": {
+      "alcoholic": true,
+      "comment": "vorzugsweise Fireball Whiskey, ca. 150ml Kaffee, ca. 1 Schuss Milch (nach belieben)",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "tuned-ice-coffee",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Whiskey",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "43er Schokolade",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Kaffee",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Milch",
+          "unit": ""
+        }
+      ],
+      "name": "Tuned Ice Coffee",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "vampire": {
+      "alcoholic": true,
+      "comment": "2cl Mandelsirup, 1cl Maracujasirup, 1cl Grenadine",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "vampire",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Sahne",
+          "unit": "cl"
+        }
+      ],
+      "name": "Vampire",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "vanilla-bourbon-punsch": {
+      "alcoholic": true,
+      "comment": "Vanille: Messerspitze, Vollmilch mit Gewürzen kurz aufkochen, mit Muskat dekorieren",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "vanilla-bourbon-punsch",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Bourbon",
+          "unit": "cl"
+        },
+        {
+          "amount": "7",
+          "name": "Milch",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Ahornsirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Sternanis",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Vanille",
+          "unit": ""
+        },
+        {
+          "amount": "",
+          "name": "Muskat",
+          "unit": ""
+        }
+      ],
+      "name": "Vanilla Bourbon Punsch",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "vanity": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "vanity",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Ananassaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Vanity",
+      "strength": "mild",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "whiskey-sour": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "whiskey-sour",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Bourbon",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zuckersirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Eiweiß",
+          "unit": ""
+        }
+      ],
+      "name": "Whiskey Sour",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "white-lady": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "white-lady",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Gin",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Zitronensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "White Lady",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "white-russian": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "white-russian",
+      "ingredients": [
+        {
+          "amount": "3",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Kaffeelikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Milch",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Sahne",
+          "unit": "cl"
+        }
+      ],
+      "name": "White Russian",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "wildberry-lillet": {
+      "alcoholic": true,
+      "comment": "gefrorene Beeren, mit Wildberry auffüllen",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "wildberry-lillet",
+      "ingredients": [
+        {
+          "amount": "5",
+          "name": "Lillet",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Wildberry Soda",
+          "unit": ""
+        }
+      ],
+      "name": "Wildberry Lillet",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "willenlos": {
+      "alcoholic": true,
+      "comment": "5cl Maracujasaft",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "willenlos",
+      "ingredients": [
+        {
+          "amount": "2",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Mandelsirup",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Grenadine",
+          "unit": "cl"
+        },
+        {
+          "amount": "5",
+          "name": "Orangensaft",
+          "unit": "cl"
+        }
+      ],
+      "name": "Willenlos",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "witches-brew": {
+      "alcoholic": true,
+      "comment": "wenn möglich Orangenbitters",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "witches-brew",
+      "ingredients": [
+        {
+          "amount": "6",
+          "name": "Mezcal",
+          "unit": "cl"
+        },
+        {
+          "amount": "3",
+          "name": "Butterfly Pea Tea",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Limettensaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Bitters",
+          "unit": ""
+        }
+      ],
+      "name": "Witches Brew",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "woo-woo-cocktail": {
+      "alcoholic": true,
+      "comment": "Bitters: 2 Spritzer (Peach am besten)",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "woo-woo-cocktail",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Wodka",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Pfirsichlikör",
+          "unit": "cl"
+        },
+        {
+          "amount": "6",
+          "name": "Cranberrysaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "",
+          "name": "Bitters",
+          "unit": ""
+        }
+      ],
+      "name": "Woo-Woo Cocktail",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "zombie": {
+      "alcoholic": true,
+      "comment": "2cl Zitronensaft, 2cl Maracujasirup, 4cl Ananassaft, 4cl Orangensaft",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "zombie",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "weißer Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "dunkler Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "High Rum",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Grenadine",
+          "unit": "cl"
+        }
+      ],
+      "name": "Zombie",
+      "strength": "intensiv",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    },
+    "zorro": {
+      "alcoholic": true,
+      "comment": "",
+      "createdAt": "2026-08-04T18:00:00.000Z",
+      "daily": false,
+      "id": "zorro",
+      "ingredients": [
+        {
+          "amount": "4",
+          "name": "Tequila",
+          "unit": "cl"
+        },
+        {
+          "amount": "2",
+          "name": "Cointreau",
+          "unit": "cl"
+        },
+        {
+          "amount": "1",
+          "name": "Blue Curacao",
+          "unit": "cl"
+        },
+        {
+          "amount": "4",
+          "name": "Grapefruitsaft",
+          "unit": "cl"
+        },
+        {
+          "amount": "10",
+          "name": "Tonic Water",
+          "unit": "cl"
+        }
+      ],
+      "name": "Zorro",
+      "strength": "ausgewogen",
+      "updatedAt": "2026-08-04T18:00:00.000Z"
+    }
+  },
+  "inventory": {
+    "Zutat": true,
+    "test": true
+  }
+}
