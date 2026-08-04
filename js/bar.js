@@ -383,6 +383,9 @@ function renderCocktailsTab() {
                 <label>
                   <input type="checkbox" data-field="alcoholic" ${selectedCocktail.alcoholic ? 'checked' : ''} /> Alkoholisch
                 </label>
+                <label>
+                  <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
+                </label>
               </div>
             </div>
             <div class="editor-actions">
@@ -406,6 +409,7 @@ function renderCocktailsTab() {
           name: 'Neuer Cocktail',
           ingredients: [],
           alcoholic: true,
+          daily: false,
           available: true,
           strength: 'ausgewogen',
           comment: '',
@@ -770,6 +774,7 @@ function bindContentEvents() {
       const nameInput = card.querySelector('[data-field="name"]');
       const commentInput = card.querySelector('[data-field="comment"]');
       const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
+      const dailyInput = card.querySelector('[data-field="daily"]');
       const strengthInput = card.querySelector('[data-field="strength"]');
       const ingredientRows = Array.from(card.querySelectorAll('[data-ingredient-index]'));
 
@@ -793,6 +798,7 @@ function bindContentEvents() {
         ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         alcoholic: alcoholicInput?.checked || false,
+        daily: dailyInput?.checked || false,
         strength: normalizeStrength(strengthInput?.value),
         comment: commentInput?.value.trim() || '',
       };

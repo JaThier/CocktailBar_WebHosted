@@ -7,6 +7,7 @@ const state = {
   inventory: {},
   filteredCocktails: [],
   activeFilterKeys: [],
+  guestView: 'full',
   cart: [],
   barKey: 'default',
   selectedCocktailId: null,
@@ -40,6 +41,9 @@ const cocktailCountElement = document.querySelector('#cocktail-count');
 const cartItemsElement = document.querySelector('#cart-items');
 const cartCountElement = document.querySelector('#cart-count');
 const filterGroup = document.querySelector('#filter-group');
+const guestFilterPanel = document.querySelector('#guest-filter-panel');
+const cocktailSectionTitleElement = document.querySelector('#cocktail-section-title');
+const guestViewTabButtons = Array.from(document.querySelectorAll('[data-guest-view-tab]'));
 const barLink = document.querySelector('#bar-link');
 
 function parseBarKey() {
@@ -109,6 +113,36 @@ function isCocktailAvailable(cocktail) {
   }
 
   return ingredients.every((ingredient) => state.inventory[ingredient] !== false);
+}
+
+function isDailyCocktail(cocktail) {
+  return cocktail?.daily === true;
+}
+
+function setGuestView(view) {
+  if (state.guestView === view) {
+    return;
+  }
+
+  state.guestView = view;
+
+  guestViewTabButtons.forEach((button) => {
+    button.classList.toggle('active', button.dataset.guestViewTab === view);
+  });
+
+  if (guestFilterPanel) {
+    guestFilterPanel.hidden = view === 'daily';
+    if (view === 'daily') {
+      guestFilterPanel.open = false;
+    }
+  }
+
+  if (cocktailSectionTitleElement) {
+    cocktailSectionTitleElement.textContent = view === 'daily' ? 'Tageskarte' : 'Cocktails';
+  }
+
+  renderFilters();
+  renderCocktails();
 }
 
 function getAvailablePropertyFilters() {
@@ -183,6 +217,11 @@ function renderFilters() {
     return;
   }
 
+  if (state.guestView === 'daily') {
+    filterGroup.innerHTML = '';
+    return;
+  }
+
   const propertyFilters = getAvailablePropertyFilters();
   const strengthFilters = [
     { key: 'strength:mild', label: 'mild' },
@@ -237,6 +276,10 @@ function renderFilters() {
 
 function getFilteredCocktails() {
   let filteredCocktails = state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail));
+
+  if (state.guestView === 'daily') {
+    return filteredCocktails.filter((cocktail) => isDailyCocktail(cocktail));
+  }
 
   const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
 
@@ -463,6 +506,18 @@ async function init() {
     barEyebrowElement.textContent = config.barName || 'Cocktail Bar';
     barNameElement.textContent = config.barName || 'Cocktail Bar';
     barStatusElement.textContent = config.isOpen === false ? 'Bar aktuell geschlossen' : 'Bar geöffnet';
+
+    guestViewTabButtons.forEach((button) => {
+      button.addEventListener('click', () => setGuestView(button.dataset.guestViewTab));
+    });
+
+    if (guestFilterPanel) {
+      guestFilterPanel.hidden = state.guestView === 'daily';
+    }
+
+    if (cocktailSectionTitleElement) {
+      cocktailSectionTitleElement.textContent = 'Cocktails';
+    }
 
     if (orderButton) {
       if (config.isOpen === false) {

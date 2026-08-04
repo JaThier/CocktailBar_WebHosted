@@ -17,7 +17,14 @@
         <a class="bar-link" id="bar-link" href="./bar.html">Bar-Ansicht</a>
       </header>
 
-      <details class="panel filter-panel">
+      <section class="panel">
+        <div class="tab-list guest-view-tabs" role="tablist" aria-label="Kartenansicht">
+          <button class="tab-button active" data-guest-view-tab="full" type="button">Vollständige Karte</button>
+          <button class="tab-button" data-guest-view-tab="daily" type="button">Tageskarte</button>
+        </div>
+      </section>
+
+      <details class="panel filter-panel" id="guest-filter-panel">
         <summary class="filter-panel-summary">
           <span>Filter</span>
         </summary>
@@ -28,7 +35,7 @@
 
       <section class="panel">
         <div class="section-title">
-          <h2>Cocktails</h2>
+          <h2 id="cocktail-section-title">Cocktails</h2>
           <span id="cocktail-count">0</span>
         </div>
         <div class="cocktail-layout">
