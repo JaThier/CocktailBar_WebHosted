@@ -8,12 +8,14 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 - Umschaltbare Gäste-Tabs für vollständige Karte und Tageskarte
 - Warenkorb und Bestell-Button
 - einfache Bar-Ansicht für die Barkeeper-Ansicht
+- zusätzliche Bar-Museum-Ansicht mit Filterdefinitionen
 - dynamische Konfiguration über JSON-Dateien im Ordner config/
 - GitHub-Pages-taugliche Struktur direkt im Repository-Root
 
 ## Projektstruktur
 - index.html: Startseite der Gäste-Ansicht
 - bar.html: Barkeeper-Ansicht
+- bar-museum.html: Bar-Museum-Ansicht
 - css/style.css: Styling
 - js/app.js: Gäste-Logik und Warenkorb
 - js/bar.js: Barkeeper-Logik

@@ -89,6 +89,13 @@ body {
   padding: 1.25rem 1.25rem 1.1rem;
 }
 
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   text-transform: uppercase;
@@ -124,6 +131,10 @@ h3 {
 .primary-button {
   background: #0f766e;
   color: #fff;
+}
+
+.bar-link-secondary {
+  background: #f59e0b;
 }
 
 .secondary-button {
@@ -485,6 +496,58 @@ h3 {
   gap: 0.55rem;
   width: 100%;
   text-align: left;
+}
+
+.museum-tabs {
+  margin-bottom: 0;
+}
+
+.museum-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.museum-filter-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.museum-filter-item {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.museum-editor-panel {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fffdf9;
+  min-height: 280px;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.museum-editor-row textarea {
+  width: 100%;
+  min-height: 17rem;
+  resize: vertical;
+  border: 1px solid #d1d5db;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+  font: inherit;
+  background: #fff;
+}
+
+@media (max-width: 800px) {
+  .museum-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start;
+  }
 }
 
 .order-card {

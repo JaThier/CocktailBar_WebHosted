@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bar-Museum</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Barkeeper</p>
+          <h1 id="bar-name">Bar-Museum</h1>
+          <p class="subline" id="bar-status">Lade Status…</p>
+        </div>
+        <a class="bar-link" id="bar-link" href="./bar.html">Bar-Ansicht</a>
+      </header>
+
+      <section class="panel">
+        <div id="bar-dashboard">
+          <div class="tab-list museum-tabs" role="tablist" aria-label="Bar-Museum-Menü">
+            <button class="tab-button active" data-tab="filterdefinitions" type="button">Filterdefinitionen</button>
+          </div>
+          <div id="tab-content" class="tab-content"></div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="./js/bar.js"></script>
+  </body>
+</html>

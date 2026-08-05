@@ -21,6 +21,7 @@ const state = {
   orders: [],
   activeTab: 'cocktails',
   searchQuery: '',
+  museumSelectedFilterKey: null,
   selectedCocktailId: null,
   selectedOrderId: null,
 };
@@ -42,6 +43,8 @@ const cocktailPropertyOptions = [
   'Sauer',
   'Bartenders Favourite',
 ];
+
+const isMuseumView = window.location.pathname.toLowerCase().endsWith('/bar-museum.html');
 
 const barNameElement = document.querySelector('#bar-name');
 const barStatusElement = document.querySelector('#bar-status');
@@ -66,6 +69,28 @@ function resetBarState() {
 function loadStoredState() {
   const savedOrders = JSON.parse(localStorage.getItem(getStorageKey('orders')) || 'null');
   state.orders = Array.isArray(savedOrders) ? savedOrders : [];
+}
+
+function getFilterDefinitionStorageKey() {
+  return getStorageKey('filter-definitions');
+}
+
+function getFilterDefinitionKeys() {
+  return Array.from(new Set(cocktailPropertyOptions)).sort((left, right) => left.localeCompare(right, 'de', { sensitivity: 'base' }));
+}
+
+function loadFilterDefinitions() {
+  getFilterDefinitionKeys().forEach((filterKey) => {
+    // keep keys stable; values are initialized below
+  });
+
+  return Object.fromEntries(
+    getFilterDefinitionKeys().map((filterKey) => [filterKey, `Beispieltext_${filterKey}`])
+  );
+}
+
+function saveFilterDefinitions() {
+  localStorage.setItem(getFilterDefinitionStorageKey(), JSON.stringify(state.filterDefinitions || {}));
 }
 
 function saveState() {
@@ -436,6 +461,44 @@ function renderCocktailsTab(options = {}) {
   }
 }
 
+function renderMuseumFilterDefinitionsTab() {
+  const filterKeys = getFilterDefinitionKeys();
+
+  if (!filterKeys.length) {
+    tabContentElement.innerHTML = '<p class="empty-state">Keine Filterdefinitionen vorhanden.</p>';
+    return;
+  }
+
+  if (!state.museumSelectedFilterKey || !filterKeys.includes(state.museumSelectedFilterKey)) {
+    state.museumSelectedFilterKey = filterKeys[0];
+  }
+
+  const selectedFilterKey = state.museumSelectedFilterKey;
+  const selectedFilterText = state.filterDefinitions?.[selectedFilterKey] || '';
+
+  tabContentElement.innerHTML = `
+    <div class="section-title">
+      <h3>Filterdefinitionen</h3>
+      <span>${filterKeys.length}</span>
+    </div>
+    <div class="museum-layout">
+      <div class="museum-filter-list" aria-label="Filterliste">
+        ${filterKeys.map((filterKey) => `
+          <button class="cocktail-list-item museum-filter-item ${selectedFilterKey === filterKey ? 'active' : ''}" type="button" data-role="select-museum-filter" data-id="${filterKey}">
+            <span>${filterKey}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="museum-editor-panel">
+        <label class="editor-row museum-editor-row">
+          <span>${selectedFilterKey}</span>
+          <textarea id="museum-filter-text" rows="12" placeholder="Text zur Filterkategorie" readonly>${escapeHtml(selectedFilterText)}</textarea>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
 function renderInventoryTab() {
   const ingredients = getAllIngredients();
 
@@ -674,6 +737,11 @@ function renderContent(options = {}) {
     return;
   }
 
+  if (isMuseumView) {
+    renderMuseumFilterDefinitionsTab();
+    return;
+  }
+
   if (state.activeTab === 'inventory') {
     renderInventoryTab();
     return;
@@ -753,6 +821,12 @@ function bindContentEvents() {
   tabContentElement.addEventListener('click', async (event) => {
     const button = event.target.closest('button');
     if (!button) {
+      return;
+    }
+
+    if (isMuseumView && button.dataset.role === 'select-museum-filter') {
+      state.museumSelectedFilterKey = button.dataset.id;
+      renderContent();
       return;
     }
 
@@ -946,7 +1020,7 @@ async function init() {
   createFirebaseClient(state.config);
 
   const sessionKey = getStorageKey('access');
-  if (sessionStorage.getItem(sessionKey) !== 'true') {
+  if (!isMuseumView && sessionStorage.getItem(sessionKey) !== 'true') {
     ensureAccess();
     return;
   }
@@ -955,14 +1029,26 @@ async function init() {
 
   try {
     if (barLink) {
-      const guestUrl = new URL('./index.html', window.location.href);
-      guestUrl.searchParams.set('bar', state.barKey);
-      barLink.href = guestUrl.toString();
+      if (isMuseumView) {
+        barLink.textContent = 'Bar-Ansicht';
+        barLink.href = new URL('./bar.html', window.location.href).toString();
+      } else {
+        const guestUrl = new URL('./index.html', window.location.href);
+        guestUrl.searchParams.set('bar', state.barKey);
+        barLink.href = guestUrl.toString();
+      }
     }
-    barNameElement.textContent = state.config.barName || 'Cocktail Bar';
-    barStatusElement.textContent = state.config.isOpen === false ? 'Bar geschlossen' : 'Bar geöffnet';
+    barNameElement.textContent = isMuseumView ? 'Bar-Museum' : (state.config.barName || 'Cocktail Bar');
+    barStatusElement.textContent = isMuseumView
+      ? (state.config.isOpen === false ? 'Bar-Museum geschlossen' : 'Bar-Museum geöffnet')
+      : (state.config.isOpen === false ? 'Bar geschlossen' : 'Bar geöffnet');
     resetBarState();
     loadStoredState();
+    state.filterDefinitions = loadFilterDefinitions();
+    if (isMuseumView) {
+      state.activeTab = 'filterdefinitions';
+      state.museumSelectedFilterKey = getFilterDefinitionKeys()[0] || null;
+    }
     bindTabEvents();
     bindContentEvents();
 
