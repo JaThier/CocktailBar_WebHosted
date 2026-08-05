@@ -134,11 +134,11 @@ h3 {
 }
 
 .bar-link-secondary {
-  background: #f59e0b;
+  background: #0f766e;
 }
 
 .secondary-button {
-  background: #f59e0b;
+  background: #0f766e;
   color: #fff;
 }
 
@@ -262,6 +262,19 @@ h3 {
 
 .cocktail-list-item.disabled {
   opacity: 0.65;
+}
+
+.order-list-primary {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.order-list-primary strong,
+.order-list-primary span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cocktail-detail-panel {

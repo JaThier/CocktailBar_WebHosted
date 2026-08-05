@@ -1,4 +1,4 @@
-import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
+import { createFirebaseClient, listenToCocktails, listenToInventory, listenToOrders, addOrder } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
 import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable, sortCocktailsByName } from './shared.js';
 
@@ -7,12 +7,14 @@ const state = {
   cocktails: [],
   inventory: {},
   filteredCocktails: [],
+  orders: [],
   activeFilterKeys: [],
   searchQuery: '',
   guestView: 'full',
   cart: [],
   barKey: 'default',
   selectedCocktailId: null,
+  selectedOrderId: null,
 };
 
 const cocktailPropertyOptions = [
@@ -49,6 +51,7 @@ const guestFilterPanel = document.querySelector('#guest-filter-panel');
 const cocktailSectionTitleElement = document.querySelector('#cocktail-section-title');
 const guestViewTabButtons = Array.from(document.querySelectorAll('[data-guest-view-tab]'));
 const barLink = document.querySelector('#bar-link');
+const museumLink = document.querySelector('#museum-link');
 
 function getStorageKey(key, barKey = state.barKey) {
   return `cocktailbar-${key}-${barKey}`;
@@ -102,18 +105,24 @@ function setGuestView(view) {
   });
 
   if (guestFilterPanel) {
-    guestFilterPanel.hidden = view === 'daily';
-    if (view === 'daily') {
+    guestFilterPanel.hidden = view !== 'full';
+    if (view !== 'full') {
       guestFilterPanel.open = false;
     }
   }
 
   if (cocktailSectionTitleElement) {
-    cocktailSectionTitleElement.textContent = view === 'daily' ? 'Tageskarte' : 'Cocktails';
+    if (view === 'daily') {
+      cocktailSectionTitleElement.textContent = 'Tageskarte';
+    } else if (view === 'orders') {
+      cocktailSectionTitleElement.textContent = 'Bestellungen';
+    } else {
+      cocktailSectionTitleElement.textContent = 'Cocktails';
+    }
   }
 
   renderFilters();
-  renderCocktails();
+  renderView();
 }
 
 function normalizeSearchText(value) {
@@ -280,6 +289,27 @@ function getFilteredCocktails() {
   return sortCocktailsByName(filteredCocktails);
 }
 
+function getSortedOrders() {
+  return [...(Array.isArray(state.orders) ? state.orders : [])].sort((left, right) => {
+    const leftTime = new Date(left?.createdAt || 0).getTime();
+    const rightTime = new Date(right?.createdAt || 0).getTime();
+    return rightTime - leftTime;
+  });
+}
+
+function getOrderItemsText(order) {
+  const itemNames = Array.isArray(order?.items)
+    ? order.items.map((item) => item?.name).filter(Boolean)
+    : [];
+
+  return itemNames.length ? itemNames.join(', ') : 'Keine Angaben';
+}
+
+function getOrderCocktailName(order) {
+  const firstItem = Array.isArray(order?.items) ? order.items[0] : null;
+  return firstItem?.name || 'Cocktail';
+}
+
 function getCocktailImageMarkup(cocktail) {
   const safeAlt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
   const slug = generateCocktailId(cocktail.name || cocktail.id || 'cocktail');
@@ -325,6 +355,11 @@ function renderCocktailDetail() {
     return;
   }
 
+  if (state.guestView === 'orders') {
+    renderOrderDetail();
+    return;
+  }
+
   const selectedCocktail = state.filteredCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || state.filteredCocktails[0] || null;
 
   if (!selectedCocktail) {
@@ -352,7 +387,86 @@ function renderCocktailDetail() {
   bindCustomerOrderControls();
 }
 
+function renderOrderDetail() {
+  if (!cocktailDetailElement) {
+    return;
+  }
+
+  const sortedOrders = getSortedOrders();
+  const selectedOrder = sortedOrders.find((order) => order.id === state.selectedOrderId) || sortedOrders[0] || null;
+
+  if (!selectedOrder) {
+    cocktailDetailElement.innerHTML = '<p class="empty-state">Noch keine Bestellungen.</p>';
+    return;
+  }
+
+  cocktailDetailElement.innerHTML = `
+    <div class="cocktail-detail-title">
+      <h3>${selectedOrder.guestName || 'Kunde'}</h3>
+      <span class="badge">${getOrderStatusLabel(selectedOrder)}</span>
+    </div>
+    <p><strong>Name/Tisch:</strong> ${selectedOrder.guestName || 'Kunde'}</p>
+    <p><strong>Cocktail:</strong> ${getOrderItemsText(selectedOrder)}</p>
+    <p><strong>Bestellt am:</strong> ${new Date(selectedOrder.createdAt).toLocaleString('de-DE')}</p>
+    <p><strong>Status:</strong> ${getOrderStatusLabel(selectedOrder)}</p>
+  `;
+}
+
+function getOrderStatusLabel(order) {
+  if (order?.status === 'done') {
+    return 'Fertig';
+  }
+
+  if (order?.status === 'in_progress') {
+    return 'In Bearbeitung';
+  }
+
+  return 'Offen';
+}
+
+function renderOrdersTab() {
+  const sortedOrders = getSortedOrders();
+
+  if (!sortedOrders.length) {
+    state.selectedOrderId = null;
+  } else if (!sortedOrders.some((order) => order.id === state.selectedOrderId)) {
+    state.selectedOrderId = sortedOrders[0].id;
+  }
+
+  if (cocktailCountElement) {
+    cocktailCountElement.textContent = `${sortedOrders.length}`;
+  }
+
+  if (cocktailListElement) {
+    cocktailListElement.innerHTML = sortedOrders.length
+      ? sortedOrders.map((order) => `
+        <button class="cocktail-list-item ${state.selectedOrderId === order.id ? 'active' : ''}" type="button" data-id="${order.id}">
+          <span class="order-list-primary">
+            <strong>${order.guestName || 'Kunde'}</strong>
+            <span>${getOrderItemsText(order)}</span>
+          </span>
+          <span class="badge">${getOrderStatusLabel(order)}</span>
+        </button>
+      `).join('')
+      : '<p class="empty-state">Noch keine Bestellungen.</p>';
+
+    cocktailListElement.querySelectorAll('button[data-id]').forEach((button) => {
+      button.addEventListener('click', () => {
+        state.selectedOrderId = button.dataset.id;
+        renderOrdersTab();
+      });
+    });
+  }
+
+  renderOrderDetail();
+}
+
 function renderCocktails() {
+  if (state.guestView === 'orders') {
+    renderOrdersTab();
+    return;
+  }
+
   state.filteredCocktails = getFilteredCocktails();
 
   if (cocktailCountElement) {
@@ -412,6 +526,15 @@ function renderCart() {
     .join('');
 }
 
+function renderView() {
+  if (state.guestView === 'orders') {
+    renderOrdersTab();
+    return;
+  }
+
+  renderCocktails();
+}
+
 function addToCart(cocktailId) {
   const cocktail = state.cocktails.find((item) => item.id === cocktailId);
   if (!cocktail || cocktail.available === false) {
@@ -469,6 +592,11 @@ async function init() {
       barUrl.searchParams.set('bar', barKey);
       barLink.href = barUrl.toString();
     }
+    if (museumLink) {
+      const museumUrl = new URL('./bar-museum.html', window.location.href);
+      museumUrl.searchParams.set('bar', barKey);
+      museumLink.href = museumUrl.toString();
+    }
     const config = await loadConfig(barKey);
     state.config = config;
     createFirebaseClient(config);
@@ -519,6 +647,13 @@ async function init() {
       renderFilters();
       renderCocktails();
       renderCart();
+    });
+
+    listenToOrders(config.barId || barKey, (orders) => {
+      state.orders = Array.isArray(orders) ? orders : [];
+      if (state.guestView === 'orders') {
+        renderView();
+      }
     });
 
     renderFilters();

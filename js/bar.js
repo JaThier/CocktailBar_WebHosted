@@ -48,6 +48,8 @@ const isMuseumView = window.location.pathname.toLowerCase().endsWith('/bar-museu
 
 const barNameElement = document.querySelector('#bar-name');
 const barStatusElement = document.querySelector('#bar-status');
+const guestLink = document.querySelector('#guest-link');
+const museumGuestLink = document.querySelector('#museum-guest-link');
 const barLink = document.querySelector('#bar-link');
 const accessPanelElement = document.querySelector('#access-panel');
 const unlockButton = document.querySelector('#unlock-bar');
@@ -69,6 +71,22 @@ function resetBarState() {
 function loadStoredState() {
   const savedOrders = JSON.parse(localStorage.getItem(getStorageKey('orders')) || 'null');
   state.orders = Array.isArray(savedOrders) ? savedOrders : [];
+}
+
+function getConfiguredBarKey() {
+  return state.config?.barId || state.barKey;
+}
+
+function getGuestViewUrl() {
+  const guestUrl = new URL('./index.html', window.location.href);
+  guestUrl.searchParams.set('bar', getConfiguredBarKey());
+  return guestUrl;
+}
+
+function getBarViewUrl() {
+  const barUrl = new URL('./bar.html', window.location.href);
+  barUrl.searchParams.set('bar', getConfiguredBarKey());
+  return barUrl;
 }
 
 function getFilterDefinitionContent() {
@@ -194,6 +212,14 @@ function getFilterDefinitionContent() {
       ],
     },
   };
+}
+
+function getFilterDefinitionBulletPoints(filterKey) {
+  return getFilterDefinitionContent()[filterKey]?.bullets || [
+    `Passt zur Kategorie ${filterKey} im Bar-Museum.`,
+    'Hilft bei der schnellen Einordnung passender Cocktails.',
+    'Dient im Bar-Museum als kompakte Erklärung zur Filterkategorie.',
+  ];
 }
 
 function getFilterDefinitionStorageKey() {
@@ -1148,6 +1174,34 @@ async function init() {
 
   createFirebaseClient(state.config);
 
+  const guestUrl = getGuestViewUrl();
+  const barUrl = getBarViewUrl();
+
+  if (guestLink) {
+    guestLink.textContent = 'Gäste-Ansicht';
+    guestLink.href = guestUrl.toString();
+  }
+
+  if (museumGuestLink) {
+    museumGuestLink.textContent = 'Gäste-Ansicht';
+    museumGuestLink.href = guestUrl.toString();
+  }
+
+  if (barLink) {
+    barLink.textContent = isMuseumView ? 'Bar-Ansicht' : 'Gäste-Ansicht';
+    barLink.href = isMuseumView ? barUrl.toString() : guestUrl.toString();
+  }
+
+  if (barNameElement) {
+    barNameElement.textContent = isMuseumView ? (state.config.barName || 'Cocktail Bar') : (state.config.barName || 'Cocktail Bar');
+  }
+
+  if (barStatusElement) {
+    barStatusElement.textContent = isMuseumView
+      ? `${state.config.barName || 'Cocktail Bar'} · ${state.config.isOpen === false ? 'Bar-Museum geschlossen' : 'Bar-Museum geöffnet'}`
+      : (state.config.isOpen === false ? 'Bar geschlossen' : 'Bar geöffnet');
+  }
+
   const sessionKey = getStorageKey('access');
   if (!isMuseumView && sessionStorage.getItem(sessionKey) !== 'true') {
     ensureAccess();
@@ -1157,20 +1211,6 @@ async function init() {
   setAccessState(true);
 
   try {
-    if (barLink) {
-      if (isMuseumView) {
-        barLink.textContent = 'Bar-Ansicht';
-        barLink.href = new URL('./bar.html', window.location.href).toString();
-      } else {
-        const guestUrl = new URL('./index.html', window.location.href);
-        guestUrl.searchParams.set('bar', state.barKey);
-        barLink.href = guestUrl.toString();
-      }
-    }
-    barNameElement.textContent = isMuseumView ? 'Bar-Museum' : (state.config.barName || 'Cocktail Bar');
-    barStatusElement.textContent = isMuseumView
-      ? (state.config.isOpen === false ? 'Bar-Museum geschlossen' : 'Bar-Museum geöffnet')
-      : (state.config.isOpen === false ? 'Bar geschlossen' : 'Bar geöffnet');
     resetBarState();
     loadStoredState();
     state.filterDefinitions = loadFilterDefinitions();

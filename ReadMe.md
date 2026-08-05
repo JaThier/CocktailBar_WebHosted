@@ -6,6 +6,7 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 - Responsive Gäste-Ansicht mit Cocktail-Karten
 - Filter für Alkoholisch / Alkoholfrei
 - Umschaltbare Gäste-Tabs für vollständige Karte und Tageskarte
+- Gäste-Tab für Bestellungen mit Statusübersicht
 - Warenkorb und Bestell-Button
 - einfache Bar-Ansicht für die Barkeeper-Ansicht
 - zusätzliche Bar-Museum-Ansicht mit Filterdefinitionen
