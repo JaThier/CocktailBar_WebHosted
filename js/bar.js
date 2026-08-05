@@ -20,6 +20,7 @@ const state = {
   inventory: {},
   orders: [],
   activeTab: 'cocktails',
+  searchQuery: '',
   selectedCocktailId: null,
   selectedOrderId: null,
 };
@@ -242,27 +243,69 @@ function getCocktailStrengthLabel(cocktail) {
   return 'Ausgewogen';
 }
 
-function renderCocktailsTab() {
-  const ingredients = getAllIngredients();
-  const sortedCocktails = sortCocktailsByName(state.cocktails);
-  const previousListScrollTop = tabContentElement?.querySelector('.cocktail-list')?.scrollTop || 0;
+function normalizeSearchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
+}
 
-  if (!sortedCocktails.length) {
-    state.selectedCocktailId = null;
-  } else if (!sortedCocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
-    state.selectedCocktailId = sortedCocktails[0].id;
+function matchesSearchQuery(cocktail, query) {
+  const normalizedQuery = normalizeSearchText(query);
+
+  if (!normalizedQuery) {
+    return true;
   }
 
-  const selectedCocktail = sortedCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || null;
+  const haystack = normalizeSearchText([
+    cocktail?.name || '',
+    getIngredientNameList(cocktail).join(' '),
+  ].join(' '));
+
+  if (haystack.includes(normalizedQuery)) {
+    return true;
+  }
+
+  const tokens = normalizedQuery.split(' ').filter(Boolean);
+  return tokens.length > 1 && tokens.every((token) => haystack.includes(token));
+}
+
+function getFilteredCocktails() {
+  const availableCocktails = sortCocktailsByName(state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail, state.inventory)));
+
+  if (!state.searchQuery) {
+    return availableCocktails;
+  }
+
+  return availableCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
+}
+
+function renderCocktailsTab(options = {}) {
+  const { preserveSearchFocus = false, searchSelectionStart = null, searchSelectionEnd = null } = options;
+  const ingredients = getAllIngredients();
+  const filteredCocktails = getFilteredCocktails();
+  const previousListScrollTop = tabContentElement?.querySelector('.cocktail-list')?.scrollTop || 0;
+
+  if (!filteredCocktails.length) {
+    state.selectedCocktailId = null;
+  } else if (!filteredCocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
+    state.selectedCocktailId = filteredCocktails[0].id;
+  }
+
+  const selectedCocktail = filteredCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || null;
 
   tabContentElement.innerHTML = `
     <div class="section-title">
       <h3>Cocktails bearbeiten</h3>
       <button class="primary-button" id="add-cocktail" type="button">+ Cocktail hinzufügen</button>
     </div>
+    <label class="filter-search-field">
+      <span>Cocktail suchen</span>
+      <input id="bartender-cocktail-search" type="search" placeholder="Name oder Zutat" value="${escapeHtml(state.searchQuery)}" />
+    </label>
     <div class="cocktail-layout">
       <div class="cocktail-list" aria-label="Cocktail-Liste">
-        ${sortedCocktails.length ? sortedCocktails.map((cocktail) => {
+        ${filteredCocktails.length ? filteredCocktails.map((cocktail) => {
           const isAvailable = isCocktailAvailable(cocktail, state.inventory);
           return `
             <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${isAvailable ? '' : 'disabled'}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
@@ -337,6 +380,27 @@ function renderCocktailsTab() {
   `;
 
   attachCocktailImages();
+
+  const searchInput = tabContentElement.querySelector('#bartender-cocktail-search');
+  if (searchInput) {
+    searchInput.value = state.searchQuery;
+    if (preserveSearchFocus) {
+      searchInput.focus();
+      if (typeof searchSelectionStart === 'number' && typeof searchSelectionEnd === 'number') {
+        searchInput.setSelectionRange(searchSelectionStart, searchSelectionEnd);
+      }
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      const target = event.target;
+      state.searchQuery = event.target.value;
+      renderContent({
+        preserveSearchFocus: true,
+        searchSelectionStart: target.selectionStart,
+        searchSelectionEnd: target.selectionEnd,
+      });
+    });
+  }
 
   requestAnimationFrame(() => {
     const cocktailList = tabContentElement?.querySelector('.cocktail-list');
@@ -604,7 +668,7 @@ function renderOrdersTab() {
   attachOrderImage(selectedOrder);
 }
 
-function renderContent() {
+function renderContent(options = {}) {
   if (!tabContentElement) {
     return;
   }
@@ -619,7 +683,7 @@ function renderContent() {
     return;
   }
 
-  renderCocktailsTab();
+  renderCocktailsTab(options);
 }
 
 function bindTabEvents() {
