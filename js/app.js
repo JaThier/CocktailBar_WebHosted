@@ -21,6 +21,7 @@ const cocktailPropertyOptions = [
   'Aromatisch',
   'Fruchtig',
   'Würzig',
+  'Nussig',
   'Spritzig',
   'Cremig',
   'Raffiniert',
