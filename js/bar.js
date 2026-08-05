@@ -245,6 +245,7 @@ function getCocktailStrengthLabel(cocktail) {
 function renderCocktailsTab() {
   const ingredients = getAllIngredients();
   const sortedCocktails = sortCocktailsByName(state.cocktails);
+  const previousListScrollTop = tabContentElement?.querySelector('.cocktail-list')?.scrollTop || 0;
 
   if (!sortedCocktails.length) {
     state.selectedCocktailId = null;
@@ -336,6 +337,13 @@ function renderCocktailsTab() {
   `;
 
   attachCocktailImages();
+
+  requestAnimationFrame(() => {
+    const cocktailList = tabContentElement?.querySelector('.cocktail-list');
+    if (cocktailList) {
+      cocktailList.scrollTop = previousListScrollTop;
+    }
+  });
 
   const addButton = tabContentElement.querySelector('#add-cocktail');
   if (addButton) {

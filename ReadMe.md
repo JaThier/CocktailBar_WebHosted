@@ -41,6 +41,8 @@ Dann öffne:
 - http://127.0.0.1:8000/
 - http://127.0.0.1:8000/?bar=alex
 - http://127.0.0.1:8000/?bar=jakob
+- http://127.0.0.1:8000/?bar=daniel
+- http://127.0.0.1:8000/?bar=marcel
 
 ## GitHub Pages veröffentlichen
 1. Die Änderungen auf GitHub pushen.
