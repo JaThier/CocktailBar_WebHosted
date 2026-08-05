@@ -540,6 +540,39 @@ h3 {
   background: #fff;
 }
 
+.museum-filter-text {
+  margin: 0.35rem 0 0;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.museum-description-block {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.9rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.museum-description-block span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.museum-description-block ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #4b5563;
+  display: grid;
+  gap: 0.35rem;
+}
+
 @media (max-width: 800px) {
   .museum-layout {
     grid-template-columns: 1fr;

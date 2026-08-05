@@ -71,6 +71,131 @@ function loadStoredState() {
   state.orders = Array.isArray(savedOrders) ? savedOrders : [];
 }
 
+function getFilterDefinitionContent() {
+  return {
+    'Erfrischend': {
+      text: 'Leicht und angenehm kühl im Eindruck. Diese Kategorie steht für Cocktails, die sofort frisch wirken und nicht schwer im Abgang sind. Häufig Cocktails mit größeren Mengen.',
+      bullets: [
+        'Leicht und direkt zugänglich.',
+        'Passt zu klaren, spritzigen Rezepten.',
+        'Ideal für unkomplizierte, frische Cocktails.',
+      ],
+    },
+    'Exotisch': {
+      text: 'Aromen mit Urlaubsvibe und tropischen oder ungewöhnlichen Zutaten. Diese Kategorie sammelt Cocktails, die bewusst etwas weiter weg vom Polarkreis klingen.',
+      bullets: [
+        'Mit auffälligen, tropischen Noten.',
+        'Passt gut zu fruchtigen und ausgefallenen Rezepten.',
+        'Bringt ein verspieltes, besonderes Profil.',
+      ],
+    },
+    'Aromatisch': {
+      text: 'Kräftig duftend und geschmacklich vielschichtig. Oder einfach schwer anderweitig zu beschreiben. Hier landen Cocktails, die teils unbekannte Dimensionen bieten.',
+      bullets: [
+        'Sammelt Rezepte, die sich nicht klar zu anderen Kategorien zuteilen lassen.',
+        'Mehrschichtiger, runder Geschmack.',
+        'Gut geeignet für intensive Geschmacksprofile.',
+      ],
+    },
+    'Fruchtig': {
+      text: 'Frucht steht im Vordergrund, ohne den Cocktail zu überladen. Diese Kategorie wirkt saftig, rund und oft angenehm süffig.',
+      bullets: [
+        'Klare Fruchtnoten im Mittelpunkt.',
+        'Wirkt saftig und weich.',
+        'Passt zu vielen beliebten und allgemeinverträglichen Rezepten.',
+      ],
+    },
+    'Würzig': {
+      text: 'Hier geht es um mehr Kante und Tiefe. Würzige Cocktails bringen Wärme, Charakter und oft eine leicht markante Länge mit.',
+      bullets: [
+        'Mehr kräutriger und würziger Nachhall.',
+        'Wirkt oft etwas wärmer und kräftiger.',
+        'Für Cocktails mit klarer Würzstruktur.',
+      ],
+    },
+    'Nussig': {
+      text: 'Rund, etwas dicker und mit sanfter Aromatik. Nussige Cocktails wirken oft weich, warm und angenehm voll im Geschmack.',
+      bullets: [
+        'Sanfte Aromen und warme Noten.',
+        'Wirkt weich und vollmundig.',
+        'Passt zu cremigen oder samtigen Rezepten.',
+      ],
+    },
+    'Spritzig': {
+      text: 'Lebhaft, leicht und mit spürbarer Frische im Glas. Spritzige Cocktails setzen auf lebendige Kohlensäure oder besonders schnelle Trinkfreude.',
+      bullets: [
+        'Belebt durch Frische und Bewegung.',
+        'Oft mit prickelndem, leichtem Charakter.',
+        'Geeignet für unkomplizierte Drinks.',
+      ],
+    },
+    'Cremig': {
+      text: 'Samtig, weich und mit dichter Textur. Diese Kategorie beschreibt Cocktails, die sich besonders glatt und rund anfühlen.',
+      bullets: [
+        'Weiche, sahnige Textur.',
+        'Oft milder und dichter im Mundgefühl.',
+        'Gut für etwas deftiger wirkende Drinks.',
+      ],
+    },
+    'Raffiniert': {
+      text: 'Fein aufgebaut und mit einer besonderen Idee im Rezept. Raffinierte Cocktails wirken durch Details, nicht durch Lautstärke.',
+      bullets: [
+        'Mit klug gesetzten Geschmacksdetails.',
+        'Wirkt elegant und durchdacht.',
+        'Für Rezepte mit einer größeren Idee.',
+      ],
+    },
+    'Klassiker': {
+      text: 'Bewährte Getränke mit Wiedererkennungswert. Diese Kategorie steht für Cocktails, die man sofort einordnen kann und die lange funktionieren.',
+      bullets: [
+        'Bekannt und bewährt.',
+        'Starker Wiedererkennungswert.',
+        'Zeitlos in der Bar-Auswahl.',
+      ],
+    },
+    'Classy': {
+      text: 'Elegant, sauber und mit einem Hauch von Stil. Classy beschreibt Cocktails, die bewusst gepflegt und etwas feiner wirken.',
+      bullets: [
+        'Elegant und stilvoll im Auftritt.',
+        'Wirkt teuer und businesstauglich.',
+        'Für Cocktails mit klarer und feiner Ausstrahlung.',
+      ],
+    },
+    'Bitter': {
+      text: 'Herb, markant und oft mit langer Präsenz am Gaumen. Bittere Cocktails leben von Ecken, Kanten und einem klaren Gegenpol zur Süße.',
+      bullets: [
+        'Herbe und klare Geschmacksrichtung.',
+        'Bringt Kontrast zur Süße.',
+        'Für Gäste mit Vorliebe für Charakter.',
+      ],
+    },
+    'Süß': {
+      text: 'Weich, zugänglich und oft besonders gefällig. Süße Cocktails setzen auf angenehme Rundheit und einen direkten Wohlfühl-Eindruck.',
+      bullets: [
+        'Angenehm rund und zugänglich.',
+        'Oft freundlich und unkompliziert.',
+        'Gut geeignet für Zuckerliebhaber.',
+      ],
+    },
+    'Sauer': {
+      text: 'Frisch, klar und mit deutlicher Säure. Diese Kategorie steht für Cocktails, die wach machen und einen präzisen Gegenpol zur Süße setzen.',
+      bullets: [
+        'Deutlich frische Säure im Profil.',
+        'Sorgt für klare Spannung im Drink.',
+        'Ideal für lebendige Rezepturen.',
+      ],
+    },
+    'Bartenders Favourite': {
+      text: 'Persönliche Favoriten mit besonderem Wiedererkennungswert. Hier landen Cocktails, die aus Sicht der Bar einfach gut funktionieren und gern empfohlen werden.',
+      bullets: [
+        'Persönliche Favoriten aus der Bar.',
+        'Praktisch, beliebt und bewährt.',
+        'Für Rezepte mit besonderem Stellenwert.',
+      ],
+    },
+  };
+}
+
 function getFilterDefinitionStorageKey() {
   return getStorageKey('filter-definitions');
 }
@@ -80,13 +205,12 @@ function getFilterDefinitionKeys() {
 }
 
 function loadFilterDefinitions() {
-  getFilterDefinitionKeys().forEach((filterKey) => {
-    // keep keys stable; values are initialized below
-  });
+  const contentByFilter = getFilterDefinitionContent();
 
-  return Object.fromEntries(
-    getFilterDefinitionKeys().map((filterKey) => [filterKey, `Beispieltext_${filterKey}`])
-  );
+  return getFilterDefinitionKeys().reduce((definitions, filterKey) => {
+    definitions[filterKey] = contentByFilter[filterKey]?.text || `Beispieltext_${filterKey}`;
+    return definitions;
+  }, {});
 }
 
 function saveFilterDefinitions() {
@@ -492,8 +616,13 @@ function renderMuseumFilterDefinitionsTab() {
       <div class="museum-editor-panel">
         <label class="editor-row museum-editor-row">
           <span>${selectedFilterKey}</span>
-          <textarea id="museum-filter-text" rows="12" placeholder="Text zur Filterkategorie" readonly>${escapeHtml(selectedFilterText)}</textarea>
+          <p class="museum-filter-text">${escapeHtml(selectedFilterText)}</p>
         </label>
+        <div class="museum-description-block" aria-label="Kurzbeschreibung">
+          <ul>
+            ${getFilterDefinitionBulletPoints(selectedFilterKey).map((line) => `<li>${escapeHtml(line)}</li>`).join('')}
+          </ul>
+        </div>
       </div>
     </div>
   `;
