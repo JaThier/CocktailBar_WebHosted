@@ -25,6 +25,7 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 ## Wichtige Konventionen
 - Die Bar wird über den Query-Parameter `?bar=` gewählt, zum Beispiel `?bar=alex`.
 - Cocktails können in der Bar-Ansicht als `daily` markiert werden. Diese Cocktails erscheinen in der Gästeansicht in der Tageskarte.
+- Die Stärke-Kategorie `alkoholfrei` ist Teil des `strength`-Feldes und ersetzt die frühere separate Alkohol-Checkbox in der Oberfläche.
 - Die vollständige Karte zeigt alle Cocktails mit den vorhandenen Filtern.
 - Das Bild-Namensschema liegt in `config/images/NAMING_CONVENTION.txt` und sollte beim Hinzufügen neuer Bilder beachtet werden.
 

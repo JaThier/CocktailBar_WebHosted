@@ -1,6 +1,6 @@
 import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable } from './shared.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable, sortCocktailsByName } from './shared.js';
 
 const state = {
   config: null,
@@ -55,6 +55,38 @@ function getStorageKey(key, barKey = state.barKey) {
 
 function isDailyCocktail(cocktail) {
   return cocktail?.daily === true;
+}
+
+function getCocktailStrengthValue(cocktail) {
+  return normalizeStrength(cocktail?.strength || (cocktail?.alcoholic === false ? 'alkoholfrei' : 'ausgewogen'));
+}
+
+function getCocktailStrengthLabel(cocktail) {
+  const strength = getCocktailStrengthValue(cocktail);
+
+  if (strength === 'alkoholfrei') {
+    return 'Alkoholfrei';
+  }
+
+  if (strength === 'intensiv') {
+    return 'Intensiv';
+  }
+
+  if (strength === 'mild') {
+    return 'Mild';
+  }
+
+  return 'Ausgewogen';
+}
+
+function getCocktailStrengthDescription(cocktail) {
+  const strength = getCocktailStrengthValue(cocktail);
+
+  if (strength === 'alkoholfrei') {
+    return 'alkoholfreier';
+  }
+
+  return `${getCocktailStrengthLabel(cocktail).toLowerCase()}er`;
 }
 
 function setGuestView(view) {
@@ -148,23 +180,6 @@ function toggleFilter(filterKey) {
     return;
   }
 
-  if (filterKey === 'alcoholic' || filterKey === 'non-alcoholic') {
-    const alcoholFilterIndex = state.activeFilterKeys.findIndex((key) => key === 'alcoholic' || key === 'non-alcoholic');
-    const isSameFilterActive = alcoholFilterIndex >= 0 && state.activeFilterKeys[alcoholFilterIndex] === filterKey;
-
-    if (alcoholFilterIndex >= 0) {
-      state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== 'alcoholic' && key !== 'non-alcoholic');
-    }
-
-    if (!isSameFilterActive) {
-      state.activeFilterKeys.push(filterKey);
-    }
-
-    renderFilters();
-    renderCocktails();
-    return;
-  }
-
   if (isFilterActive(filterKey)) {
     state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== filterKey);
   } else {
@@ -188,6 +203,7 @@ function renderFilters() {
 
   const propertyFilters = getAvailablePropertyFilters();
   const strengthFilters = [
+    { key: 'strength:alkoholfrei', label: 'alkoholfrei' },
     { key: 'strength:mild', label: 'mild' },
     { key: 'strength:ausgewogen', label: 'ausgewogen' },
     { key: 'strength:intensiv', label: 'intensiv' },
@@ -195,8 +211,6 @@ function renderFilters() {
 
   const filters = [
     { key: 'all', label: 'Alle' },
-    { key: 'alcoholic', label: 'Alkoholisch' },
-    { key: 'non-alcoholic', label: 'Alkoholfrei' },
     ...strengthFilters,
     ...propertyFilters.map((property) => ({ key: property, label: property })),
   ];
@@ -211,8 +225,6 @@ function renderFilters() {
 
       if (filter.key === 'all') {
         filterClass += ' filter-chip-all';
-      } else if (filter.key === 'alcoholic' || filter.key === 'non-alcoholic') {
-        filterClass += ' filter-chip-alcohol';
       } else if (filter.key.startsWith('strength:')) {
         filterClass += ' filter-chip-strength';
       } else {
@@ -245,18 +257,8 @@ function getFilteredCocktails() {
     return filteredCocktails.filter((cocktail) => isDailyCocktail(cocktail));
   }
 
-  const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
-
-  if (alcoholFilter === 'alcoholic') {
-    filteredCocktails = filteredCocktails.filter((cocktail) => cocktail.alcoholic);
-  } else if (alcoholFilter === 'non-alcoholic') {
-    filteredCocktails = filteredCocktails.filter((cocktail) => !cocktail.alcoholic);
-  }
-
   const propertyFilters = state.activeFilterKeys.filter((filterKey) => {
-    return filterKey !== 'alcoholic'
-      && filterKey !== 'non-alcoholic'
-      && !filterKey.startsWith('strength:');
+    return !filterKey.startsWith('strength:');
   });
 
   const strengthFilter = state.activeFilterKeys.find((filterKey) => filterKey.startsWith('strength:'));
@@ -274,7 +276,7 @@ function getFilteredCocktails() {
     filteredCocktails = filteredCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
   }
 
-  return filteredCocktails;
+  return sortCocktailsByName(filteredCocktails);
 }
 
 function getCocktailImageMarkup(cocktail) {
@@ -296,7 +298,7 @@ function getCocktailDescription(cocktail) {
     ? getIngredientNames(cocktail).join(', ')
     : 'frische Zutaten';
 
-  return `${cocktail.name} ist ein ${cocktail.alcoholic ? 'alkoholischer' : 'alkoholfreier'} Cocktail mit ${ingredients}.`;
+  return `${cocktail.name} ist ein ${getCocktailStrengthDescription(cocktail)} Cocktail mit ${ingredients}.`;
 }
 
 function bindCustomerOrderControls() {
@@ -332,7 +334,7 @@ function renderCocktailDetail() {
   cocktailDetailElement.innerHTML = `
     <div class="cocktail-detail-title">
       <h3>${selectedCocktail.name}</h3>
-      <span class="badge">${selectedCocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
+      <span class="badge">${getCocktailStrengthLabel(selectedCocktail)}</span>
     </div>
     ${getCocktailImageMarkup(selectedCocktail)}
     <p>${getCocktailDescription(selectedCocktail)}</p>
@@ -377,7 +379,7 @@ function renderCocktails() {
     .map((cocktail) => `
       <button class="cocktail-list-item ${state.selectedCocktailId === cocktail.id ? 'active' : ''} ${cocktail.available === false ? 'disabled' : ''}" type="button" data-id="${cocktail.id}">
         <span>${cocktail.name}</span>
-        <span class="badge">${cocktail.available === false ? 'Ausverkauft' : cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
+        <span class="badge">${cocktail.available === false ? 'Ausverkauft' : getCocktailStrengthLabel(cocktail)}</span>
       </button>
     `)
     .join('');

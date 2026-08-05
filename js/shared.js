@@ -69,6 +69,14 @@ export function getIngredientNames(cocktail) {
     .filter(Boolean);
 }
 
+export function sortCocktailsByName(cocktails) {
+  return [...(Array.isArray(cocktails) ? cocktails : [])].sort((left, right) => {
+    return String(left?.name || '').localeCompare(String(right?.name || ''), 'de', {
+      sensitivity: 'base',
+    });
+  });
+}
+
 export function isCocktailAvailable(cocktail, inventory = {}) {
   const ingredients = getIngredientNames(cocktail);
 

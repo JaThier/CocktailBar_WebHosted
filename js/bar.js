@@ -11,7 +11,7 @@ import {
   deleteOrder,
 } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates } from './shared.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName } from './shared.js';
 
 const state = {
   barKey: 'default',
@@ -220,16 +220,39 @@ function getIngredientDisplayEntries(cocktail) {
   });
 }
 
-function renderCocktailsTab() {
-  const ingredients = getAllIngredients();
+function getCocktailStrengthValue(cocktail) {
+  return normalizeStrength(cocktail?.strength || (cocktail?.alcoholic === false ? 'alkoholfrei' : 'ausgewogen'));
+}
 
-  if (!state.cocktails.length) {
-    state.selectedCocktailId = null;
-  } else if (!state.cocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
-    state.selectedCocktailId = state.cocktails[0].id;
+function getCocktailStrengthLabel(cocktail) {
+  const strength = getCocktailStrengthValue(cocktail);
+
+  if (strength === 'alkoholfrei') {
+    return 'Alkoholfrei';
   }
 
-  const selectedCocktail = state.cocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || null;
+  if (strength === 'intensiv') {
+    return 'Intensiv';
+  }
+
+  if (strength === 'mild') {
+    return 'Mild';
+  }
+
+  return 'Ausgewogen';
+}
+
+function renderCocktailsTab() {
+  const ingredients = getAllIngredients();
+  const sortedCocktails = sortCocktailsByName(state.cocktails);
+
+  if (!sortedCocktails.length) {
+    state.selectedCocktailId = null;
+  } else if (!sortedCocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
+    state.selectedCocktailId = sortedCocktails[0].id;
+  }
+
+  const selectedCocktail = sortedCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || null;
 
   tabContentElement.innerHTML = `
     <div class="section-title">
@@ -238,12 +261,12 @@ function renderCocktailsTab() {
     </div>
     <div class="cocktail-layout">
       <div class="cocktail-list" aria-label="Cocktail-Liste">
-        ${state.cocktails.length ? state.cocktails.map((cocktail) => {
+        ${sortedCocktails.length ? sortedCocktails.map((cocktail) => {
           const isAvailable = isCocktailAvailable(cocktail, state.inventory);
           return `
             <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${isAvailable ? '' : 'disabled'}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
               <span>${cocktail.name || 'Unbenannter Cocktail'}</span>
-              <span class="badge">${isAvailable ? (cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei') : 'Nicht verfügbar'}</span>
+              <span class="badge">${isAvailable ? getCocktailStrengthLabel(cocktail) : 'Nicht verfügbar'}</span>
             </button>
           `;
         }).join('') : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
@@ -291,13 +314,11 @@ function renderCocktailsTab() {
                 <label class="editor-row">
                   <span>Stärke</span>
                   <select data-field="strength">
+                    <option value="alkoholfrei" ${getCocktailStrengthValue(selectedCocktail) === 'alkoholfrei' ? 'selected' : ''}>alkoholfrei</option>
                     <option value="mild" ${selectedCocktail.strength === 'mild' ? 'selected' : ''}>mild</option>
                     <option value="ausgewogen" ${selectedCocktail.strength === 'ausgewogen' || !selectedCocktail.strength ? 'selected' : ''}>ausgewogen</option>
                     <option value="intensiv" ${selectedCocktail.strength === 'intensiv' ? 'selected' : ''}>intensiv</option>
                   </select>
-                </label>
-                <label>
-                  <input type="checkbox" data-field="alcoholic" ${selectedCocktail.alcoholic ? 'checked' : ''} /> Alkoholisch
                 </label>
                 <label>
                   <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
@@ -323,7 +344,6 @@ function renderCocktailsTab() {
         const newCocktail = {
           name: 'Neuer Cocktail',
           ingredients: [],
-          alcoholic: true,
           daily: false,
           available: true,
           strength: 'ausgewogen',
@@ -556,7 +576,7 @@ function renderOrdersTab() {
                 </div>
                 <div class="order-detail-content">
                   <h4>${escapeHtml(selectedCocktail.name || 'Cocktail')}</h4>
-                  <p>${escapeHtml(selectedCocktail.description || (selectedCocktail.alcoholic ? 'Ein klassischer alkoholischer Cocktail.' : 'Ein frischer alkoholfreier Cocktail.'))}</p>
+                  <p>${escapeHtml(selectedCocktail.description || `Ein ${getCocktailStrengthLabel(selectedCocktail).toLowerCase()}er Cocktail.`)}</p>
                   <p><strong>Rezept:</strong></p>
                   <div>${getIngredientDisplayEntries(selectedCocktail).length ? getIngredientDisplayEntries(selectedCocktail).map((entry) => `<div>${escapeHtml(entry)}</div>`).join('') : '<div>Keine Angaben</div>'}</div>
                   ${selectedCocktail.comment ? `<p><strong>Kommentar:</strong> ${escapeHtml(selectedCocktail.comment)}</p>` : ''}
@@ -688,7 +708,6 @@ function bindContentEvents() {
 
       const nameInput = card.querySelector('[data-field="name"]');
       const commentInput = card.querySelector('[data-field="comment"]');
-      const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
       const dailyInput = card.querySelector('[data-field="daily"]');
       const strengthInput = card.querySelector('[data-field="strength"]');
       const ingredientRows = Array.from(card.querySelectorAll('[data-ingredient-index]'));
@@ -712,7 +731,6 @@ function bindContentEvents() {
         id: generateCocktailId(nameInput?.value || 'Neuer Cocktail'),
         ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
-        alcoholic: alcoholicInput?.checked || false,
         daily: dailyInput?.checked || false,
         strength: normalizeStrength(strengthInput?.value),
         comment: commentInput?.value.trim() || '',
