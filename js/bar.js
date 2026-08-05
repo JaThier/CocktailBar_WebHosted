@@ -446,8 +446,8 @@ function renderInventoryTab() {
     <div class="inventory-list">
       ${ingredients.length ? ingredients.map((ingredient) => `
         <label class="inventory-item">
-          <span>${ingredient}</span>
           <input type="checkbox" data-ingredient="${ingredient}" ${state.inventory[ingredient] !== false ? 'checked' : ''} />
+          <span>${ingredient}</span>
         </label>
       `).join('') : '<p class="empty-state">Noch keine Zutaten vorhanden.</p>'}
     </div>

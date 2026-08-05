@@ -480,9 +480,11 @@ h3 {
 
 .inventory-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: left;
 }
 
 .order-card {
