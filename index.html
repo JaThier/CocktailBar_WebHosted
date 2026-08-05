@@ -18,12 +18,28 @@
       </header>
 
       <section class="panel">
-        <div class="filters" id="filter-group" role="group" aria-label="Filter"></div>
+        <div class="tab-list guest-view-tabs" role="tablist" aria-label="Kartenansicht">
+          <button class="tab-button active" data-guest-view-tab="full" type="button">Vollständige Karte</button>
+          <button class="tab-button" data-guest-view-tab="daily" type="button">Tageskarte</button>
+        </div>
       </section>
+
+      <details class="panel filter-panel" id="guest-filter-panel">
+        <summary class="filter-panel-summary">
+          <span>Filter</span>
+        </summary>
+        <div class="filter-panel-body">
+          <label class="filter-search-field">
+            <span>Suche</span>
+            <input id="filter-search" type="search" placeholder="Cocktail oder Zutat suchen" autocomplete="off" />
+          </label>
+          <div class="filters" id="filter-group" role="group" aria-label="Filter"></div>
+        </div>
+      </details>
 
       <section class="panel">
         <div class="section-title">
-          <h2>Cocktails</h2>
+          <h2 id="cocktail-section-title">Cocktails</h2>
           <span id="cocktail-count">0</span>
         </div>
         <div class="cocktail-layout">

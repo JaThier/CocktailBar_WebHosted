@@ -5,6 +5,7 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 ## Was ist umgesetzt?
 - Responsive Gäste-Ansicht mit Cocktail-Karten
 - Filter für Alkoholisch / Alkoholfrei
+- Umschaltbare Gäste-Tabs für vollständige Karte und Tageskarte
 - Warenkorb und Bestell-Button
 - einfache Bar-Ansicht für die Barkeeper-Ansicht
 - dynamische Konfiguration über JSON-Dateien im Ordner config/
@@ -16,9 +17,16 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 - css/style.css: Styling
 - js/app.js: Gäste-Logik und Warenkorb
 - js/bar.js: Barkeeper-Logik
+- js/shared.js: gemeinsam genutzte Helfer für Config, Darstellung und Datennormalisierung
 - js/firebase.js: Firebase-Helfer
 - config/alex.json: Beispiel-Konfiguration für eine Bar
 - config/default.json: Fallback-Konfiguration
+
+## Wichtige Konventionen
+- Die Bar wird über den Query-Parameter `?bar=` gewählt, zum Beispiel `?bar=alex`.
+- Cocktails können in der Bar-Ansicht als `daily` markiert werden. Diese Cocktails erscheinen in der Gästeansicht in der Tageskarte.
+- Die vollständige Karte zeigt alle Cocktails mit den vorhandenen Filtern.
+- Das Bild-Namensschema liegt in `config/images/NAMING_CONVENTION.txt` und sollte beim Hinzufügen neuer Bilder beachtet werden.
 
 ## Lokales Testen
 Öffne die Datei index.html direkt im Browser oder starte einen lokalen Webserver im Projektordner.
