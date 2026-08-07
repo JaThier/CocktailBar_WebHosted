@@ -288,10 +288,12 @@ h3 {
 .cocktail-detail-panel img {
   width: 100%;
   aspect-ratio: 9 / 16;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   border-radius: 0.75rem;
   margin-bottom: 0.8rem;
   display: block;
+  background: #f7f3ea;
 }
 
 .cocktail-detail-title {
@@ -405,12 +407,14 @@ h3 {
 .editor-image {
   width: 100%;
   max-width: 140px;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+  object-position: center;
   border-radius: 0.9rem;
   display: block;
   margin: 0;
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  background: #f7f3ea;
 }
 
 .editor-image-host {
