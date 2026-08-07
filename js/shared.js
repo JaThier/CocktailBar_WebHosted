@@ -113,7 +113,7 @@ export function getCocktailImageCandidates(cocktail, barFolder) {
   });
 
   return baseNames.flatMap((baseName) => [
-    `./config/images/${barFolder}/${baseName}.jpg`,
+    `./config/images/${barFolder}/${baseName}.png`,
     `./config/images/${barFolder}/${baseName}.png`,
   ]);
 }

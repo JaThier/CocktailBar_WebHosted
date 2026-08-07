@@ -313,7 +313,7 @@ function getOrderCocktailName(order) {
 function getCocktailImageMarkup(cocktail) {
   const safeAlt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
   const slug = generateCocktailId(cocktail.name || cocktail.id || 'cocktail');
-  const localImagePath = `./config/images/${state.barKey}/${slug}.jpg`;
+  const localImagePath = `./config/images/${state.barKey}/${slug}.png`;
   const remoteImage = cocktail.image || '';
   const imageSource = localImagePath;
 

@@ -11,14 +11,14 @@ bei Dateinamen absolut strikt! (Case-sensitive)
   config/images/<barId>/
 
   Beispiel:
-  config/images/alex/mojito.jpg
-  config/images/kollege/gin-tonic.jpg
+  config/images/alex/mojito.png
+  config/images/kollege/gin-tonic.png
 
 
 2. DATEINAMEN & FORMATIERUNG
 --------------------------------------------------------------------
 - Format: IMMER Kleinschreibung (Lowercase)
-- Endung: IMMER .jpg (oder .png), klein geschrieben
+- Endung: IMMER .png (oder .png), klein geschrieben
 - Leerzeichen: Ersetzen durch Bindestrich (-)
 - Umlaute & Sonderzeichen: Ersetzen durch ASCII-Zeichen
   - ä -> ae
@@ -27,10 +27,10 @@ bei Dateinamen absolut strikt! (Case-sensitive)
   - ß -> ss
 
   Beispiele:
-  - "Mojito"              -> mojito.jpg
-  - "Sex on the Beach"    -> sex-on-the-beach.jpg
-  - "Grüner Engel"        -> gruener-engel.jpg
-  - "Tequila Sunrise"     -> tequila-sunrise.jpg
+  - "Mojito"              -> mojito.png
+  - "Sex on the Beach"    -> sex-on-the-beach.png
+  - "Grüner Engel"        -> gruener-engel.png
+  - "Tequila Sunrise"     -> tequila-sunrise.png
 
 
 3. VERKNÜPFUNG IM CODE / WEB-UI (ID-BASIS)
@@ -41,6 +41,6 @@ sondern über eine bereinigte Cocktail-ID!
 Beispiel im Web-UI:
 - Name im Formular: "Sex on the Beach"
 - Generierte ID:    "sex-on-the-beach"
-- Automatische Bild-URL: "config/images/alex/sex-on-the-beach.jpg"
+- Automatische Bild-URL: "config/images/alex/sex-on-the-beach.png"
 
 ====================================================================
