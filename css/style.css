@@ -37,7 +37,7 @@ body {
 
 .topbar,
 .panel {
-  background: #fff;
+  background: #3d3d3d00;
   border-radius: 1rem;
   padding: 1rem;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
@@ -138,7 +138,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.75rem;
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 h1,
@@ -291,7 +291,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 0.9rem;
   padding: 0.8rem 0.95rem;
-  background: #fffdf9;
+  background: #51515100;
   text-align: left;
   cursor: pointer;
   font: inherit;
@@ -324,7 +324,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 1rem;
   padding: 1rem;
-  background: #fffdf9;
+  background: #51515100;
   min-height: 280px;
 }
 
