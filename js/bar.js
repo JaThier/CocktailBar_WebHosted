@@ -11,7 +11,7 @@ import {
   deleteOrder,
 } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates } from './shared.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName } from './shared.js';
 
 const state = {
   barKey: 'default',
@@ -20,6 +20,8 @@ const state = {
   inventory: {},
   orders: [],
   activeTab: 'cocktails',
+  searchQuery: '',
+  museumSelectedFilterKey: null,
   selectedCocktailId: null,
   selectedOrderId: null,
 };
@@ -30,6 +32,7 @@ const cocktailPropertyOptions = [
   'Aromatisch',
   'Fruchtig',
   'Würzig',
+  'Nussig',
   'Spritzig',
   'Cremig',
   'Raffiniert',
@@ -41,8 +44,12 @@ const cocktailPropertyOptions = [
   'Bartenders Favourite',
 ];
 
+const isMuseumView = window.location.pathname.toLowerCase().endsWith('/bar-museum.html');
+
 const barNameElement = document.querySelector('#bar-name');
 const barStatusElement = document.querySelector('#bar-status');
+const guestLink = document.querySelector('#guest-link');
+const museumGuestLink = document.querySelector('#museum-guest-link');
 const barLink = document.querySelector('#bar-link');
 const accessPanelElement = document.querySelector('#access-panel');
 const unlockButton = document.querySelector('#unlock-bar');
@@ -64,6 +71,176 @@ function resetBarState() {
 function loadStoredState() {
   const savedOrders = JSON.parse(localStorage.getItem(getStorageKey('orders')) || 'null');
   state.orders = Array.isArray(savedOrders) ? savedOrders : [];
+}
+
+function getConfiguredBarKey() {
+  return state.config?.barId || state.barKey;
+}
+
+function getGuestViewUrl() {
+  const guestUrl = new URL('./index.html', window.location.href);
+  guestUrl.searchParams.set('bar', getConfiguredBarKey());
+  return guestUrl;
+}
+
+function getBarViewUrl() {
+  const barUrl = new URL('./bar.html', window.location.href);
+  barUrl.searchParams.set('bar', getConfiguredBarKey());
+  return barUrl;
+}
+
+function getFilterDefinitionContent() {
+  return {
+    'Erfrischend': {
+      text: 'Leicht und angenehm kühl im Eindruck. Diese Kategorie steht für Cocktails, die sofort frisch wirken und nicht schwer im Abgang sind. Häufig Cocktails mit größeren Mengen.',
+      bullets: [
+        'Leicht und direkt zugänglich.',
+        'Passt zu klaren, spritzigen Rezepten.',
+        'Ideal für unkomplizierte, frische Cocktails.',
+      ],
+    },
+    'Exotisch': {
+      text: 'Aromen mit Urlaubsvibe und tropischen oder ungewöhnlichen Zutaten. Diese Kategorie sammelt Cocktails, die bewusst etwas weiter weg vom Polarkreis klingen.',
+      bullets: [
+        'Mit auffälligen, tropischen Noten.',
+        'Passt gut zu fruchtigen und ausgefallenen Rezepten.',
+        'Bringt ein verspieltes, besonderes Profil.',
+      ],
+    },
+    'Aromatisch': {
+      text: 'Kräftig duftend und geschmacklich vielschichtig. Oder einfach schwer anderweitig zu beschreiben. Hier landen Cocktails, die teils unbekannte Dimensionen bieten.',
+      bullets: [
+        'Sammelt Rezepte, die sich nicht klar zu anderen Kategorien zuteilen lassen.',
+        'Mehrschichtiger, runder Geschmack.',
+        'Gut geeignet für intensive Geschmacksprofile.',
+      ],
+    },
+    'Fruchtig': {
+      text: 'Frucht steht im Vordergrund, ohne den Cocktail zu überladen. Diese Kategorie wirkt saftig, rund und oft angenehm süffig.',
+      bullets: [
+        'Klare Fruchtnoten im Mittelpunkt.',
+        'Wirkt saftig und weich.',
+        'Passt zu vielen beliebten und allgemeinverträglichen Rezepten.',
+      ],
+    },
+    'Würzig': {
+      text: 'Hier geht es um mehr Kante und Tiefe. Würzige Cocktails bringen Wärme, Charakter und oft eine leicht markante Länge mit.',
+      bullets: [
+        'Mehr kräutriger und würziger Nachhall.',
+        'Wirkt oft etwas wärmer und kräftiger.',
+        'Für Cocktails mit klarer Würzstruktur.',
+      ],
+    },
+    'Nussig': {
+      text: 'Rund, etwas dicker und mit sanfter Aromatik. Nussige Cocktails wirken oft weich, warm und angenehm voll im Geschmack.',
+      bullets: [
+        'Sanfte Aromen und warme Noten.',
+        'Wirkt weich und vollmundig.',
+        'Passt zu cremigen oder samtigen Rezepten.',
+      ],
+    },
+    'Spritzig': {
+      text: 'Lebhaft, leicht und mit spürbarer Frische im Glas. Spritzige Cocktails setzen auf lebendige Kohlensäure oder besonders schnelle Trinkfreude.',
+      bullets: [
+        'Belebt durch Frische und Bewegung.',
+        'Oft mit prickelndem, leichtem Charakter.',
+        'Geeignet für unkomplizierte Drinks.',
+      ],
+    },
+    'Cremig': {
+      text: 'Samtig, weich und mit dichter Textur. Diese Kategorie beschreibt Cocktails, die sich besonders glatt und rund anfühlen.',
+      bullets: [
+        'Weiche, sahnige Textur.',
+        'Oft milder und dichter im Mundgefühl.',
+        'Gut für etwas deftiger wirkende Drinks.',
+      ],
+    },
+    'Raffiniert': {
+      text: 'Fein aufgebaut und mit einer besonderen Idee im Rezept. Raffinierte Cocktails wirken durch Details, nicht durch Lautstärke.',
+      bullets: [
+        'Mit klug gesetzten Geschmacksdetails.',
+        'Wirkt elegant und durchdacht.',
+        'Für Rezepte mit einer größeren Idee.',
+      ],
+    },
+    'Klassiker': {
+      text: 'Bewährte Getränke mit Wiedererkennungswert. Diese Kategorie steht für Cocktails, die man sofort einordnen kann und die lange funktionieren.',
+      bullets: [
+        'Bekannt und bewährt.',
+        'Starker Wiedererkennungswert.',
+        'Zeitlos in der Bar-Auswahl.',
+      ],
+    },
+    'Classy': {
+      text: 'Elegant, sauber und mit einem Hauch von Stil. Classy beschreibt Cocktails, die bewusst gepflegt und etwas feiner wirken.',
+      bullets: [
+        'Elegant und stilvoll im Auftritt.',
+        'Wirkt teuer und businesstauglich.',
+        'Für Cocktails mit klarer und feiner Ausstrahlung.',
+      ],
+    },
+    'Bitter': {
+      text: 'Herb, markant und oft mit langer Präsenz am Gaumen. Bittere Cocktails leben von Ecken, Kanten und einem klaren Gegenpol zur Süße.',
+      bullets: [
+        'Herbe und klare Geschmacksrichtung.',
+        'Bringt Kontrast zur Süße.',
+        'Für Gäste mit Vorliebe für Charakter.',
+      ],
+    },
+    'Süß': {
+      text: 'Weich, zugänglich und oft besonders gefällig. Süße Cocktails setzen auf angenehme Rundheit und einen direkten Wohlfühl-Eindruck.',
+      bullets: [
+        'Angenehm rund und zugänglich.',
+        'Oft freundlich und unkompliziert.',
+        'Gut geeignet für Zuckerliebhaber.',
+      ],
+    },
+    'Sauer': {
+      text: 'Frisch, klar und mit deutlicher Säure. Diese Kategorie steht für Cocktails, die wach machen und einen präzisen Gegenpol zur Süße setzen.',
+      bullets: [
+        'Deutlich frische Säure im Profil.',
+        'Sorgt für klare Spannung im Drink.',
+        'Ideal für lebendige Rezepturen.',
+      ],
+    },
+    'Bartenders Favourite': {
+      text: 'Persönliche Favoriten mit besonderem Wiedererkennungswert. Hier landen Cocktails, die aus Sicht der Bar einfach gut funktionieren und gern empfohlen werden.',
+      bullets: [
+        'Persönliche Favoriten aus der Bar.',
+        'Praktisch, beliebt und bewährt.',
+        'Für Rezepte mit besonderem Stellenwert.',
+      ],
+    },
+  };
+}
+
+function getFilterDefinitionBulletPoints(filterKey) {
+  return getFilterDefinitionContent()[filterKey]?.bullets || [
+    `Passt zur Kategorie ${filterKey} im Bar-Museum.`,
+    'Hilft bei der schnellen Einordnung passender Cocktails.',
+    'Dient im Bar-Museum als kompakte Erklärung zur Filterkategorie.',
+  ];
+}
+
+function getFilterDefinitionStorageKey() {
+  return getStorageKey('filter-definitions');
+}
+
+function getFilterDefinitionKeys() {
+  return Array.from(new Set(cocktailPropertyOptions)).sort((left, right) => left.localeCompare(right, 'de', { sensitivity: 'base' }));
+}
+
+function loadFilterDefinitions() {
+  const contentByFilter = getFilterDefinitionContent();
+
+  return getFilterDefinitionKeys().reduce((definitions, filterKey) => {
+    definitions[filterKey] = contentByFilter[filterKey]?.text || `Beispieltext_${filterKey}`;
+    return definitions;
+  }, {});
+}
+
+function saveFilterDefinitions() {
+  localStorage.setItem(getFilterDefinitionStorageKey(), JSON.stringify(state.filterDefinitions || {}));
 }
 
 function saveState() {
@@ -220,30 +397,96 @@ function getIngredientDisplayEntries(cocktail) {
   });
 }
 
-function renderCocktailsTab() {
-  const ingredients = getAllIngredients();
+function getCocktailStrengthValue(cocktail) {
+  return normalizeStrength(cocktail?.strength || (cocktail?.alcoholic === false ? 'alkoholfrei' : 'ausgewogen'));
+}
 
-  if (!state.cocktails.length) {
-    state.selectedCocktailId = null;
-  } else if (!state.cocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
-    state.selectedCocktailId = state.cocktails[0].id;
+function getCocktailStrengthLabel(cocktail) {
+  const strength = getCocktailStrengthValue(cocktail);
+
+  if (strength === 'alkoholfrei') {
+    return 'Alkoholfrei';
   }
 
-  const selectedCocktail = state.cocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || null;
+  if (strength === 'intensiv') {
+    return 'Intensiv';
+  }
+
+  if (strength === 'mild') {
+    return 'Mild';
+  }
+
+  return 'Ausgewogen';
+}
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function matchesSearchQuery(cocktail, query) {
+  const normalizedQuery = normalizeSearchText(query);
+
+  if (!normalizedQuery) {
+    return true;
+  }
+
+  const haystack = normalizeSearchText([
+    cocktail?.name || '',
+    getIngredientNameList(cocktail).join(' '),
+  ].join(' '));
+
+  if (haystack.includes(normalizedQuery)) {
+    return true;
+  }
+
+  const tokens = normalizedQuery.split(' ').filter(Boolean);
+  return tokens.length > 1 && tokens.every((token) => haystack.includes(token));
+}
+
+function getFilteredCocktails() {
+  const availableCocktails = sortCocktailsByName(state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail, state.inventory)));
+
+  if (!state.searchQuery) {
+    return availableCocktails;
+  }
+
+  return availableCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
+}
+
+function renderCocktailsTab(options = {}) {
+  const { preserveSearchFocus = false, searchSelectionStart = null, searchSelectionEnd = null } = options;
+  const ingredients = getAllIngredients();
+  const filteredCocktails = getFilteredCocktails();
+  const previousListScrollTop = tabContentElement?.querySelector('.cocktail-list')?.scrollTop || 0;
+
+  if (!filteredCocktails.length) {
+    state.selectedCocktailId = null;
+  } else if (!filteredCocktails.some((cocktail) => cocktail.id === state.selectedCocktailId)) {
+    state.selectedCocktailId = filteredCocktails[0].id;
+  }
+
+  const selectedCocktail = filteredCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || null;
 
   tabContentElement.innerHTML = `
     <div class="section-title">
       <h3>Cocktails bearbeiten</h3>
       <button class="primary-button" id="add-cocktail" type="button">+ Cocktail hinzufügen</button>
     </div>
+    <label class="filter-search-field">
+      <span>Cocktail suchen</span>
+      <input id="bartender-cocktail-search" type="search" placeholder="Name oder Zutat" value="${escapeHtml(state.searchQuery)}" />
+    </label>
     <div class="cocktail-layout">
       <div class="cocktail-list" aria-label="Cocktail-Liste">
-        ${state.cocktails.length ? state.cocktails.map((cocktail) => {
+        ${filteredCocktails.length ? filteredCocktails.map((cocktail) => {
           const isAvailable = isCocktailAvailable(cocktail, state.inventory);
           return `
             <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${isAvailable ? '' : 'disabled'}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
               <span>${cocktail.name || 'Unbenannter Cocktail'}</span>
-              <span class="badge">${isAvailable ? (cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei') : 'Nicht verfügbar'}</span>
+              <span class="badge">${isAvailable ? getCocktailStrengthLabel(cocktail) : 'Nicht verfügbar'}</span>
             </button>
           `;
         }).join('') : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
@@ -291,13 +534,14 @@ function renderCocktailsTab() {
                 <label class="editor-row">
                   <span>Stärke</span>
                   <select data-field="strength">
+                    <option value="alkoholfrei" ${getCocktailStrengthValue(selectedCocktail) === 'alkoholfrei' ? 'selected' : ''}>alkoholfrei</option>
                     <option value="mild" ${selectedCocktail.strength === 'mild' ? 'selected' : ''}>mild</option>
                     <option value="ausgewogen" ${selectedCocktail.strength === 'ausgewogen' || !selectedCocktail.strength ? 'selected' : ''}>ausgewogen</option>
                     <option value="intensiv" ${selectedCocktail.strength === 'intensiv' ? 'selected' : ''}>intensiv</option>
                   </select>
                 </label>
                 <label>
-                  <input type="checkbox" data-field="alcoholic" ${selectedCocktail.alcoholic ? 'checked' : ''} /> Alkoholisch
+                  <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
                 </label>
                 <label>
                   <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
@@ -316,6 +560,34 @@ function renderCocktailsTab() {
 
   attachCocktailImages();
 
+  const searchInput = tabContentElement.querySelector('#bartender-cocktail-search');
+  if (searchInput) {
+    searchInput.value = state.searchQuery;
+    if (preserveSearchFocus) {
+      searchInput.focus();
+      if (typeof searchSelectionStart === 'number' && typeof searchSelectionEnd === 'number') {
+        searchInput.setSelectionRange(searchSelectionStart, searchSelectionEnd);
+      }
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      const target = event.target;
+      state.searchQuery = event.target.value;
+      renderContent({
+        preserveSearchFocus: true,
+        searchSelectionStart: target.selectionStart,
+        searchSelectionEnd: target.selectionEnd,
+      });
+    });
+  }
+
+  requestAnimationFrame(() => {
+    const cocktailList = tabContentElement?.querySelector('.cocktail-list');
+    if (cocktailList) {
+      cocktailList.scrollTop = previousListScrollTop;
+    }
+  });
+
   const addButton = tabContentElement.querySelector('#add-cocktail');
   if (addButton) {
     addButton.addEventListener('click', async () => {
@@ -323,7 +595,6 @@ function renderCocktailsTab() {
         const newCocktail = {
           name: 'Neuer Cocktail',
           ingredients: [],
-          alcoholic: true,
           daily: false,
           available: true,
           strength: 'ausgewogen',
@@ -343,6 +614,49 @@ function renderCocktailsTab() {
   }
 }
 
+function renderMuseumFilterDefinitionsTab() {
+  const filterKeys = getFilterDefinitionKeys();
+
+  if (!filterKeys.length) {
+    tabContentElement.innerHTML = '<p class="empty-state">Keine Filterdefinitionen vorhanden.</p>';
+    return;
+  }
+
+  if (!state.museumSelectedFilterKey || !filterKeys.includes(state.museumSelectedFilterKey)) {
+    state.museumSelectedFilterKey = filterKeys[0];
+  }
+
+  const selectedFilterKey = state.museumSelectedFilterKey;
+  const selectedFilterText = state.filterDefinitions?.[selectedFilterKey] || '';
+
+  tabContentElement.innerHTML = `
+    <div class="section-title">
+      <h3>Filterdefinitionen</h3>
+      <span>${filterKeys.length}</span>
+    </div>
+    <div class="museum-layout">
+      <div class="museum-filter-list" aria-label="Filterliste">
+        ${filterKeys.map((filterKey) => `
+          <button class="cocktail-list-item museum-filter-item ${selectedFilterKey === filterKey ? 'active' : ''}" type="button" data-role="select-museum-filter" data-id="${filterKey}">
+            <span>${filterKey}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="museum-editor-panel">
+        <label class="editor-row museum-editor-row">
+          <span>${selectedFilterKey}</span>
+          <p class="museum-filter-text">${escapeHtml(selectedFilterText)}</p>
+        </label>
+        <div class="museum-description-block" aria-label="Kurzbeschreibung">
+          <ul>
+            ${getFilterDefinitionBulletPoints(selectedFilterKey).map((line) => `<li>${escapeHtml(line)}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function renderInventoryTab() {
   const ingredients = getAllIngredients();
 
@@ -353,8 +667,8 @@ function renderInventoryTab() {
     <div class="inventory-list">
       ${ingredients.length ? ingredients.map((ingredient) => `
         <label class="inventory-item">
-          <span>${ingredient}</span>
           <input type="checkbox" data-ingredient="${ingredient}" ${state.inventory[ingredient] !== false ? 'checked' : ''} />
+          <span>${ingredient}</span>
         </label>
       `).join('') : '<p class="empty-state">Noch keine Zutaten vorhanden.</p>'}
     </div>
@@ -556,7 +870,7 @@ function renderOrdersTab() {
                 </div>
                 <div class="order-detail-content">
                   <h4>${escapeHtml(selectedCocktail.name || 'Cocktail')}</h4>
-                  <p>${escapeHtml(selectedCocktail.description || (selectedCocktail.alcoholic ? 'Ein klassischer alkoholischer Cocktail.' : 'Ein frischer alkoholfreier Cocktail.'))}</p>
+                  <p>${escapeHtml(selectedCocktail.description || `Ein ${getCocktailStrengthLabel(selectedCocktail).toLowerCase()}er Cocktail.`)}</p>
                   <p><strong>Rezept:</strong></p>
                   <div>${getIngredientDisplayEntries(selectedCocktail).length ? getIngredientDisplayEntries(selectedCocktail).map((entry) => `<div>${escapeHtml(entry)}</div>`).join('') : '<div>Keine Angaben</div>'}</div>
                   ${selectedCocktail.comment ? `<p><strong>Kommentar:</strong> ${escapeHtml(selectedCocktail.comment)}</p>` : ''}
@@ -576,8 +890,13 @@ function renderOrdersTab() {
   attachOrderImage(selectedOrder);
 }
 
-function renderContent() {
+function renderContent(options = {}) {
   if (!tabContentElement) {
+    return;
+  }
+
+  if (isMuseumView) {
+    renderMuseumFilterDefinitionsTab();
     return;
   }
 
@@ -591,7 +910,7 @@ function renderContent() {
     return;
   }
 
-  renderCocktailsTab();
+  renderCocktailsTab(options);
 }
 
 function bindTabEvents() {
@@ -663,6 +982,12 @@ function bindContentEvents() {
       return;
     }
 
+    if (isMuseumView && button.dataset.role === 'select-museum-filter') {
+      state.museumSelectedFilterKey = button.dataset.id;
+      renderContent();
+      return;
+    }
+
     if (button.id === 'add-cocktail') {
       return;
     }
@@ -688,7 +1013,6 @@ function bindContentEvents() {
 
       const nameInput = card.querySelector('[data-field="name"]');
       const commentInput = card.querySelector('[data-field="comment"]');
-      const alcoholicInput = card.querySelector('[data-field="alcoholic"]');
       const dailyInput = card.querySelector('[data-field="daily"]');
       const strengthInput = card.querySelector('[data-field="strength"]');
       const ingredientRows = Array.from(card.querySelectorAll('[data-ingredient-index]'));
@@ -712,7 +1036,6 @@ function bindContentEvents() {
         id: generateCocktailId(nameInput?.value || 'Neuer Cocktail'),
         ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
-        alcoholic: alcoholicInput?.checked || false,
         daily: dailyInput?.checked || false,
         strength: normalizeStrength(strengthInput?.value),
         comment: commentInput?.value.trim() || '',
@@ -854,8 +1177,36 @@ async function init() {
 
   createFirebaseClient(state.config);
 
+  const guestUrl = getGuestViewUrl();
+  const barUrl = getBarViewUrl();
+
+  if (guestLink) {
+    guestLink.textContent = 'Gäste-Ansicht';
+    guestLink.href = guestUrl.toString();
+  }
+
+  if (museumGuestLink) {
+    museumGuestLink.textContent = 'Gäste-Ansicht';
+    museumGuestLink.href = guestUrl.toString();
+  }
+
+  if (barLink) {
+    barLink.textContent = isMuseumView ? 'Bar-Ansicht' : 'Gäste-Ansicht';
+    barLink.href = isMuseumView ? barUrl.toString() : guestUrl.toString();
+  }
+
+  if (barNameElement) {
+    barNameElement.textContent = isMuseumView ? (state.config.barName || 'Cocktail Bar') : (state.config.barName || 'Cocktail Bar');
+  }
+
+  if (barStatusElement) {
+    barStatusElement.textContent = isMuseumView
+      ? `${state.config.barName || 'Cocktail Bar'} · ${state.config.isOpen === false ? 'Bar-Museum geschlossen' : 'Bar-Museum geöffnet'}`
+      : (state.config.isOpen === false ? 'Bar geschlossen' : 'Bar geöffnet');
+  }
+
   const sessionKey = getStorageKey('access');
-  if (sessionStorage.getItem(sessionKey) !== 'true') {
+  if (!isMuseumView && sessionStorage.getItem(sessionKey) !== 'true') {
     ensureAccess();
     return;
   }
@@ -863,15 +1214,13 @@ async function init() {
   setAccessState(true);
 
   try {
-    if (barLink) {
-      const guestUrl = new URL('./index.html', window.location.href);
-      guestUrl.searchParams.set('bar', state.barKey);
-      barLink.href = guestUrl.toString();
-    }
-    barNameElement.textContent = state.config.barName || 'Cocktail Bar';
-    barStatusElement.textContent = state.config.isOpen === false ? 'Bar geschlossen' : 'Bar geöffnet';
     resetBarState();
     loadStoredState();
+    state.filterDefinitions = loadFilterDefinitions();
+    if (isMuseumView) {
+      state.activeTab = 'filterdefinitions';
+      state.museumSelectedFilterKey = getFilterDefinitionKeys()[0] || null;
+    }
     bindTabEvents();
     bindContentEvents();
 

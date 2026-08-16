@@ -89,6 +89,13 @@ body {
   padding: 1.25rem 1.25rem 1.1rem;
 }
 
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   text-transform: uppercase;
@@ -126,8 +133,12 @@ h3 {
   color: #fff;
 }
 
+.bar-link-secondary {
+  background: #0f766e;
+}
+
 .secondary-button {
-  background: #f59e0b;
+  background: #0f766e;
   color: #fff;
 }
 
@@ -253,6 +264,19 @@ h3 {
   opacity: 0.65;
 }
 
+.order-list-primary {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.order-list-primary strong,
+.order-list-primary span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .cocktail-detail-panel {
   border: 1px solid #e5e7eb;
   border-radius: 1rem;
@@ -264,10 +288,12 @@ h3 {
 .cocktail-detail-panel img {
   width: 100%;
   aspect-ratio: 9 / 16;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   border-radius: 0.75rem;
   margin-bottom: 0.8rem;
   display: block;
+  background: #f7f3ea;
 }
 
 .cocktail-detail-title {
@@ -381,12 +407,14 @@ h3 {
 .editor-image {
   width: 100%;
   max-width: 140px;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+  object-position: center;
   border-radius: 0.9rem;
   display: block;
   margin: 0;
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  background: #f7f3ea;
 }
 
 .editor-image-host {
@@ -480,9 +508,96 @@ h3 {
 
 .inventory-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.55rem;
+  width: 100%;
+  text-align: left;
+}
+
+.museum-tabs {
+  margin-bottom: 0;
+}
+
+.museum-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.museum-filter-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.museum-filter-item {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.museum-editor-panel {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fffdf9;
+  min-height: 280px;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.museum-editor-row textarea {
+  width: 100%;
+  min-height: 17rem;
+  resize: vertical;
+  border: 1px solid #d1d5db;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+  font: inherit;
+  background: #fff;
+}
+
+.museum-filter-text {
+  margin: 0.35rem 0 0;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.museum-description-block {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.9rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.museum-description-block span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.museum-description-block ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #4b5563;
+  display: grid;
+  gap: 0.35rem;
+}
+
+@media (max-width: 800px) {
+  .museum-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start;
+  }
 }
 
 .order-card {
