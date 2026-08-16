@@ -117,3 +117,32 @@ export function getCocktailImageCandidates(cocktail, barFolder) {
     `./config/images/${barFolder}/${baseName}.png`,
   ]);
 }
+
+if (typeof document !== 'undefined') {
+  const setupMobileOverlay = () => {
+    if (document.getElementById('mobile-close-button')) return;
+    const closeButton = document.createElement('button');
+    closeButton.id = 'mobile-close-button';
+    closeButton.className = 'mobile-close-button';
+    closeButton.innerHTML = '&times; Zurück';
+    document.body.appendChild(closeButton);
+
+    document.addEventListener('click', (e) => {
+      const item = e.target.closest('.cocktail-list-item');
+      const isListItem = item && !item.classList.contains('museum-filter-item');
+      if (isListItem) {
+        document.body.classList.add('overlay-open');
+      }
+      
+      if (e.target.closest('#mobile-close-button') || e.target.closest('.tab-button') || e.target.closest('.bar-link')) {
+        document.body.classList.remove('overlay-open');
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMobileOverlay);
+  } else {
+    setupMobileOverlay();
+  }
+}
