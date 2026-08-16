@@ -653,8 +653,8 @@ h3 {
   }
 
   .bar-logo {
-    height: clamp(3rem, 12vw, 5.5rem);
-    max-width: 220px;
+    height: clamp(4.5rem, 16vw, 7.5rem);
+    max-width: 260px;
     margin: 0.25rem 0;
   }
 
