@@ -129,7 +129,7 @@ if (typeof document !== 'undefined') {
 
     document.addEventListener('click', (e) => {
       const item = e.target.closest('.cocktail-list-item');
-      const isListItem = item && !item.classList.contains('museum-filter-item');
+      const isListItem = !!item;
       if (isListItem) {
         document.body.classList.add('overlay-open');
       }
@@ -137,7 +137,7 @@ if (typeof document !== 'undefined') {
       if (e.target.closest('#mobile-close-button') || e.target.closest('.tab-button') || e.target.closest('.bar-link')) {
         document.body.classList.remove('overlay-open');
       }
-    });
+    }, { capture: true });
   };
 
   if (document.readyState === 'loading') {
