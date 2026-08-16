@@ -372,9 +372,15 @@ function renderCocktailDetail() {
       <h3>${selectedCocktail.name}</h3>
       <span class="badge">${getCocktailStrengthLabel(selectedCocktail)}</span>
     </div>
-    ${getCocktailImageMarkup(selectedCocktail)}
-    <p>${getCocktailDescription(selectedCocktail)}</p>
-    <p><strong>Zutaten:</strong> ${getIngredientNames(selectedCocktail).length ? getIngredientNames(selectedCocktail).join(' · ') : 'Keine Angaben'}</p>
+    <div class="cocktail-detail-main">
+      <div class="cocktail-image-host">
+        ${getCocktailImageMarkup(selectedCocktail)}
+      </div>
+      <div class="cocktail-detail-content">
+        <p>${getCocktailDescription(selectedCocktail)}</p>
+        <p><strong>Zutaten:</strong> ${getIngredientNames(selectedCocktail).length ? getIngredientNames(selectedCocktail).join(' · ') : 'Keine Angaben'}</p>
+      </div>
+    </div>
     <div class="customer-order-panel">
       <label class="field">
         <span>Name oder Tisch</span>
