@@ -543,9 +543,6 @@ function renderCocktailsTab(options = {}) {
                 <label>
                   <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
                 </label>
-                <label>
-                  <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
-                </label>
               </div>
             </div>
             <div class="editor-actions">
