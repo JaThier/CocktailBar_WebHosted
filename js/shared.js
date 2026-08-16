@@ -69,6 +69,14 @@ export function getIngredientNames(cocktail) {
     .filter(Boolean);
 }
 
+export function sortCocktailsByName(cocktails) {
+  return [...(Array.isArray(cocktails) ? cocktails : [])].sort((left, right) => {
+    return String(left?.name || '').localeCompare(String(right?.name || ''), 'de', {
+      sensitivity: 'base',
+    });
+  });
+}
+
 export function isCocktailAvailable(cocktail, inventory = {}) {
   const ingredients = getIngredientNames(cocktail);
 
@@ -105,7 +113,36 @@ export function getCocktailImageCandidates(cocktail, barFolder) {
   });
 
   return baseNames.flatMap((baseName) => [
-    `./config/images/${barFolder}/${baseName}.jpg`,
+    `./config/images/${barFolder}/${baseName}.png`,
     `./config/images/${barFolder}/${baseName}.png`,
   ]);
+}
+
+if (typeof document !== 'undefined') {
+  const setupMobileOverlay = () => {
+    if (document.getElementById('mobile-close-button')) return;
+    const closeButton = document.createElement('button');
+    closeButton.id = 'mobile-close-button';
+    closeButton.className = 'mobile-close-button';
+    closeButton.innerHTML = '&times; Zurück';
+    document.body.appendChild(closeButton);
+
+    document.addEventListener('click', (e) => {
+      const item = e.target.closest('.cocktail-list-item');
+      const isListItem = !!item;
+      if (isListItem) {
+        document.body.classList.add('overlay-open');
+      }
+      
+      if (e.target.closest('#mobile-close-button') || e.target.closest('.tab-button') || e.target.closest('.bar-link')) {
+        document.body.classList.remove('overlay-open');
+      }
+    }, { capture: true });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMobileOverlay);
+  } else {
+    setupMobileOverlay();
+  }
 }

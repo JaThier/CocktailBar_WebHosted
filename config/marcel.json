@@ -1,7 +1,7 @@
 {
   "barId": "marcel",
   "barName": "MK Cocktail Bar",
-  "barPassword": "Kaimer&Staiger",
+  "barPassword": "MKBar2026",
   "firebase": {
     "apiKey": "AIzaSyDc3QdnrioPTS22h010cEfe5TS_hdbunqs",
     "databaseURL": "https://test-abf47-default-rtdb.europe-west1.firebasedatabase.app"

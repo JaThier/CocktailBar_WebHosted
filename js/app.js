@@ -1,18 +1,20 @@
-import { createFirebaseClient, listenToCocktails, listenToInventory, addOrder } from './firebase.js';
+import { createFirebaseClient, listenToCocktails, listenToInventory, listenToOrders, addOrder } from './firebase.js';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable } from './shared.js';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable, sortCocktailsByName } from './shared.js';
 
 const state = {
   config: null,
   cocktails: [],
   inventory: {},
   filteredCocktails: [],
+  orders: [],
   activeFilterKeys: [],
   searchQuery: '',
   guestView: 'full',
   cart: [],
   barKey: 'default',
   selectedCocktailId: null,
+  selectedOrderId: null,
 };
 
 const cocktailPropertyOptions = [
@@ -21,6 +23,7 @@ const cocktailPropertyOptions = [
   'Aromatisch',
   'Fruchtig',
   'Würzig',
+  'Nussig',
   'Spritzig',
   'Cremig',
   'Raffiniert',
@@ -48,6 +51,7 @@ const guestFilterPanel = document.querySelector('#guest-filter-panel');
 const cocktailSectionTitleElement = document.querySelector('#cocktail-section-title');
 const guestViewTabButtons = Array.from(document.querySelectorAll('[data-guest-view-tab]'));
 const barLink = document.querySelector('#bar-link');
+const museumLink = document.querySelector('#museum-link');
 
 function getStorageKey(key, barKey = state.barKey) {
   return `cocktailbar-${key}-${barKey}`;
@@ -55,6 +59,38 @@ function getStorageKey(key, barKey = state.barKey) {
 
 function isDailyCocktail(cocktail) {
   return cocktail?.daily === true;
+}
+
+function getCocktailStrengthValue(cocktail) {
+  return normalizeStrength(cocktail?.strength || (cocktail?.alcoholic === false ? 'alkoholfrei' : 'ausgewogen'));
+}
+
+function getCocktailStrengthLabel(cocktail) {
+  const strength = getCocktailStrengthValue(cocktail);
+
+  if (strength === 'alkoholfrei') {
+    return 'Alkoholfrei';
+  }
+
+  if (strength === 'intensiv') {
+    return 'Intensiv';
+  }
+
+  if (strength === 'mild') {
+    return 'Mild';
+  }
+
+  return 'Ausgewogen';
+}
+
+function getCocktailStrengthDescription(cocktail) {
+  const strength = getCocktailStrengthValue(cocktail);
+
+  if (strength === 'alkoholfrei') {
+    return 'alkoholfreier';
+  }
+
+  return `${getCocktailStrengthLabel(cocktail).toLowerCase()}er`;
 }
 
 function setGuestView(view) {
@@ -69,18 +105,24 @@ function setGuestView(view) {
   });
 
   if (guestFilterPanel) {
-    guestFilterPanel.hidden = view === 'daily';
-    if (view === 'daily') {
+    guestFilterPanel.hidden = view !== 'full';
+    if (view !== 'full') {
       guestFilterPanel.open = false;
     }
   }
 
   if (cocktailSectionTitleElement) {
-    cocktailSectionTitleElement.textContent = view === 'daily' ? 'Tageskarte' : 'Cocktails';
+    if (view === 'daily') {
+      cocktailSectionTitleElement.textContent = 'Tageskarte';
+    } else if (view === 'orders') {
+      cocktailSectionTitleElement.textContent = 'Bestellungen';
+    } else {
+      cocktailSectionTitleElement.textContent = 'Cocktails';
+    }
   }
 
   renderFilters();
-  renderCocktails();
+  renderView();
 }
 
 function normalizeSearchText(value) {
@@ -148,23 +190,6 @@ function toggleFilter(filterKey) {
     return;
   }
 
-  if (filterKey === 'alcoholic' || filterKey === 'non-alcoholic') {
-    const alcoholFilterIndex = state.activeFilterKeys.findIndex((key) => key === 'alcoholic' || key === 'non-alcoholic');
-    const isSameFilterActive = alcoholFilterIndex >= 0 && state.activeFilterKeys[alcoholFilterIndex] === filterKey;
-
-    if (alcoholFilterIndex >= 0) {
-      state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== 'alcoholic' && key !== 'non-alcoholic');
-    }
-
-    if (!isSameFilterActive) {
-      state.activeFilterKeys.push(filterKey);
-    }
-
-    renderFilters();
-    renderCocktails();
-    return;
-  }
-
   if (isFilterActive(filterKey)) {
     state.activeFilterKeys = state.activeFilterKeys.filter((key) => key !== filterKey);
   } else {
@@ -188,6 +213,7 @@ function renderFilters() {
 
   const propertyFilters = getAvailablePropertyFilters();
   const strengthFilters = [
+    { key: 'strength:alkoholfrei', label: 'alkoholfrei' },
     { key: 'strength:mild', label: 'mild' },
     { key: 'strength:ausgewogen', label: 'ausgewogen' },
     { key: 'strength:intensiv', label: 'intensiv' },
@@ -195,8 +221,6 @@ function renderFilters() {
 
   const filters = [
     { key: 'all', label: 'Alle' },
-    { key: 'alcoholic', label: 'Alkoholisch' },
-    { key: 'non-alcoholic', label: 'Alkoholfrei' },
     ...strengthFilters,
     ...propertyFilters.map((property) => ({ key: property, label: property })),
   ];
@@ -211,8 +235,6 @@ function renderFilters() {
 
       if (filter.key === 'all') {
         filterClass += ' filter-chip-all';
-      } else if (filter.key === 'alcoholic' || filter.key === 'non-alcoholic') {
-        filterClass += ' filter-chip-alcohol';
       } else if (filter.key.startsWith('strength:')) {
         filterClass += ' filter-chip-strength';
       } else {
@@ -245,18 +267,8 @@ function getFilteredCocktails() {
     return filteredCocktails.filter((cocktail) => isDailyCocktail(cocktail));
   }
 
-  const alcoholFilter = state.activeFilterKeys.find((filterKey) => filterKey === 'alcoholic' || filterKey === 'non-alcoholic');
-
-  if (alcoholFilter === 'alcoholic') {
-    filteredCocktails = filteredCocktails.filter((cocktail) => cocktail.alcoholic);
-  } else if (alcoholFilter === 'non-alcoholic') {
-    filteredCocktails = filteredCocktails.filter((cocktail) => !cocktail.alcoholic);
-  }
-
   const propertyFilters = state.activeFilterKeys.filter((filterKey) => {
-    return filterKey !== 'alcoholic'
-      && filterKey !== 'non-alcoholic'
-      && !filterKey.startsWith('strength:');
+    return !filterKey.startsWith('strength:');
   });
 
   const strengthFilter = state.activeFilterKeys.find((filterKey) => filterKey.startsWith('strength:'));
@@ -274,13 +286,34 @@ function getFilteredCocktails() {
     filteredCocktails = filteredCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
   }
 
-  return filteredCocktails;
+  return sortCocktailsByName(filteredCocktails);
+}
+
+function getSortedOrders() {
+  return [...(Array.isArray(state.orders) ? state.orders : [])].sort((left, right) => {
+    const leftTime = new Date(left?.createdAt || 0).getTime();
+    const rightTime = new Date(right?.createdAt || 0).getTime();
+    return rightTime - leftTime;
+  });
+}
+
+function getOrderItemsText(order) {
+  const itemNames = Array.isArray(order?.items)
+    ? order.items.map((item) => item?.name).filter(Boolean)
+    : [];
+
+  return itemNames.length ? itemNames.join(', ') : 'Keine Angaben';
+}
+
+function getOrderCocktailName(order) {
+  const firstItem = Array.isArray(order?.items) ? order.items[0] : null;
+  return firstItem?.name || 'Cocktail';
 }
 
 function getCocktailImageMarkup(cocktail) {
   const safeAlt = (cocktail.name || 'Cocktail').replace(/"/g, '&quot;');
   const slug = generateCocktailId(cocktail.name || cocktail.id || 'cocktail');
-  const localImagePath = `./config/images/${state.barKey}/${slug}.jpg`;
+  const localImagePath = `./config/images/${state.barKey}/${slug}.png`;
   const remoteImage = cocktail.image || '';
   const imageSource = localImagePath;
 
@@ -296,7 +329,7 @@ function getCocktailDescription(cocktail) {
     ? getIngredientNames(cocktail).join(', ')
     : 'frische Zutaten';
 
-  return `${cocktail.name} ist ein ${cocktail.alcoholic ? 'alkoholischer' : 'alkoholfreier'} Cocktail mit ${ingredients}.`;
+  return `${cocktail.name} ist ein ${getCocktailStrengthDescription(cocktail)} Cocktail mit ${ingredients}.`;
 }
 
 function bindCustomerOrderControls() {
@@ -322,6 +355,11 @@ function renderCocktailDetail() {
     return;
   }
 
+  if (state.guestView === 'orders') {
+    renderOrderDetail();
+    return;
+  }
+
   const selectedCocktail = state.filteredCocktails.find((cocktail) => cocktail.id === state.selectedCocktailId) || state.filteredCocktails[0] || null;
 
   if (!selectedCocktail) {
@@ -332,7 +370,7 @@ function renderCocktailDetail() {
   cocktailDetailElement.innerHTML = `
     <div class="cocktail-detail-title">
       <h3>${selectedCocktail.name}</h3>
-      <span class="badge">${selectedCocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
+      <span class="badge">${getCocktailStrengthLabel(selectedCocktail)}</span>
     </div>
     ${getCocktailImageMarkup(selectedCocktail)}
     <p>${getCocktailDescription(selectedCocktail)}</p>
@@ -349,7 +387,86 @@ function renderCocktailDetail() {
   bindCustomerOrderControls();
 }
 
+function renderOrderDetail() {
+  if (!cocktailDetailElement) {
+    return;
+  }
+
+  const sortedOrders = getSortedOrders();
+  const selectedOrder = sortedOrders.find((order) => order.id === state.selectedOrderId) || sortedOrders[0] || null;
+
+  if (!selectedOrder) {
+    cocktailDetailElement.innerHTML = '<p class="empty-state">Noch keine Bestellungen.</p>';
+    return;
+  }
+
+  cocktailDetailElement.innerHTML = `
+    <div class="cocktail-detail-title">
+      <h3>${selectedOrder.guestName || 'Kunde'}</h3>
+      <span class="badge">${getOrderStatusLabel(selectedOrder)}</span>
+    </div>
+    <p><strong>Name/Tisch:</strong> ${selectedOrder.guestName || 'Kunde'}</p>
+    <p><strong>Cocktail:</strong> ${getOrderItemsText(selectedOrder)}</p>
+    <p><strong>Bestellt am:</strong> ${new Date(selectedOrder.createdAt).toLocaleString('de-DE')}</p>
+    <p><strong>Status:</strong> ${getOrderStatusLabel(selectedOrder)}</p>
+  `;
+}
+
+function getOrderStatusLabel(order) {
+  if (order?.status === 'done') {
+    return 'Fertig';
+  }
+
+  if (order?.status === 'in_progress') {
+    return 'In Bearbeitung';
+  }
+
+  return 'Offen';
+}
+
+function renderOrdersTab() {
+  const sortedOrders = getSortedOrders();
+
+  if (!sortedOrders.length) {
+    state.selectedOrderId = null;
+  } else if (!sortedOrders.some((order) => order.id === state.selectedOrderId)) {
+    state.selectedOrderId = sortedOrders[0].id;
+  }
+
+  if (cocktailCountElement) {
+    cocktailCountElement.textContent = `${sortedOrders.length}`;
+  }
+
+  if (cocktailListElement) {
+    cocktailListElement.innerHTML = sortedOrders.length
+      ? sortedOrders.map((order) => `
+        <button class="cocktail-list-item ${state.selectedOrderId === order.id ? 'active' : ''}" type="button" data-id="${order.id}">
+          <span class="order-list-primary">
+            <strong>${order.guestName || 'Kunde'}</strong>
+            <span>${getOrderItemsText(order)}</span>
+          </span>
+          <span class="badge">${getOrderStatusLabel(order)}</span>
+        </button>
+      `).join('')
+      : '<p class="empty-state">Noch keine Bestellungen.</p>';
+
+    cocktailListElement.querySelectorAll('button[data-id]').forEach((button) => {
+      button.addEventListener('click', () => {
+        state.selectedOrderId = button.dataset.id;
+        renderOrdersTab();
+      });
+    });
+  }
+
+  renderOrderDetail();
+}
+
 function renderCocktails() {
+  if (state.guestView === 'orders') {
+    renderOrdersTab();
+    return;
+  }
+
   state.filteredCocktails = getFilteredCocktails();
 
   if (cocktailCountElement) {
@@ -377,7 +494,7 @@ function renderCocktails() {
     .map((cocktail) => `
       <button class="cocktail-list-item ${state.selectedCocktailId === cocktail.id ? 'active' : ''} ${cocktail.available === false ? 'disabled' : ''}" type="button" data-id="${cocktail.id}">
         <span>${cocktail.name}</span>
-        <span class="badge">${cocktail.available === false ? 'Ausverkauft' : cocktail.alcoholic ? 'Alkoholisch' : 'Alkoholfrei'}</span>
+        <span class="badge">${cocktail.available === false ? 'Ausverkauft' : getCocktailStrengthLabel(cocktail)}</span>
       </button>
     `)
     .join('');
@@ -407,6 +524,15 @@ function renderCart() {
   cartItemsElement.innerHTML = state.cart
     .map((item) => `<div class="cart-item">${item.name}</div>`)
     .join('');
+}
+
+function renderView() {
+  if (state.guestView === 'orders') {
+    renderOrdersTab();
+    return;
+  }
+
+  renderCocktails();
 }
 
 function addToCart(cocktailId) {
@@ -466,6 +592,11 @@ async function init() {
       barUrl.searchParams.set('bar', barKey);
       barLink.href = barUrl.toString();
     }
+    if (museumLink) {
+      const museumUrl = new URL('./bar-museum.html', window.location.href);
+      museumUrl.searchParams.set('bar', barKey);
+      museumLink.href = museumUrl.toString();
+    }
     const config = await loadConfig(barKey);
     state.config = config;
     createFirebaseClient(config);
@@ -516,6 +647,13 @@ async function init() {
       renderFilters();
       renderCocktails();
       renderCart();
+    });
+
+    listenToOrders(config.barId || barKey, (orders) => {
+      state.orders = Array.isArray(orders) ? orders : [];
+      if (state.guestView === 'orders') {
+        renderView();
+      }
     });
 
     renderFilters();

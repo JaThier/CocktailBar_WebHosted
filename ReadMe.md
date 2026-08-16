@@ -6,14 +6,17 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 - Responsive Gäste-Ansicht mit Cocktail-Karten
 - Filter für Alkoholisch / Alkoholfrei
 - Umschaltbare Gäste-Tabs für vollständige Karte und Tageskarte
+- Gäste-Tab für Bestellungen mit Statusübersicht
 - Warenkorb und Bestell-Button
 - einfache Bar-Ansicht für die Barkeeper-Ansicht
+- zusätzliche Bar-Museum-Ansicht mit Filterdefinitionen
 - dynamische Konfiguration über JSON-Dateien im Ordner config/
 - GitHub-Pages-taugliche Struktur direkt im Repository-Root
 
 ## Projektstruktur
 - index.html: Startseite der Gäste-Ansicht
 - bar.html: Barkeeper-Ansicht
+- bar-museum.html: Bar-Museum-Ansicht
 - css/style.css: Styling
 - js/app.js: Gäste-Logik und Warenkorb
 - js/bar.js: Barkeeper-Logik
@@ -25,6 +28,7 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 ## Wichtige Konventionen
 - Die Bar wird über den Query-Parameter `?bar=` gewählt, zum Beispiel `?bar=alex`.
 - Cocktails können in der Bar-Ansicht als `daily` markiert werden. Diese Cocktails erscheinen in der Gästeansicht in der Tageskarte.
+- Die Stärke-Kategorie `alkoholfrei` ist Teil des `strength`-Feldes und ersetzt die frühere separate Alkohol-Checkbox in der Oberfläche.
 - Die vollständige Karte zeigt alle Cocktails mit den vorhandenen Filtern.
 - Das Bild-Namensschema liegt in `config/images/NAMING_CONVENTION.txt` und sollte beim Hinzufügen neuer Bilder beachtet werden.
 
@@ -40,6 +44,8 @@ Dann öffne:
 - http://127.0.0.1:8000/
 - http://127.0.0.1:8000/?bar=alex
 - http://127.0.0.1:8000/?bar=jakob
+- http://127.0.0.1:8000/?bar=daniel
+- http://127.0.0.1:8000/?bar=marcel
 
 ## GitHub Pages veröffentlichen
 1. Die Änderungen auf GitHub pushen.
