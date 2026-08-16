@@ -35,7 +35,8 @@ export function applyTheme(config, barKey) {
   }
 
   // Set background image
-  document.documentElement.style.setProperty('--bg-image', `url('./config/images/${barKey}/background.png')`);
+  const bgUrl = new URL(`./config/images/${barKey}/background.png`, window.location.href).toString();
+  document.documentElement.style.setProperty('--bg-image', `url("${bgUrl}")`);
 
   // Set logo
   const logo = document.getElementById('bar-logo');
@@ -161,7 +162,7 @@ if (typeof document !== 'undefined') {
       if (isListItem) {
         document.body.classList.add('overlay-open');
       }
-      
+
       if (e.target.closest('#mobile-close-button') || e.target.closest('.tab-button') || e.target.closest('.bar-link')) {
         document.body.classList.remove('overlay-open');
       }
