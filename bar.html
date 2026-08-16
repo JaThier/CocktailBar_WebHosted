@@ -1,43 +1,50 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bar-Ansicht</title>
-    <link rel="stylesheet" href="./css/style.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bar-Ansicht</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-branding">
+        <img id="bar-logo" class="bar-logo" src="" alt="Bar Logo" style="display: none;"
+          onerror="this.style.display='none'">
         <div>
           <p class="eyebrow">Barkeeper</p>
           <h1 id="bar-name">Cocktail Bar</h1>
           <p class="subline" id="bar-status">Lade Status…</p>
         </div>
-        <div class="topbar-actions">
-          <a class="bar-link" id="guest-link" href="./index.html">Gäste-Ansicht</a>
-        </div>
-      </header>
+      </div>
+      <div class="topbar-actions">
+        <a class="bar-link" id="guest-link" href="./index.html">Gäste-Ansicht</a>
+      </div>
+    </header>
 
-      <section class="panel">
-        <div id="access-panel" class="access-panel">
-          <label class="editor-row">
-            <span>Passwort für die Bar-Ansicht</span>
-            <input id="bar-password" type="password" placeholder="Passwort eingeben" />
-          </label>
-          <button class="primary-button" id="unlock-bar" type="button">Entriegeln</button>
+    <section class="panel">
+      <div id="access-panel" class="access-panel">
+        <label class="editor-row">
+          <span>Passwort für die Bar-Ansicht</span>
+          <input id="bar-password" type="password" placeholder="Passwort eingeben" />
+        </label>
+        <button class="primary-button" id="unlock-bar" type="button">Entriegeln</button>
+      </div>
+      <div id="bar-dashboard" hidden>
+        <div class="tab-list" role="tablist" aria-label="Bar-Menü">
+          <button class="tab-button active" data-tab="cocktails" type="button">Cocktails</button>
+          <button class="tab-button" data-tab="inventory" type="button">Vorratskammer</button>
+          <button class="tab-button" data-tab="orders" type="button">Bestellungen</button>
         </div>
-        <div id="bar-dashboard" hidden>
-          <div class="tab-list" role="tablist" aria-label="Bar-Menü">
-            <button class="tab-button active" data-tab="cocktails" type="button">Cocktails</button>
-            <button class="tab-button" data-tab="inventory" type="button">Vorratskammer</button>
-            <button class="tab-button" data-tab="orders" type="button">Bestellungen</button>
-          </div>
-          <div id="tab-content" class="tab-content"></div>
-        </div>
-      </section>
-    </div>
+        <div id="tab-content" class="tab-content"></div>
+      </div>
+    </section>
+  </div>
 
-    <script type="module" src="./js/bar.js"></script>
-  </body>
+  <script type="module" src="./js/bar.js"></script>
+</body>
+
 </html>
