@@ -21,6 +21,31 @@ function getConfigCandidates(barKey) {
   ];
 }
 
+export function applyTheme(config, barKey) {
+  if (config.theme) {
+    const root = document.documentElement;
+    if (config.theme.primary) root.style.setProperty('--color-primary', config.theme.primary);
+    if (config.theme.primaryText) root.style.setProperty('--color-primary-text', config.theme.primaryText);
+    if (config.theme.secondary) root.style.setProperty('--color-secondary', config.theme.secondary);
+    if (config.theme.background) root.style.setProperty('--color-background', config.theme.background);
+    if (config.theme.surface) root.style.setProperty('--color-surface', config.theme.surface);
+    if (config.theme.text) root.style.setProperty('--color-text', config.theme.text);
+    if (config.theme.textMuted) root.style.setProperty('--color-text-muted', config.theme.textMuted);
+    if (config.theme.border) root.style.setProperty('--color-surface-border', config.theme.border);
+  }
+
+  // Set background image
+  const bgUrl = new URL(`./config/images/${barKey}/background.png`, window.location.href).toString();
+  document.documentElement.style.setProperty('--bg-image', `url("${bgUrl}")`);
+
+  // Set logo
+  const logo = document.getElementById('bar-logo');
+  if (logo) {
+    logo.src = `./config/images/${barKey}/logo.png`;
+    logo.style.display = 'block';
+  }
+}
+
 export async function loadConfig(barKey) {
   const candidates = getConfigCandidates(barKey);
 
@@ -28,7 +53,11 @@ export async function loadConfig(barKey) {
     try {
       const response = await fetch(candidate, { cache: 'no-store' });
       if (response.ok) {
-        return await response.json();
+        const config = await response.json();
+        if (typeof window !== 'undefined') {
+          applyTheme(config, barKey);
+        }
+        return config;
       }
     } catch (error) {
       console.warn(`Konfiguration konnte nicht geladen werden: ${candidate}`, error);
@@ -133,7 +162,7 @@ if (typeof document !== 'undefined') {
       if (isListItem) {
         document.body.classList.add('overlay-open');
       }
-      
+
       if (e.target.closest('#mobile-close-button') || e.target.closest('.tab-button') || e.target.closest('.bar-link')) {
         document.body.classList.remove('overlay-open');
       }
