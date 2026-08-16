@@ -5,5 +5,15 @@
   "firebase": {
     "apiKey": "AIzaSyDc3QdnrioPTS22h010cEfe5TS_hdbunqs",
     "databaseURL": "https://test-abf47-default-rtdb.europe-west1.firebasedatabase.app"
+  },
+  "theme": {
+    "primary": "#0f766e",
+    "primaryText": "#ffffff",
+    "secondary": "#e9771f",
+    "background": "#f7f4ef",
+    "surface": "#ffffff",
+    "text": "#1f2937",
+    "textMuted": "#6b7280",
+    "border": "#e5e7eb"
   }
 }
