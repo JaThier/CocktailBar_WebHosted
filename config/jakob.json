@@ -7,14 +7,14 @@
     "databaseURL": "https://test-abf47-default-rtdb.europe-west1.firebasedatabase.app"
   },
   "theme": {
-    "primary": "#4f46e5",
+    "primary": "#C8A060",
     "primaryText": "#ffffff",
-    "secondary": "#db2777",
-    "background": "#f3f4f6",
-    "surface": "#ffffff",
-    "secondarySurface": "#ffffff00",
-    "text": "#111827",
-    "textMuted": "#4b5563",
-    "border": "#d1d5db"
+    "secondary": "#c0a478",
+    "background": "#fffdf9",
+    "surface": "#ffefcf",
+    "secondarySurface": "#fffdf9",
+    "text": "#151515",
+    "textMuted": "#282828",
+    "border": "#d1d5db00"
   }
 }

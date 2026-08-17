@@ -142,10 +142,12 @@ export function getCocktailImageCandidates(cocktail, barFolder) {
     }
   });
 
-  return baseNames.flatMap((baseName) => [
+  const localCandidates = baseNames.flatMap((baseName) => [
     `./config/images/${barFolder}/${baseName}.png`,
     `./config/images/${barFolder}/${baseName}.png`,
   ]);
+
+  return cocktail?.image ? [cocktail.image, ...localCandidates] : localCandidates;
 }
 
 if (typeof document !== 'undefined') {

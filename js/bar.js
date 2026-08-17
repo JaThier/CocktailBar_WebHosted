@@ -497,6 +497,11 @@ function renderCocktailsTab(options = {}) {
             <div class="editor-main-layout">
               <div class="editor-image-column">
                 <div class="editor-image-host" data-image-host></div>
+                <div class="editor-image-actions" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; width: 100%; max-width: 140px;">
+                  <button class="secondary-button" data-action="upload-image" type="button" style="padding: 0.4rem; font-size: 0.85rem;">Bild hochladen</button>
+                  ${selectedCocktail.image ? '<button class="danger-button" data-action="remove-image" type="button" style="padding: 0.4rem; font-size: 0.85rem;">Bild entfernen</button>' : ''}
+                  <input type="file" class="image-upload-input" accept="image/*" style="display: none;" />
+                </div>
               </div>
               <div class="editor-grid">
                 <label class="editor-row">
@@ -916,6 +921,25 @@ function bindTabEvents() {
   });
 }
 
+async function uploadImageToImgBB(file) {
+  const apiKey = '42855a3501b3cdff3979818605f77eb3';
+  const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const response = await fetch(url, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Upload fehlgeschlagen');
+  }
+
+  const result = await response.json();
+  return result.data.url;
+}
+
 async function updateCocktailInFirebase(cocktailId, patch) {
   const cocktail = state.cocktails.find((item) => item.id === cocktailId);
   if (!cocktail) {
@@ -1113,6 +1137,51 @@ function bindContentEvents() {
         console.error('Cocktail konnte nicht gelöscht werden.', error);
         alert('Cocktail konnte nicht gelöscht werden.');
       }
+      return;
+    }
+
+    if (button.dataset.action === 'upload-image') {
+      const card = button.closest('.editor-card');
+      if (!card) return;
+      const fileInput = card.querySelector('.image-upload-input');
+      if (!fileInput) return;
+      
+      fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        button.disabled = true;
+        button.textContent = 'Lädt...';
+        
+        try {
+          const imageUrl = await uploadImageToImgBB(file);
+          const cocktailId = card.dataset.cocktailId;
+          await updateCocktailInFirebase(cocktailId, { image: imageUrl });
+          renderContent();
+        } catch (error) {
+          console.error('Bild-Upload fehlgeschlagen.', error);
+          alert('Bild-Upload fehlgeschlagen.');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Bild hochladen';
+          fileInput.value = '';
+        }
+      };
+      
+      fileInput.click();
+      return;
+    }
+
+    if (button.dataset.action === 'remove-image') {
+      const card = button.closest('.editor-card');
+      const cocktailId = card?.dataset.cocktailId;
+      if (!cocktailId) return;
+
+      const confirmed = window.confirm('Bisheriges Bild wirklich entfernen?');
+      if (!confirmed) return;
+
+      await updateCocktailInFirebase(cocktailId, { image: null });
+      renderContent();
       return;
     }
 
