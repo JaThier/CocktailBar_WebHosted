@@ -12,6 +12,7 @@
     "secondary": "#e9771f",
     "background": "#f7f4ef",
     "surface": "#ffffff",
+    "secondarySurface": "#ffffff00",
     "text": "#1f2937",
     "textMuted": "#6b7280",
     "border": "#e5e7eb"

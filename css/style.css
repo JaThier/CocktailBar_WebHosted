@@ -4,6 +4,7 @@
   --color-secondary: var(--color-secondary);
   --color-background: var(--color-background);
   --color-surface: #ffffff;
+  --color-secondary-surface: #ffffff;
   --color-surface-border: var(--color-surface-border);
   --color-text: var(--color-text);
   --color-text-muted: var(--color-text-muted);
@@ -38,7 +39,7 @@ body {
 
 .topbar,
 .panel {
-  background: #3d3d3d00;
+  background: var(--color-secondary-surface);
   border-radius: 1rem;
   padding: 1rem;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
@@ -290,7 +291,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 0.9rem;
   padding: 0.8rem 0.95rem;
-  background: #51515100;
+  background: var(--color-secondary-surface);
   text-align: left;
   cursor: pointer;
   font: inherit;
@@ -323,7 +324,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 1rem;
   padding: 1rem;
-  background: #51515100;
+  background: var(--color-secondary-surface);
   min-height: 280px;
 }
 
