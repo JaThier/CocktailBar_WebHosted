@@ -426,7 +426,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 0.9rem;
   padding: 0.9rem;
-  background: var(--color-background);
+  background: var(--color-surface);
 }
 
 .editor-card {
@@ -443,7 +443,8 @@ h3 {
 
 .editor-image-column {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .editor-card img,
@@ -584,7 +585,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 1rem;
   padding: 1rem;
-  background: var(--color-background);
+  background: var(--color-secondary-surface);
   min-height: 280px;
   display: grid;
   gap: 0.9rem;
@@ -702,7 +703,7 @@ h3 {
   border: 1px solid var(--color-surface-border);
   border-radius: 1rem;
   padding: 1rem;
-  background: var(--color-background);
+  background: var(--color-secondary-surface);
 }
 
 .order-detail-header {
@@ -798,7 +799,7 @@ h3 {
     overflow-y: auto;
     padding: 1.25rem;
     padding-top: 4rem;
-    background: var(--color-background);
+    background: var(--color-secondary-surface);
     box-shadow: 0 15px 50px rgba(15, 23, 42, 0.3);
   }
 

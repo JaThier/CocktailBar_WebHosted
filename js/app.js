@@ -315,9 +315,10 @@ function getCocktailImageMarkup(cocktail) {
   const slug = generateCocktailId(cocktail.name || cocktail.id || 'cocktail');
   const localImagePath = `./config/images/${state.barKey}/${slug}.png`;
   const remoteImage = cocktail.image || '';
-  const imageSource = localImagePath;
+  const imageSource = remoteImage || localImagePath;
+  const fallback = remoteImage ? localImagePath : '';
 
-  return `<img src="${imageSource}" alt="${safeAlt}" onerror="this.onerror=null; this.src='${remoteImage}';" />`;
+  return `<img src="${imageSource}" alt="${safeAlt}" onerror="this.onerror=null; ${fallback ? `this.src='${fallback}';` : ''}" />`;
 }
 
 function getCocktailDescription(cocktail) {
