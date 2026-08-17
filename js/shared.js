@@ -29,6 +29,7 @@ export function applyTheme(config, barKey) {
     if (config.theme.secondary) root.style.setProperty('--color-secondary', config.theme.secondary);
     if (config.theme.background) root.style.setProperty('--color-background', config.theme.background);
     if (config.theme.surface) root.style.setProperty('--color-surface', config.theme.surface);
+    if (config.theme.secondarySurface) root.style.setProperty('--color-secondary-surface', config.theme.secondarySurface);
     if (config.theme.text) root.style.setProperty('--color-text', config.theme.text);
     if (config.theme.textMuted) root.style.setProperty('--color-text-muted', config.theme.textMuted);
     if (config.theme.border) root.style.setProperty('--color-surface-border', config.theme.border);
