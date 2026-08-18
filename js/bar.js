@@ -512,10 +512,11 @@ function renderCocktailsTab(options = {}) {
                   <span>Zutaten</span>
                   <div class="ingredient-list" data-ingredient-list>
                     ${normalizeIngredients(selectedCocktail).length ? normalizeIngredients(selectedCocktail).map((ingredient, index) => `
-                      <div class="ingredient-row" data-ingredient-index="${index}">
-                        <input type="text" data-field="ingredient-name" value="${escapeHtml(ingredient.name)}" placeholder="Name" />
-                        <input type="text" data-field="ingredient-detail" value="${escapeHtml([ingredient.amount, ingredient.unit].filter(Boolean).join(' '))}" placeholder="Menge / Einheit" />
-                        <button class="danger-button" data-action="remove-ingredient" type="button">×</button>
+                      <div class="ingredient-row" data-ingredient-index="${index}" draggable="true" style="display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; width: 100%; max-width: 100%; margin-bottom: 0.5rem;">
+                        <span class="drag-handle" style="cursor: grab; user-select: none; display: flex; align-items: center; justify-content: center; color: var(--text-muted, #888); flex: 1; min-width: 0; width: 0;" title="Verschieben">☰</span>
+                        <input type="text" data-field="ingredient-name" value="${escapeHtml(ingredient.name)}" placeholder="Name" style="flex: 5; min-width: 0; width: 0;" />
+                        <input type="text" data-field="ingredient-detail" value="${escapeHtml([ingredient.amount, ingredient.unit].filter(Boolean).join(' '))}" placeholder="Menge / Einheit" style="flex: 2; min-width: 0; width: 0;" />
+                        <button class="danger-button" data-action="remove-ingredient" type="button" style="flex: 2; min-width: 0; width: 0; padding: 0.5rem 0;">×</button>
                       </div>
                     `).join('') : '<p class="empty-state">Noch keine Zutaten angelegt.</p>'}
                     <button class="secondary-button" data-action="add-ingredient" type="button">+</button>
@@ -969,6 +970,48 @@ async function updateCocktailInFirebase(cocktailId, patch) {
 }
 
 function bindContentEvents() {
+  let draggedRow = null;
+
+  tabContentElement.addEventListener('dragstart', (event) => {
+    const row = event.target.closest('.ingredient-row');
+    if (row && event.target.hasAttribute('draggable')) {
+      draggedRow = row;
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', '');
+      setTimeout(() => row.style.opacity = '0.5', 0);
+    }
+  });
+
+  tabContentElement.addEventListener('dragover', (event) => {
+    if (!draggedRow) return;
+    event.preventDefault();
+
+    const list = event.target.closest('[data-ingredient-list]');
+    if (!list) return;
+
+    const targetRow = event.target.closest('.ingredient-row');
+    if (targetRow && targetRow !== draggedRow) {
+      const rect = targetRow.getBoundingClientRect();
+      const mid = rect.top + rect.height / 2;
+      if (event.clientY < mid) {
+        list.insertBefore(draggedRow, targetRow);
+      } else {
+        list.insertBefore(draggedRow, targetRow.nextSibling);
+      }
+    }
+  });
+
+  tabContentElement.addEventListener('dragend', (event) => {
+    if (draggedRow) {
+      draggedRow.style.opacity = '';
+      const card = draggedRow.closest('.editor-card');
+      if (card) {
+        card.classList.add('is-dirty');
+      }
+      draggedRow = null;
+    }
+  });
+
   tabContentElement.addEventListener('input', (event) => {
     const target = event.target;
     const card = target.closest('.editor-card');
@@ -1124,10 +1167,11 @@ function bindContentEvents() {
       const currentRows = list.querySelectorAll('[data-ingredient-index]');
       const nextIndex = currentRows.length;
       const rowMarkup = `
-        <div class="ingredient-row" data-ingredient-index="${nextIndex}">
-          <input type="text" data-field="ingredient-name" value="" placeholder="Name" />
-          <input type="text" data-field="ingredient-detail" value="" placeholder="Menge / Einheit" />
-          <button class="danger-button" data-action="remove-ingredient" type="button">×</button>
+        <div class="ingredient-row" data-ingredient-index="${nextIndex}" draggable="true" style="display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; width: 100%; max-width: 100%; margin-bottom: 0.5rem;">
+          <span class="drag-handle" style="cursor: grab; user-select: none; display: flex; align-items: center; justify-content: center; color: var(--text-muted, #888); flex: 1; min-width: 0; width: 0;" title="Verschieben">☰</span>
+          <input type="text" data-field="ingredient-name" value="" placeholder="Name" style="flex: 5; min-width: 0; width: 0;" />
+          <input type="text" data-field="ingredient-detail" value="" placeholder="Menge / Einheit" style="flex: 2; min-width: 0; width: 0;" />
+          <button class="danger-button" data-action="remove-ingredient" type="button" style="flex: 2; min-width: 0; width: 0; padding: 0.5rem 0;">×</button>
         </div>
       `;
 
