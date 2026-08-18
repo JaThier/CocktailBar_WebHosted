@@ -661,11 +661,20 @@ function renderMuseumFilterDefinitionsTab() {
 
 function renderInventoryTab() {
   const ingredients = getAllIngredients();
+  const allChecked = ingredients.length > 0 && ingredients.every((ingredient) => state.inventory[ingredient] !== false);
 
   tabContentElement.innerHTML = `
     <div class="section-title">
       <h3>Vorratskammer</h3>
     </div>
+    ${ingredients.length ? `
+    <div class="inventory-list" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color, #ccc);">
+      <label class="inventory-item">
+        <input type="checkbox" data-action="toggle-all-ingredients" ${allChecked ? 'checked' : ''} />
+        <span><strong>Alle auswählen</strong></span>
+      </label>
+    </div>
+    ` : ''}
     <div class="inventory-list">
       ${ingredients.length ? ingredients.map((ingredient) => `
         <label class="inventory-item">
@@ -980,12 +989,40 @@ function bindContentEvents() {
       return;
     }
 
+    if (target.dataset.action === 'toggle-all-ingredients') {
+      const isChecked = target.checked;
+      const checkboxes = tabContentElement.querySelectorAll('[data-ingredient]');
+      const patch = {};
+
+      checkboxes.forEach((cb) => {
+        cb.checked = isChecked;
+        const ingredient = cb.dataset.ingredient;
+        state.inventory[ingredient] = isChecked;
+        patch[ingredient] = isChecked;
+      });
+
+      try {
+        await updateInventory(state.config?.barId || state.barKey, patch);
+      } catch (error) {
+        console.error('Inventar konnte nicht gespeichert werden.', error);
+        alert('Inventar konnte nicht gespeichert werden.');
+      }
+      return;
+    }
+
     if (target.dataset.ingredient) {
       const nextInventoryState = {
         ...state.inventory,
         [target.dataset.ingredient]: target.checked,
       };
       state.inventory = nextInventoryState;
+
+      const selectAllCb = tabContentElement.querySelector('[data-action="toggle-all-ingredients"]');
+      if (selectAllCb) {
+        const checkboxes = Array.from(tabContentElement.querySelectorAll('[data-ingredient]'));
+        selectAllCb.checked = checkboxes.every(cb => cb.checked);
+      }
+
       try {
         await updateInventory(state.config?.barId || state.barKey, {
           [target.dataset.ingredient]: target.checked,
