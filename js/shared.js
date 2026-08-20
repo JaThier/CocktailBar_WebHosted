@@ -33,6 +33,7 @@ export function applyTheme(config, barKey) {
     if (config.theme.text) root.style.setProperty('--color-text', config.theme.text);
     if (config.theme.textMuted) root.style.setProperty('--color-text-muted', config.theme.textMuted);
     if (config.theme.border) root.style.setProperty('--color-surface-border', config.theme.border);
+    if (config.theme.pantrySurface) root.style.setProperty('--color-pantry-surface', config.theme.pantrySurface);
   }
 
   // Set background image

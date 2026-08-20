@@ -645,7 +645,7 @@ function renderMuseumEventsTab() {
     return `
       <ul style="list-style: none; padding: 0; margin: 0;">
         ${sortedIds.map(id => `
-          <li style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color, #eee);">
+          <li style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--color-secondary-surface);">
             <span>${escapeHtml(getCocktailName(id))}</span>
             <strong>${statsObj[id]}x</strong>
           </li>

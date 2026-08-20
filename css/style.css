@@ -540,6 +540,8 @@ h3 {
   gap: 0.55rem;
   width: 100%;
   text-align: left;
+  cursor: pointer;
+  background: var(--color-pantry-surface, var(--color-surface));
 }
 
 .museum-tabs {

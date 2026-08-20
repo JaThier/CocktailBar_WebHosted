@@ -11,10 +11,11 @@
     "primaryText": "#000000",
     "secondary": "#914c6b",
     "background": "#404040",
-    "surface": "#5a5a5a",
+    "surface": "#5a5a5a00",
     "secondarySurface": "#51515100",
     "text": "#ffffff",
     "textMuted": "#ffffff",
-    "border": "#d1d5db00"
+    "border": "#d1d5db00",
+    "pantrySurface": "#5a5a5a"
   }
 }

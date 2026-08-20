@@ -15,6 +15,7 @@
     "secondarySurface": "#ffffff00",
     "text": "#1f2937",
     "textMuted": "#6b7280",
-    "border": "#e5e7eb"
+    "border": "#e5e7eb",
+    "pantrySurface": "#e5e7eb"
   }
 }
