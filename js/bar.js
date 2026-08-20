@@ -9,9 +9,12 @@ import {
   updateInventory,
   updateOrder,
   deleteOrder,
-} from './firebase.js';
-import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName } from './shared.js';
+  addEvent,
+  updateEvent,
+  listenToEvents,
+} from './firebase.js?v=3';
+import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName } from './shared.js?v=3';
 
 const state = {
   barKey: 'default',
@@ -19,6 +22,7 @@ const state = {
   cocktails: [],
   inventory: {},
   orders: [],
+  events: [],
   activeTab: 'cocktails',
   searchQuery: '',
   museumSelectedFilterKey: null,
@@ -66,6 +70,7 @@ function resetBarState() {
   state.cocktails = [];
   state.inventory = {};
   state.orders = [];
+  state.events = [];
 }
 
 function loadStoredState() {
@@ -617,6 +622,70 @@ function renderCocktailsTab(options = {}) {
   }
 }
 
+function renderMuseumEventsTab() {
+  const events = state.events || [];
+  
+  const grandTotalStats = {};
+  events.forEach(event => {
+    const stats = event.statistics || {};
+    Object.keys(stats).forEach(cocktailId => {
+      grandTotalStats[cocktailId] = (grandTotalStats[cocktailId] || 0) + stats[cocktailId];
+    });
+  });
+
+  const getCocktailName = (id) => {
+    const cocktail = state.cocktails.find(c => c.id === id);
+    return cocktail ? cocktail.name : 'Unbekannter Cocktail';
+  };
+
+  const renderStats = (statsObj) => {
+    const sortedIds = Object.keys(statsObj).sort((a, b) => statsObj[b] - statsObj[a]);
+    if (sortedIds.length === 0) return '<p class="empty-state">Noch keine Daten.</p>';
+    
+    return `
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        ${sortedIds.map(id => `
+          <li style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color, #eee);">
+            <span>${escapeHtml(getCocktailName(id))}</span>
+            <strong>${statsObj[id]}x</strong>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  };
+
+  tabContentElement.innerHTML = `
+    <div class="section-title">
+      <h3>Event-Statistiken</h3>
+      <span>Gesamt über alle Events</span>
+    </div>
+    
+    <div style="background: var(--surface-2, #f5f5f5); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+      <h4 style="margin-top: 0;">Gesamtstatistik</h4>
+      ${renderStats(grandTotalStats)}
+    </div>
+
+    <div class="section-title">
+      <h3>Einzelne Events</h3>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      ${events.length ? [...events].reverse().map(event => `
+        <div style="border: 1px solid var(--border-color, #ddd); padding: 1rem; border-radius: 8px;">
+          <h4 style="margin-top: 0; margin-bottom: 0.5rem;">
+            ${event.status === 'active' ? '🔴 Aktives Event' : '✅ Abgeschlossenes Event'}
+          </h4>
+          <p style="font-size: 0.9em; color: var(--text-muted, #666); margin-top: 0; margin-bottom: 1rem;">
+            Start: ${new Date(event.createdAt).toLocaleString('de-DE')}
+            ${event.endTime ? `<br>Ende: ${new Date(event.endTime).toLocaleString('de-DE')}` : ''}
+          </p>
+          ${renderStats(event.statistics || {})}
+        </div>
+      `).join('') : '<p class="empty-state">Bisher keine Events gestartet.</p>'}
+    </div>
+  `;
+}
+
 function renderMuseumFilterDefinitionsTab() {
   const filterKeys = getFilterDefinitionKeys();
 
@@ -850,10 +919,22 @@ function renderOrdersTab() {
     ? state.cocktails.find((cocktail) => cocktail.id === firstItem.id) || null
     : null;
 
+  const activeEvent = state.events.find((e) => e.status === 'active');
+
   tabContentElement.innerHTML = `
     <div class="section-title">
       <h3>Bestellungen</h3>
       <span>${state.orders.length}</span>
+    </div>
+    <div style="margin-bottom: 1rem;">
+      ${activeEvent ? `
+        <div class="editor-row" style="background: var(--surface-2, #f5f5f5); padding: 1rem; border-radius: 8px;">
+          <p style="margin: 0 0 0.5rem 0;"><strong>Aktives Event:</strong> Gestartet am ${new Date(activeEvent.createdAt).toLocaleString('de-DE')}</p>
+          <button class="danger-button" data-action="end-event" data-id="${activeEvent.id}" type="button">Event beenden</button>
+        </div>
+      ` : `
+        <button class="primary-button" data-action="start-event" type="button">Neues Event starten</button>
+      `}
     </div>
     <div class="order-layout">
       <div class="cocktail-list" aria-label="Bestell-Liste">
@@ -913,7 +994,11 @@ function renderContent(options = {}) {
   }
 
   if (isMuseumView) {
-    renderMuseumFilterDefinitionsTab();
+    if (state.activeTab === 'events') {
+      renderMuseumEventsTab();
+    } else {
+      renderMuseumFilterDefinitionsTab();
+    }
     return;
   }
 
@@ -1306,9 +1391,57 @@ function bindContentEvents() {
 
       try {
         await updateOrder(state.config?.barId || state.barKey, orderId, { ...targetOrder, status: 'done' });
+        
+        // Check for active event to increment statistics
+        const activeEvent = state.events.find((e) => e.status === 'active');
+        if (activeEvent) {
+          const stats = activeEvent.statistics || {};
+          (targetOrder.items || []).forEach(item => {
+            if (item.id) {
+              stats[item.id] = (stats[item.id] || 0) + 1;
+            }
+          });
+          await updateEvent(state.config?.barId || state.barKey, activeEvent.id, { statistics: stats });
+        }
       } catch (error) {
         console.error('Bestellung konnte nicht aktualisiert werden.', error);
         alert('Bestellung konnte nicht aktualisiert werden.');
+      }
+      return;
+    }
+
+    if (button.dataset.action === 'start-event') {
+      const confirmed = window.confirm('Möchtest du ein neues Event starten? Alle fertiggestellten Cocktails werden von nun an gezählt.');
+      if (!confirmed) return;
+
+      try {
+        await addEvent(state.config?.barId || state.barKey, {
+          status: 'active',
+          statistics: {}
+        });
+      } catch (error) {
+        console.error('Event konnte nicht gestartet werden.', error);
+        alert('Event konnte nicht gestartet werden.');
+      }
+      return;
+    }
+
+    if (button.dataset.action === 'end-event') {
+      const eventId = button.dataset.id;
+      const targetEvent = state.events.find((e) => e.id === eventId);
+      if (!targetEvent) return;
+
+      const confirmed = window.confirm('Event wirklich beenden? Die Statistik wird dann abgeschlossen.');
+      if (!confirmed) return;
+
+      try {
+        await updateEvent(state.config?.barId || state.barKey, eventId, { 
+          status: 'completed',
+          endTime: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error('Event konnte nicht beendet werden.', error);
+        alert('Event konnte nicht beendet werden.');
       }
       return;
     }
@@ -1409,6 +1542,11 @@ async function init() {
 
     listenToOrders(state.config.barId || state.barKey, (orders) => {
       state.orders = Array.isArray(orders) ? orders : [];
+      renderContent();
+    });
+
+    listenToEvents(state.config.barId || state.barKey, (events) => {
+      state.events = Array.isArray(events) ? events : [];
       renderContent();
     });
 

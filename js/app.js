@@ -1,6 +1,6 @@
-import { createFirebaseClient, listenToCocktails, listenToInventory, listenToOrders, addOrder } from './firebase.js';
-import { generateCocktailId, normalizeStrength } from './cocktail-utils.js';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable, sortCocktailsByName } from './shared.js';
+import { createFirebaseClient, listenToCocktails, listenToInventory, listenToOrders, addOrder } from './firebase.js?v=3';
+import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable, sortCocktailsByName } from './shared.js?v=3';
 
 const state = {
   config: null,

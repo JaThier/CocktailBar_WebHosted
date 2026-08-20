@@ -239,3 +239,73 @@ export function listenToOrders(barId, callback) {
     callback([]);
   });
 }
+
+function getEventsPath(barId) {
+  const safeBarId = String(barId || 'default').trim() || 'default';
+  return `bars/${encodeURIComponent(safeBarId)}/events`;
+}
+
+export async function addEvent(barId, eventData) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+
+  const eventsRef = ref(client.database, getEventsPath(barId));
+  const newEventRef = push(eventsRef);
+  const nextEvent = {
+    ...eventData,
+    id: newEventRef.key,
+    createdAt: eventData?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: eventData?.status || 'active',
+  };
+
+  await set(newEventRef, nextEvent);
+  return nextEvent;
+}
+
+export async function updateEvent(barId, eventId, eventData) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+
+  const eventRef = ref(client.database, `${getEventsPath(barId)}/${encodeURIComponent(eventId)}`);
+  const nextEvent = {
+    ...eventData,
+    id: eventData?.id || eventId,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await update(eventRef, nextEvent);
+  return nextEvent;
+}
+
+export function listenToEvents(barId, callback) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    callback([]);
+    return () => {};
+  }
+
+  const eventsRef = ref(client.database, getEventsPath(barId));
+  return onValue(eventsRef, (snapshot) => {
+    const events = [];
+
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+        const event = child.val() || {};
+        events.push({
+          ...event,
+          id: child.key,
+        });
+      });
+    }
+
+    callback(events);
+  }, (error) => {
+    console.error('Events konnten nicht geladen werden.', error);
+    callback([]);
+  });
+}
