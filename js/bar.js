@@ -890,7 +890,12 @@ function renderOrdersTab() {
               </div>
             ` : '<p class="empty-state">Zu dieser Bestellung ist kein Cocktail mehr verfügbar.</p>'}
             <div class="order-actions">
-              <button class="primary-button" data-action="finish-order" data-id="${selectedOrder.id}" type="button">In Bearbeitung</button>
+              ${selectedOrder.status !== 'done' && selectedOrder.status !== 'in_progress' ? `
+              <button class="primary-button" data-action="progress-order" data-id="${selectedOrder.id}" type="button">In Bearbeitung</button>
+              ` : ''}
+              ${selectedOrder.status === 'in_progress' ? `
+              <button class="primary-button" data-action="finish-order" data-id="${selectedOrder.id}" type="button">Fertig</button>
+              ` : ''}
               <button class="danger-button" data-action="delete-order" data-id="${selectedOrder.id}" type="button">Entfernen</button>
             </div>
           </div>
@@ -1266,7 +1271,7 @@ function bindContentEvents() {
       return;
     }
 
-    if (button.dataset.action === 'finish-order') {
+    if (button.dataset.action === 'progress-order') {
       const orderId = button.dataset.id;
       const targetOrder = state.orders.find((order) => order.id === orderId);
       if (!targetOrder) {
@@ -1280,6 +1285,27 @@ function bindContentEvents() {
 
       try {
         await updateOrder(state.config?.barId || state.barKey, orderId, { ...targetOrder, status: 'in_progress' });
+      } catch (error) {
+        console.error('Bestellung konnte nicht aktualisiert werden.', error);
+        alert('Bestellung konnte nicht aktualisiert werden.');
+      }
+      return;
+    }
+
+    if (button.dataset.action === 'finish-order') {
+      const orderId = button.dataset.id;
+      const targetOrder = state.orders.find((order) => order.id === orderId);
+      if (!targetOrder) {
+        return;
+      }
+
+      const confirmed = window.confirm(`Bestellung von ${targetOrder.guestName || 'Kunde'} als fertig markieren?`);
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        await updateOrder(state.config?.barId || state.barKey, orderId, { ...targetOrder, status: 'done' });
       } catch (error) {
         console.error('Bestellung konnte nicht aktualisiert werden.', error);
         alert('Bestellung konnte nicht aktualisiert werden.');
