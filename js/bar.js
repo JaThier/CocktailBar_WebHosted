@@ -487,14 +487,14 @@ function renderCocktailsTab(options = {}) {
     <div class="cocktail-layout">
       <div class="cocktail-list" aria-label="Cocktail-Liste">
         ${filteredCocktails.length ? filteredCocktails.map((cocktail) => {
-          const isAvailable = isCocktailAvailable(cocktail, state.inventory);
-          return `
+    const isAvailable = isCocktailAvailable(cocktail, state.inventory);
+    return `
             <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''} ${isAvailable ? '' : 'disabled'}" type="button" data-role="select-cocktail" data-id="${cocktail.id}">
               <span>${cocktail.name || 'Unbenannter Cocktail'}</span>
               <span class="badge">${isAvailable ? getCocktailStrengthLabel(cocktail) : 'Nicht verfügbar'}</span>
             </button>
           `;
-        }).join('') : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
+  }).join('') : '<p class="empty-state">Noch keine Cocktails angelegt.</p>'}
       </div>
       <div class="cocktail-detail-panel">
         ${selectedCocktail ? `
@@ -624,7 +624,7 @@ function renderCocktailsTab(options = {}) {
 
 function renderMuseumEventsTab() {
   const events = state.events || [];
-  
+
   const grandTotalStats = {};
   events.forEach(event => {
     const stats = event.statistics || {};
@@ -641,7 +641,7 @@ function renderMuseumEventsTab() {
   const renderStats = (statsObj) => {
     const sortedIds = Object.keys(statsObj).sort((a, b) => statsObj[b] - statsObj[a]);
     if (sortedIds.length === 0) return '<p class="empty-state">Noch keine Daten.</p>';
-    
+
     return `
       <ul style="list-style: none; padding: 0; margin: 0;">
         ${sortedIds.map(id => `
@@ -660,7 +660,7 @@ function renderMuseumEventsTab() {
       <span>Gesamt über alle Events</span>
     </div>
     
-    <details style="background: var(--surface-2, #f5f5f5); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+    <details style="background: var(--color-surface); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
       <summary style="font-weight: bold; cursor: pointer; outline: none; margin: -1.5rem; padding: 1.5rem;">Gesamtstatistik ausklappen</summary>
       <div style="margin-top: 1.5rem;">
         ${renderStats(grandTotalStats)}
@@ -1318,14 +1318,14 @@ function bindContentEvents() {
       if (!card) return;
       const fileInput = card.querySelector('.image-upload-input');
       if (!fileInput) return;
-      
+
       fileInput.onchange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         button.disabled = true;
         button.textContent = 'Lädt...';
-        
+
         try {
           const imageUrl = await uploadImageToImgBB(file);
           const cocktailId = card.dataset.cocktailId;
@@ -1340,7 +1340,7 @@ function bindContentEvents() {
           fileInput.value = '';
         }
       };
-      
+
       fileInput.click();
       return;
     }
@@ -1393,7 +1393,7 @@ function bindContentEvents() {
 
       try {
         await updateOrder(state.config?.barId || state.barKey, orderId, { ...targetOrder, status: 'done' });
-        
+
         // Check for active event to increment statistics
         const activeEvent = state.events.find((e) => e.status === 'active');
         if (activeEvent) {
@@ -1437,7 +1437,7 @@ function bindContentEvents() {
       if (eventName === null) return; // Abgebrochen
 
       try {
-        await updateEvent(state.config?.barId || state.barKey, eventId, { 
+        await updateEvent(state.config?.barId || state.barKey, eventId, {
           status: 'completed',
           name: eventName.trim() || `Event vom ${new Date().toLocaleDateString('de-DE')}`,
           endTime: new Date().toISOString()
