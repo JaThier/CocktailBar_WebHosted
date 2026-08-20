@@ -14,7 +14,7 @@ import {
   listenToEvents,
 } from './firebase.js?v=3';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName } from './shared.js?v=3';
+import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName, getIngredientNames } from './shared.js?v=3';
 
 const state = {
   barKey: 'default',
@@ -25,8 +25,10 @@ const state = {
   events: [],
   activeTab: 'cocktails',
   searchQuery: '',
+  museumArchiveSearchQuery: '',
   museumSelectedFilterKey: null,
   selectedCocktailId: null,
+  museumArchiveSelectedCocktailId: null,
   selectedOrderId: null,
 };
 
@@ -688,6 +690,109 @@ function renderMuseumEventsTab() {
   `;
 }
 
+function renderMuseumArchiveTab(options = {}) {
+  const { preserveSearchFocus = false, searchSelectionStart = null, searchSelectionEnd = null } = options;
+
+  let archivedCocktails = state.cocktails.filter((cocktail) => !isCocktailAvailable(cocktail, state.inventory));
+  
+  if (state.museumArchiveSearchQuery) {
+    const q = state.museumArchiveSearchQuery.toLowerCase();
+    archivedCocktails = archivedCocktails.filter((c) => {
+      if (c.name && c.name.toLowerCase().includes(q)) return true;
+      const ingredients = getIngredientNames(c);
+      if (ingredients.some(i => i.toLowerCase().includes(q))) return true;
+      return false;
+    });
+  }
+  
+  archivedCocktails = sortCocktailsByName(archivedCocktails);
+
+  if (!archivedCocktails.length) {
+    state.museumArchiveSelectedCocktailId = null;
+  } else if (!archivedCocktails.some(c => c.id === state.museumArchiveSelectedCocktailId)) {
+    state.museumArchiveSelectedCocktailId = archivedCocktails[0].id;
+  }
+
+  const selectedCocktail = archivedCocktails.find(c => c.id === state.museumArchiveSelectedCocktailId) || null;
+  const previousListScrollTop = tabContentElement?.querySelector('.cocktail-list')?.scrollTop || 0;
+
+  tabContentElement.innerHTML = `
+    <div class="section-title">
+      <h3>Cocktail-Archiv</h3>
+      <span>Aktuell nicht verfügbare Cocktails</span>
+    </div>
+    <label class="filter-search-field">
+      <span>Cocktail suchen</span>
+      <input id="museum-archive-search" type="search" placeholder="Name oder Zutat" value="${escapeHtml(state.museumArchiveSearchQuery)}" />
+    </label>
+    <div class="cocktail-layout">
+      <div class="cocktail-list" aria-label="Cocktail-Liste">
+        ${archivedCocktails.length ? archivedCocktails.map((cocktail) => `
+          <button class="cocktail-list-item ${selectedCocktail?.id === cocktail.id ? 'active' : ''}" type="button" data-role="select-archive-cocktail" data-id="${cocktail.id}">
+            <span>${escapeHtml(cocktail.name || 'Unbenannter Cocktail')}</span>
+          </button>
+        `).join('') : '<p class="empty-state">Keine Cocktails im Archiv gefunden.</p>'}
+      </div>
+      <div class="cocktail-detail-panel">
+        ${selectedCocktail ? `
+          <div class="editor-card" data-cocktail-id="${selectedCocktail.id}">
+            <div class="editor-main-layout">
+              <div class="editor-image-column">
+                <div class="editor-image-host" data-image-host style="pointer-events: none;"></div>
+              </div>
+              <div class="editor-grid" style="align-content: flex-start; gap: 1rem;">
+                <h3 style="margin: 0; font-size: 1.5rem;">${escapeHtml(selectedCocktail.name || 'Unbenannter Cocktail')}</h3>
+                <div style="font-size: 0.9rem; color: var(--text-muted, #666);">
+                  <strong>Zutaten:</strong> ${getIngredientNames(selectedCocktail).length ? escapeHtml(getIngredientNames(selectedCocktail).join(' · ')) : 'Keine Angaben'}
+                </div>
+                ${normalizeCocktailProperties(selectedCocktail).length ? `
+                  <div class="property-options" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    ${normalizeCocktailProperties(selectedCocktail).map(prop => `
+                      <span class="property-chip" style="pointer-events: none; opacity: 0.8; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 12px; background: var(--color-surface); border: 1px solid var(--color-secondary-surface);">
+                        ${escapeHtml(prop)}
+                      </span>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        ` : '<p class="empty-state">Bitte wählen Sie einen Cocktail aus.</p>'}
+      </div>
+    </div>
+  `;
+
+  attachCocktailImages();
+
+  const searchInput = tabContentElement.querySelector('#museum-archive-search');
+  if (searchInput) {
+    searchInput.value = state.museumArchiveSearchQuery;
+    if (preserveSearchFocus) {
+      searchInput.focus();
+      if (typeof searchSelectionStart === 'number' && typeof searchSelectionEnd === 'number') {
+        searchInput.setSelectionRange(searchSelectionStart, searchSelectionEnd);
+      }
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      const target = event.target;
+      state.museumArchiveSearchQuery = event.target.value;
+      renderMuseumArchiveTab({
+        preserveSearchFocus: true,
+        searchSelectionStart: target.selectionStart,
+        searchSelectionEnd: target.selectionEnd,
+      });
+    });
+  }
+
+  requestAnimationFrame(() => {
+    const cocktailList = tabContentElement?.querySelector('.cocktail-list');
+    if (cocktailList) {
+      cocktailList.scrollTop = previousListScrollTop;
+    }
+  });
+}
+
 function renderMuseumFilterDefinitionsTab() {
   const filterKeys = getFilterDefinitionKeys();
 
@@ -998,6 +1103,8 @@ function renderContent(options = {}) {
   if (isMuseumView) {
     if (state.activeTab === 'events') {
       renderMuseumEventsTab();
+    } else if (state.activeTab === 'archive') {
+      renderMuseumArchiveTab();
     } else {
       renderMuseumFilterDefinitionsTab();
     }
@@ -1177,6 +1284,12 @@ function bindContentEvents() {
 
     if (isMuseumView && button.dataset.role === 'select-museum-filter') {
       state.museumSelectedFilterKey = button.dataset.id;
+      renderContent();
+      return;
+    }
+
+    if (isMuseumView && button.dataset.role === 'select-archive-cocktail') {
+      state.museumArchiveSelectedCocktailId = button.dataset.id;
       renderContent();
       return;
     }
