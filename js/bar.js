@@ -660,10 +660,12 @@ function renderMuseumEventsTab() {
       <span>Gesamt über alle Events</span>
     </div>
     
-    <div style="background: var(--surface-2, #f5f5f5); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-      <h4 style="margin-top: 0;">Gesamtstatistik</h4>
-      ${renderStats(grandTotalStats)}
-    </div>
+    <details style="background: var(--surface-2, #f5f5f5); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+      <summary style="font-weight: bold; cursor: pointer; outline: none; margin: -1.5rem; padding: 1.5rem;">Gesamtstatistik ausklappen</summary>
+      <div style="margin-top: 1.5rem;">
+        ${renderStats(grandTotalStats)}
+      </div>
+    </details>
 
     <div class="section-title">
       <h3>Einzelne Events</h3>
@@ -673,7 +675,7 @@ function renderMuseumEventsTab() {
       ${events.length ? [...events].reverse().map(event => `
         <div style="border: 1px solid var(--border-color, #ddd); padding: 1rem; border-radius: 8px;">
           <h4 style="margin-top: 0; margin-bottom: 0.5rem;">
-            ${event.status === 'active' ? '🔴 Aktives Event' : '✅ Abgeschlossenes Event'}
+            ${event.status === 'active' ? '🔴 Aktives Event' : `✅ ${escapeHtml(event.name || 'Abgeschlossenes Event')}`}
           </h4>
           <p style="font-size: 0.9em; color: var(--text-muted, #666); margin-top: 0; margin-bottom: 1rem;">
             Start: ${new Date(event.createdAt).toLocaleString('de-DE')}
@@ -1431,12 +1433,13 @@ function bindContentEvents() {
       const targetEvent = state.events.find((e) => e.id === eventId);
       if (!targetEvent) return;
 
-      const confirmed = window.confirm('Event wirklich beenden? Die Statistik wird dann abgeschlossen.');
-      if (!confirmed) return;
+      const eventName = window.prompt('Event wirklich beenden? Bitte gib einen Namen für das Event ein (optional):', `Event vom ${new Date().toLocaleDateString('de-DE')}`);
+      if (eventName === null) return; // Abgebrochen
 
       try {
         await updateEvent(state.config?.barId || state.barKey, eventId, { 
           status: 'completed',
+          name: eventName.trim() || `Event vom ${new Date().toLocaleDateString('de-DE')}`,
           endTime: new Date().toISOString()
         });
       } catch (error) {
