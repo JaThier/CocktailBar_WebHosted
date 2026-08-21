@@ -132,6 +132,13 @@
           "Ideal für lebendige Rezepturen."
         ]
       },
+      "Hausmarke": {
+        "text": "Spezielle Eigenkreationen unserer Bar.",
+        "bullets": [
+          "Nur hier erhältlich",
+          "Besonders zu empfehlen"
+        ]
+      },
       "Bartenders Favourite": {
         "text": "Persönliche Favoriten mit besonderem Wiedererkennungswert. Hier landen Cocktails, die aus Sicht der Bar einfach gut funktionieren und gern empfohlen werden.",
         "bullets": [

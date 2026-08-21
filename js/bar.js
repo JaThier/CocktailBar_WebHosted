@@ -47,6 +47,7 @@ const cocktailPropertyOptions = [
   'Bitter',
   'Süß',
   'Sauer',
+  'Hausmarke',
   'Bartenders Favourite',
 ];
 
@@ -153,6 +154,10 @@ function getFilterDefinitionContent() {
     'Sauer': {
       text: 'Ein frischer Drink mit dominanter Zitrusnote.',
       bullets: ['Belebend', 'Klar'],
+    },
+    'Hausmarke': {
+      text: 'Spezielle Eigenkreationen unserer Bar.',
+      bullets: ['Nur hier erhältlich', 'Besonders zu empfehlen'],
     },
     'Bartenders Favourite': {
       text: 'Eine persönliche Empfehlung des Barkeepers.',
