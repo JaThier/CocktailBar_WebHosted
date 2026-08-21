@@ -147,6 +147,80 @@
           "Für Rezepte mit besonderem Stellenwert."
         ]
       }
-    }
+    },
+    "customTabs": [
+      {
+        "id": "glaeser",
+        "title": "Gläser",
+        "items": [
+          {
+            "id": "coupes",
+            "name": "Coupe / Cocktailschale",
+            "description": "Die klassische, flache Schale ohne Eis. Oft für Drinks verwendet, die gerührt oder geschüttelt (straight up) serviert werden.",
+            "volume": "120 - 180 ml"
+          },
+          {
+            "id": "tumbler",
+            "name": "Tumbler (Old Fashioned)",
+            "description": "Ein kurzes, zylindrisches Glas mit dickem Boden. Perfekt für Spirituosen pur oder klassische Cocktails, die auf einem großen Eiswürfel serviert werden.",
+            "volume": "200 - 300 ml"
+          },
+          {
+            "id": "highball",
+            "name": "Highball / Longdrink",
+            "description": "Ein hohes, schlankes Glas. Ideal für Drinks, die mit viel Eis und Fillern wie Soda oder Tonic Water aufgegossen werden.",
+            "volume": "250 - 400 ml"
+          },
+          {
+            "id": "martini",
+            "name": "Martini-Glas",
+            "description": "Ein konisch geformtes Glas auf einem Stiel, typischerweise für Drinks ohne Eis. Durch die Form bleiben die Aromen nah am Trinker.",
+            "volume": "150 - 250 ml"
+          },
+          {
+            "id": "hurricane",
+            "name": "Hurricane",
+            "description": "Ein bauchiges, hohes Glas, das oft für große, tropische und fruchtige Cocktails (wie Piña Colada) verwendet wird.",
+            "volume": "400 - 600 ml"
+          },
+          {
+            "id": "margarita",
+            "name": "Margarita-Glas",
+            "description": "Ein elegantes Glas mit breiter Schale und markantem Absatz. Eignet sich hervorragend für Margaritas und Drinks mit Salzrand.",
+            "volume": "250 - 350 ml"
+          },
+          {
+            "id": "moscow-mule",
+            "name": "Moscow-Mule Becher",
+            "description": "Ein traditioneller Kupferbecher. Hält den Drink besonders lange kalt und ist der absolute Standard für den Moscow Mule.",
+            "volume": "400 - 500 ml"
+          },
+          {
+            "id": "tumbler-klein",
+            "name": "Kleiner Tumbler",
+            "description": "Eine kleinere Variante des klassischen Tumblers. Perfekt für hochkonzentrierte Drinks oder Spirituosen, die pur mit wenig Eis serviert werden.",
+            "volume": "150 - 200 ml"
+          },
+          {
+            "id": "gin-glas",
+            "name": "Gin-Glas (Copa-Glas)",
+            "description": "Ein großes, bauchiges Glas auf einem Stiel. Bietet viel Platz für Eis und Botanicals, wodurch sich die Aromen des Gins ideal entfalten können.",
+            "volume": "500 - 700 ml"
+          },
+          {
+            "id": "gin-glas-stillos",
+            "name": "Gin-Glas (Stillos)",
+            "description": "Eine bauchige Glasform ähnlich dem klassischen Copa-Glas, jedoch ohne Stiel. Liegt kompakt in der Hand und bringt den Gin & Tonic modern zur Geltung.",
+            "volume": "400 - 550 ml"
+          },
+          {
+            "id": "likoerglas",
+            "name": "Likörglas / Kelchglas",
+            "description": "Ein kleines, elegantes Glas auf einem Stiel. Ideal für pure Liköre, kleine Aperitifs oder Digestifs nach dem Essen.",
+            "volume": "50 - 100 ml"
+          }
+        ]
+      }
+    ]
   }
 }

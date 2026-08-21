@@ -30,6 +30,7 @@ const state = {
   selectedCocktailId: null,
   museumArchiveSelectedCocktailId: null,
   selectedOrderId: null,
+  museumSelectedCustomItemId: null,
 };
 
 const cocktailPropertyOptions = [
@@ -63,7 +64,7 @@ const unlockButton = document.querySelector('#unlock-bar');
 const passwordInput = document.querySelector('#bar-password');
 const dashboardElement = document.querySelector('#bar-dashboard');
 const tabContentElement = document.querySelector('#tab-content');
-const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
+let tabButtons = Array.from(document.querySelectorAll('.tab-button'));
 
 function getStorageKey(key) {
   return `cocktailbar-${key}-${state.barKey}`;
@@ -747,10 +748,14 @@ function renderMuseumArchiveTab(options = {}) {
 }
 
 function renderMuseumFilterDefinitionsTab() {
+  if (!tabContentElement) {
+    return;
+  }
+
   const filterKeys = getFilterDefinitionKeys();
 
   if (!filterKeys.length) {
-    tabContentElement.innerHTML = '<p class="empty-state">Keine Filterdefinitionen vorhanden.</p>';
+    tabContentElement.innerHTML = '<p class="empty-state">Keine Filterdefinitionen in der Konfiguration gefunden.</p>';
     return;
   }
 
@@ -758,31 +763,86 @@ function renderMuseumFilterDefinitionsTab() {
     state.museumSelectedFilterKey = filterKeys[0];
   }
 
-  const selectedFilterKey = state.museumSelectedFilterKey;
-  const selectedFilterText = state.filterDefinitions?.[selectedFilterKey] || '';
+  const allContents = getFilterDefinitionContent();
+  const selectedContent = allContents[state.museumSelectedFilterKey] || {
+    text: state.filterDefinitions?.[state.museumSelectedFilterKey] || '',
+    bullets: getFilterDefinitionBulletPoints(state.museumSelectedFilterKey)
+  };
 
   tabContentElement.innerHTML = `
-    <div class="section-title">
-      <h3>Filterdefinitionen</h3>
-      <span>${filterKeys.length}</span>
-    </div>
     <div class="museum-layout">
-      <div class="museum-filter-list" aria-label="Filterliste">
-        ${filterKeys.map((filterKey) => `
-          <button class="cocktail-list-item museum-filter-item ${selectedFilterKey === filterKey ? 'active' : ''}" type="button" data-role="select-museum-filter" data-id="${filterKey}">
-            <span>${filterKey}</span>
+      <div class="museum-filter-list">
+        ${filterKeys.map((key) => `
+          <button class="cocktail-list-item ${state.museumSelectedFilterKey === key ? 'active' : ''}" type="button" data-role="select-museum-filter" data-id="${escapeHtml(key)}">
+            <span>${escapeHtml(key)}</span>
           </button>
         `).join('')}
       </div>
       <div class="museum-editor-panel">
-        <label class="editor-row museum-editor-row">
-          <span>${selectedFilterKey}</span>
-          <p class="museum-filter-text">${escapeHtml(selectedFilterText)}</p>
-        </label>
-        <div class="museum-description-block" aria-label="Kurzbeschreibung">
-          <ul>
-            ${getFilterDefinitionBulletPoints(selectedFilterKey).map((line) => `<li>${escapeHtml(line)}</li>`).join('')}
-          </ul>
+        <div class="editor-card static-card">
+          <div class="editor-header">
+            <h3>${escapeHtml(state.museumSelectedFilterKey)}</h3>
+          </div>
+          <div class="editor-body">
+            <p style="white-space: pre-line; line-height: 1.5; margin-bottom: 1rem;">
+              ${escapeHtml(selectedContent.text)}
+            </p>
+            ${selectedContent.bullets && selectedContent.bullets.length ? `
+              <ul style="list-style: disc; margin-left: 1.5rem; line-height: 1.5;">
+                ${selectedContent.bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join('')}
+              </ul>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMuseumCustomTab() {
+  if (!tabContentElement) {
+    return;
+  }
+
+  const customTabs = state.config.museum?.customTabs || [];
+  const tabId = state.activeTab.replace('custom-', '');
+  const tabData = customTabs.find(t => t.id === tabId);
+
+  if (!tabData || !tabData.items || !tabData.items.length) {
+    tabContentElement.innerHTML = '<p class="empty-state">Keine Inhalte für diesen Tab gefunden.</p>';
+    return;
+  }
+
+  const items = tabData.items;
+
+  if (!state.museumSelectedCustomItemId || !items.find(i => i.id === state.museumSelectedCustomItemId)) {
+    state.museumSelectedCustomItemId = items[0].id;
+  }
+
+  const selectedItem = items.find(i => i.id === state.museumSelectedCustomItemId);
+  const imageSource = `./config/images/${state.config.barId || state.barKey}/${selectedItem.id}.png`;
+
+  tabContentElement.innerHTML = `
+    <div class="museum-layout">
+      <div class="museum-filter-list">
+        ${items.map((item) => `
+          <button class="cocktail-list-item ${state.museumSelectedCustomItemId === item.id ? 'active' : ''}" type="button" data-role="select-museum-custom-item" data-id="${escapeHtml(item.id)}">
+            <span>${escapeHtml(item.name || item.title || item.id)}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="museum-editor-panel">
+        <div class="editor-card static-card">
+          <div class="editor-header">
+            <h3>${escapeHtml(selectedItem.name || selectedItem.title || selectedItem.id)}</h3>
+          </div>
+          <div class="editor-body">
+            <div class="cocktail-image-host" style="margin-bottom: 1rem;">
+              <img src="${imageSource}" alt="${escapeHtml(selectedItem.name || selectedItem.title || selectedItem.id)}" onerror="this.style.display='none'" />
+            </div>
+            ${selectedItem.description ? `<p style="white-space: pre-line; line-height: 1.5; margin-bottom: 1rem;">${escapeHtml(selectedItem.description)}</p>` : ''}
+            ${selectedItem.volume ? `<p><strong>Volumen:</strong> ${escapeHtml(selectedItem.volume)}</p>` : ''}
+          </div>
         </div>
       </div>
     </div>
@@ -1053,28 +1113,21 @@ function renderContent(options = {}) {
     return;
   }
 
-  if (isMuseumView) {
-    if (state.activeTab === 'events') {
-      renderMuseumEventsTab();
-    } else if (state.activeTab === 'archive') {
-      renderMuseumArchiveTab();
-    } else {
-      renderMuseumFilterDefinitionsTab();
-    }
-    return;
-  }
-
-  if (state.activeTab === 'inventory') {
+  if (state.activeTab === 'cocktails') {
+    renderCocktailsTab(options);
+  } else if (state.activeTab === 'inventory') {
     renderInventoryTab();
-    return;
-  }
-
-  if (state.activeTab === 'orders') {
+  } else if (state.activeTab === 'orders') {
     renderOrdersTab();
-    return;
+  } else if (state.activeTab === 'filterdefinitions') {
+    renderMuseumFilterDefinitionsTab();
+  } else if (state.activeTab === 'events') {
+    renderMuseumEventsTab();
+  } else if (state.activeTab === 'archive') {
+    renderMuseumArchiveTab(options);
+  } else if (state.activeTab.startsWith('custom-')) {
+    renderMuseumCustomTab();
   }
-
-  renderCocktailsTab(options);
 }
 
 function bindTabEvents() {
@@ -1235,8 +1288,14 @@ function bindContentEvents() {
       return;
     }
 
-    if (isMuseumView && button.dataset.role === 'select-museum-filter') {
+    if (button.dataset.role === 'select-museum-filter') {
       state.museumSelectedFilterKey = button.dataset.id;
+      renderContent();
+      return;
+    }
+
+    if (button.dataset.role === 'select-museum-custom-item') {
+      state.museumSelectedCustomItemId = button.dataset.id;
       renderContent();
       return;
     }
@@ -1595,6 +1654,20 @@ async function init() {
     loadStoredState();
     state.filterDefinitions = loadFilterDefinitions();
     if (isMuseumView) {
+      if (state.config?.museum?.customTabs) {
+        const tabList = document.querySelector('.tab-list');
+        if (tabList) {
+          state.config.museum.customTabs.forEach(tab => {
+            const btn = document.createElement('button');
+            btn.className = 'tab-button';
+            btn.dataset.tab = `custom-${tab.id}`;
+            btn.type = 'button';
+            btn.textContent = tab.title;
+            tabList.appendChild(btn);
+          });
+          tabButtons = Array.from(document.querySelectorAll('.tab-button'));
+        }
+      }
       state.activeTab = 'filterdefinitions';
       state.museumSelectedFilterKey = getFilterDefinitionKeys()[0] || null;
     }
