@@ -220,6 +220,27 @@
             "volume": "50 - 100 ml"
           }
         ]
+      },
+      {
+        "id": "eigene-produkte",
+        "title": "Eigene Produkte",
+        "items": [
+          {
+            "id": "mirabellenschnaps",
+            "name": "Mirabellenschnaps",
+            "description": "Ein feiner, hausgemachter Schnaps aus handverlesenen Mirabellen. Besticht durch sein fruchtiges Aroma und seinen weichen Abgang."
+          },
+          {
+            "id": "caramellized-whiskey",
+            "name": "Caramellized Whiskey",
+            "description": "Ein kräftiger Whiskey, der durch eine spezielle Karamellisierung eine einzigartige, süßliche und leicht rauchige Note erhält."
+          },
+          {
+            "id": "limoncello",
+            "name": "Limoncello",
+            "description": "Unser klassischer italienischer Zitronenlikör, hausgemacht mit frischen Bio-Zitronen für die perfekte Balance aus Süße und Säure."
+          }
+        ]
       }
     ]
   }
