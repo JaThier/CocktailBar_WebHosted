@@ -97,128 +97,71 @@ function getBarViewUrl() {
 }
 
 function getFilterDefinitionContent() {
-  return {
+  const defaults = {
     'Erfrischend': {
-      text: 'Leicht und angenehm kühl im Eindruck. Diese Kategorie steht für Cocktails, die sofort frisch wirken und nicht schwer im Abgang sind. Häufig Cocktails mit größeren Mengen.',
-      bullets: [
-        'Leicht und direkt zugänglich.',
-        'Passt zu klaren, spritzigen Rezepten.',
-        'Ideal für unkomplizierte, frische Cocktails.',
-      ],
+      text: 'Ein erfrischender Cocktail für warme Tage.',
+      bullets: ['Kühl serviert', 'Durstlöschend'],
     },
     'Exotisch': {
-      text: 'Aromen mit Urlaubsvibe und tropischen oder ungewöhnlichen Zutaten. Diese Kategorie sammelt Cocktails, die bewusst etwas weiter weg vom Polarkreis klingen.',
-      bullets: [
-        'Mit auffälligen, tropischen Noten.',
-        'Passt gut zu fruchtigen und ausgefallenen Rezepten.',
-        'Bringt ein verspieltes, besonderes Profil.',
-      ],
+      text: 'Urlaubsfeeling im Glas mit tropischen Früchten.',
+      bullets: ['Fruchtig', 'Ausgefallen'],
     },
     'Aromatisch': {
-      text: 'Kräftig duftend und geschmacklich vielschichtig. Oder einfach schwer anderweitig zu beschreiben. Hier landen Cocktails, die teils unbekannte Dimensionen bieten.',
-      bullets: [
-        'Sammelt Rezepte, die sich nicht klar zu anderen Kategorien zuteilen lassen.',
-        'Mehrschichtiger, runder Geschmack.',
-        'Gut geeignet für intensive Geschmacksprofile.',
-      ],
+      text: 'Besondere Geschmackskomposition mit tiefem Aroma.',
+      bullets: ['Vielschichtig', 'Kräftig im Duft'],
     },
     'Fruchtig': {
-      text: 'Frucht steht im Vordergrund, ohne den Cocktail zu überladen. Diese Kategorie wirkt saftig, rund und oft angenehm süffig.',
-      bullets: [
-        'Klare Fruchtnoten im Mittelpunkt.',
-        'Wirkt saftig und weich.',
-        'Passt zu vielen beliebten und allgemeinverträglichen Rezepten.',
-      ],
+      text: 'Fokus auf fruchtigen Noten und Säften.',
+      bullets: ['Süffig', 'Natürliche Süße'],
     },
     'Würzig': {
-      text: 'Hier geht es um mehr Kante und Tiefe. Würzige Cocktails bringen Wärme, Charakter und oft eine leicht markante Länge mit.',
-      bullets: [
-        'Mehr kräutriger und würziger Nachhall.',
-        'Wirkt oft etwas wärmer und kräftiger.',
-        'Für Cocktails mit klarer Würzstruktur.',
-      ],
+      text: 'Ein Cocktail mit Charakter und leichten Gewürznoten.',
+      bullets: ['Kräftiger Abgang', 'Wärmendes Profil'],
     },
     'Nussig': {
-      text: 'Rund, etwas dicker und mit sanfter Aromatik. Nussige Cocktails wirken oft weich, warm und angenehm voll im Geschmack.',
-      bullets: [
-        'Sanfte Aromen und warme Noten.',
-        'Wirkt weich und vollmundig.',
-        'Passt zu cremigen oder samtigen Rezepten.',
-      ],
+      text: 'Samtige und nussige Aromen für ein volles Mundgefühl.',
+      bullets: ['Weich', 'Vollmundig'],
     },
     'Spritzig': {
-      text: 'Lebhaft, leicht und mit spürbarer Frische im Glas. Spritzige Cocktails setzen auf lebendige Kohlensäure oder besonders schnelle Trinkfreude.',
-      bullets: [
-        'Belebt durch Frische und Bewegung.',
-        'Oft mit prickelndem, leichtem Charakter.',
-        'Geeignet für unkomplizierte Drinks.',
-      ],
+      text: 'Lebendig und frisch durch Kohlensäure.',
+      bullets: ['Prickelnd', 'Belebend'],
     },
     'Cremig': {
-      text: 'Samtig, weich und mit dichter Textur. Diese Kategorie beschreibt Cocktails, die sich besonders glatt und rund anfühlen.',
-      bullets: [
-        'Weiche, sahnige Textur.',
-        'Oft milder und dichter im Mundgefühl.',
-        'Gut für etwas deftiger wirkende Drinks.',
-      ],
+      text: 'Ein weicher, sahniger Cocktail mit Dichte.',
+      bullets: ['Samtig', 'Sättigend'],
     },
     'Raffiniert': {
-      text: 'Fein aufgebaut und mit einer besonderen Idee im Rezept. Raffinierte Cocktails wirken durch Details, nicht durch Lautstärke.',
-      bullets: [
-        'Mit klug gesetzten Geschmacksdetails.',
-        'Wirkt elegant und durchdacht.',
-        'Für Rezepte mit einer größeren Idee.',
-      ],
+      text: 'Ein feiner, durchdachter Cocktail mit Twist.',
+      bullets: ['Elegant', 'Besondere Zutaten'],
     },
     'Klassiker': {
-      text: 'Bewährte Getränke mit Wiedererkennungswert. Diese Kategorie steht für Cocktails, die man sofort einordnen kann und die lange funktionieren.',
-      bullets: [
-        'Bekannt und bewährt.',
-        'Starker Wiedererkennungswert.',
-        'Zeitlos in der Bar-Auswahl.',
-      ],
+      text: 'Zeitlose und weltweit bekannte Rezepturen.',
+      bullets: ['Bewährt', 'Immer eine gute Wahl'],
     },
     'Classy': {
-      text: 'Elegant, sauber und mit einem Hauch von Stil. Classy beschreibt Cocktails, die bewusst gepflegt und etwas feiner wirken.',
-      bullets: [
-        'Elegant und stilvoll im Auftritt.',
-        'Wirkt teuer und businesstauglich.',
-        'Für Cocktails mit klarer und feiner Ausstrahlung.',
-      ],
+      text: 'Ein stilvoller Drink für besondere Anlässe.',
+      bullets: ['Sauber', 'Vornehm'],
     },
     'Bitter': {
-      text: 'Herb, markant und oft mit langer Präsenz am Gaumen. Bittere Cocktails leben von Ecken, Kanten und einem klaren Gegenpol zur Süße.',
-      bullets: [
-        'Herbe und klare Geschmacksrichtung.',
-        'Bringt Kontrast zur Süße.',
-        'Für Gäste mit Vorliebe für Charakter.',
-      ],
+      text: 'Ein herber Drink für Freunde kräftiger Aromen.',
+      bullets: ['Herb', 'Kontrastreich'],
     },
     'Süß': {
-      text: 'Weich, zugänglich und oft besonders gefällig. Süße Cocktails setzen auf angenehme Rundheit und einen direkten Wohlfühl-Eindruck.',
-      bullets: [
-        'Angenehm rund und zugänglich.',
-        'Oft freundlich und unkompliziert.',
-        'Gut geeignet für Zuckerliebhaber.',
-      ],
+      text: 'Ein angenehm süßer Drink für Liebhaber von Desserts.',
+      bullets: ['Zugänglich', 'Gefällig'],
     },
     'Sauer': {
-      text: 'Frisch, klar und mit deutlicher Säure. Diese Kategorie steht für Cocktails, die wach machen und einen präzisen Gegenpol zur Süße setzen.',
-      bullets: [
-        'Deutlich frische Säure im Profil.',
-        'Sorgt für klare Spannung im Drink.',
-        'Ideal für lebendige Rezepturen.',
-      ],
+      text: 'Ein frischer Drink mit dominanter Zitrusnote.',
+      bullets: ['Belebend', 'Klar'],
     },
     'Bartenders Favourite': {
-      text: 'Persönliche Favoriten mit besonderem Wiedererkennungswert. Hier landen Cocktails, die aus Sicht der Bar einfach gut funktionieren und gern empfohlen werden.',
-      bullets: [
-        'Persönliche Favoriten aus der Bar.',
-        'Praktisch, beliebt und bewährt.',
-        'Für Rezepte mit besonderem Stellenwert.',
-      ],
+      text: 'Eine persönliche Empfehlung des Barkeepers.',
+      bullets: ['Lieblingsdrink', 'Besonders lecker'],
     },
   };
+
+  const configured = state.config?.museum?.filterDefinitions || {};
+  return { ...defaults, ...configured };
 }
 
 function getFilterDefinitionBulletPoints(filterKey) {
