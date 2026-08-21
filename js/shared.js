@@ -109,6 +109,10 @@ export function sortCocktailsByName(cocktails) {
 }
 
 export function isCocktailAvailable(cocktail, inventory = {}) {
+  if (cocktail?.notAvailable) {
+    return false;
+  }
+
   const ingredients = getIngredientNames(cocktail);
 
   if (!ingredients.length) {

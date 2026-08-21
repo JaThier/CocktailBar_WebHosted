@@ -245,7 +245,8 @@ function setActiveTab(tab) {
 }
 
 function getAllIngredients() {
-  return Array.from(new Set(state.cocktails.flatMap((cocktail) => getIngredientNameList(cocktail)))).sort();
+  const activeCocktails = state.cocktails.filter(c => !c.notAvailable);
+  return Array.from(new Set(activeCocktails.flatMap((cocktail) => getIngredientNameList(cocktail)))).sort();
 }
 
 function attachCocktailImages() {
@@ -402,13 +403,13 @@ function matchesSearchQuery(cocktail, query) {
 }
 
 function getFilteredCocktails() {
-  const availableCocktails = sortCocktailsByName(state.cocktails.filter((cocktail) => isCocktailAvailable(cocktail, state.inventory)));
+  const allCocktails = sortCocktailsByName(state.cocktails);
 
   if (!state.searchQuery) {
-    return availableCocktails;
+    return allCocktails;
   }
 
-  return availableCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
+  return allCocktails.filter((cocktail) => matchesSearchQuery(cocktail, state.searchQuery));
 }
 
 function renderCocktailsTab(options = {}) {
@@ -504,6 +505,9 @@ function renderCocktailsTab(options = {}) {
                 <label>
                   <input type="checkbox" data-field="daily" ${selectedCocktail.daily ? 'checked' : ''} /> Tageskarte
                 </label>
+                <label>
+                  <input type="checkbox" data-field="notAvailable" ${selectedCocktail.notAvailable ? 'checked' : ''} /> Nicht verfügbar
+                </label>
               </div>
             </div>
             <div class="editor-actions">
@@ -554,6 +558,7 @@ function renderCocktailsTab(options = {}) {
           name: 'Neuer Cocktail',
           ingredients: [],
           daily: false,
+          notAvailable: false,
           available: true,
           strength: 'ausgewogen',
           comment: '',
@@ -1268,6 +1273,7 @@ function bindContentEvents() {
       const nameInput = card.querySelector('[data-field="name"]');
       const commentInput = card.querySelector('[data-field="comment"]');
       const dailyInput = card.querySelector('[data-field="daily"]');
+      const notAvailableInput = card.querySelector('[data-field="notAvailable"]');
       const strengthInput = card.querySelector('[data-field="strength"]');
       const ingredientRows = Array.from(card.querySelectorAll('[data-ingredient-index]'));
 
@@ -1291,6 +1297,7 @@ function bindContentEvents() {
         ingredients,
         properties: cocktailPropertyOptions.filter((property) => card.querySelector(`[data-property="${property}"]`)?.checked),
         daily: dailyInput?.checked || false,
+        notAvailable: notAvailableInput?.checked || false,
         strength: normalizeStrength(strengthInput?.value),
         comment: commentInput?.value.trim() || '',
       };
