@@ -648,7 +648,7 @@ function renderMuseumArchiveTab(options = {}) {
   const { preserveSearchFocus = false, searchSelectionStart = null, searchSelectionEnd = null } = options;
 
   let archivedCocktails = state.cocktails.filter((cocktail) => !isCocktailAvailable(cocktail, state.inventory));
-  
+
   if (state.museumArchiveSearchQuery) {
     const q = state.museumArchiveSearchQuery.toLowerCase();
     archivedCocktails = archivedCocktails.filter((c) => {
@@ -658,7 +658,7 @@ function renderMuseumArchiveTab(options = {}) {
       return false;
     });
   }
-  
+
   archivedCocktails = sortCocktailsByName(archivedCocktails);
 
   if (!archivedCocktails.length) {
@@ -820,7 +820,7 @@ function renderMuseumCustomTab() {
   }
 
   const selectedItem = items.find(i => i.id === state.museumSelectedCustomItemId);
-  const imageSource = `./config/images/${state.config.barId || state.barKey}/${selectedItem.id}.png`;
+  const imageSource = `./config/images/${state.config.barId || state.barKey}/${selectedItem.id}.jpg`;
 
   tabContentElement.innerHTML = `
     <div class="museum-layout">
