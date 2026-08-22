@@ -1,4 +1,4 @@
-{
+﻿{
   "barId": "jakob",
   "barName": "JaTh Cocktail Bar",
   "barPassword": "JaThOnSpotify",
@@ -172,19 +172,19 @@
             "volume": "250 - 400 ml"
           },
           {
-            "id": "martini",
+            "id": "martini-glas",
             "name": "Martini-Glas",
             "description": "Ein konisch geformtes Glas auf einem Stiel, typischerweise für Drinks ohne Eis. Durch die Form bleiben die Aromen nah am Trinker.",
             "volume": "150 - 250 ml"
           },
           {
-            "id": "hurricane",
+            "id": "hurricane-glas",
             "name": "Hurricane",
             "description": "Ein bauchiges, hohes Glas, das oft für große, tropische und fruchtige Cocktails (wie Piña Colada) verwendet wird.",
             "volume": "400 - 600 ml"
           },
           {
-            "id": "margarita",
+            "id": "margarita-glas",
             "name": "Margarita-Glas",
             "description": "Ein elegantes Glas mit breiter Schale und markantem Absatz. Eignet sich hervorragend für Margaritas und Drinks mit Salzrand.",
             "volume": "250 - 350 ml"
