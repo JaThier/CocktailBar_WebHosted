@@ -156,68 +156,68 @@
           {
             "id": "coupes",
             "name": "Coupe / Cocktailschale",
-            "description": "Die klassische, flache Schale ohne Eis. Oft für Drinks verwendet, die gerührt oder geschüttelt (straight up) serviert werden.",
-            "volume": "120 - 180 ml"
+            "description": "Die klassische, flache Schale ohne Eis. Oft für Drinks verwendet, die gerührt oder geschüttelt (straight up) serviert werden. Typische Cocktail-Füllmengen betragen zwischen 120 ml und 180 ml.",
+            "volume": "200 ml"
           },
           {
             "id": "tumbler",
             "name": "Tumbler (Old Fashioned)",
-            "description": "Ein kurzes, zylindrisches Glas mit dickem Boden. Perfekt für Spirituosen pur oder klassische Cocktails, die auf einem großen Eiswürfel serviert werden.",
-            "volume": "200 - 300 ml"
+            "description": "Ein kurzes, zylindrisches Glas mit dickem Boden. Perfekt für Spirituosen pur oder klassische Cocktails, die auf einem großen Eiswürfel serviert werden. Typische Cocktail-Füllmengen betragen zwischen 250 ml und 330 ml.",
+            "volume": "380 ml"
           },
           {
             "id": "highball",
             "name": "Highball / Longdrink",
-            "description": "Ein hohes, schlankes Glas. Ideal für Drinks, die mit viel Eis und Fillern wie Soda oder Tonic Water aufgegossen werden.",
-            "volume": "250 - 400 ml"
+            "description": "Ein hohes, schlankes Glas. Ideal für Drinks, die mit viel Eis und Fillern wie Soda oder Tonic Water aufgegossen werden. Das Glas wird in der Regel bis zum Rand mit der Cocktail-Füllmenge und Eis befüllt.",
+            "volume": "480 ml"
           },
           {
             "id": "martini-glas",
             "name": "Martini-Glas",
-            "description": "Ein konisch geformtes Glas auf einem Stiel, typischerweise für Drinks ohne Eis. Durch die Form bleiben die Aromen nah am Trinker.",
-            "volume": "150 - 250 ml"
+            "description": "Ein konisch geformtes Glas auf einem Stiel, typischerweise für Drinks ohne Eis. Durch die Form bleiben die Aromen nah am Trinker. Typische Cocktail-Füllmengen betragen zwischen 120 ml und 170 ml.",
+            "volume": "250 ml"
           },
           {
             "id": "hurricane-glas",
             "name": "Hurricane",
-            "description": "Ein bauchiges, hohes Glas, das oft für große, tropische und fruchtige Cocktails (wie Piña Colada) verwendet wird.",
-            "volume": "400 - 600 ml"
+            "description": "Ein bauchiges, hohes Glas, das oft für große, tropische und fruchtige Cocktails (wie Piña Colada) verwendet wird. Das Glas wird in der Regel bis zum Rand mit der Cocktail-Füllmenge und Eis befüllt.",
+            "volume": "380 ml"
           },
           {
             "id": "margarita-glas",
             "name": "Margarita-Glas",
-            "description": "Ein elegantes Glas mit breiter Schale und markantem Absatz. Eignet sich hervorragend für Margaritas und Drinks mit Salzrand.",
-            "volume": "250 - 350 ml"
+            "description": "Ein elegantes Glas mit breiter Schale und markantem Absatz. Eignet sich hervorragend für Margaritas und Drinks mit Salzrand. Typische Cocktail-Füllmengen betragen zwischen 180 ml und 250 ml.",
+            "volume": "290 ml"
           },
           {
             "id": "moscow-mule",
             "name": "Moscow-Mule Becher",
-            "description": "Ein traditioneller Kupferbecher. Hält den Drink besonders lange kalt und ist der absolute Standard für den Moscow Mule.",
-            "volume": "400 - 500 ml"
+            "description": "Ein traditioneller Kupferbecher. Hält den Drink besonders lange kalt und ist der absolute Standard für den Moscow Mule. Typische Cocktail-Füllmengen betragen zwischen 350 ml und 500 ml. Der Becher wird in der Regel mit Eis befüllt.",
+            "volume": "550 ml"
           },
           {
             "id": "tumbler-klein",
             "name": "Kleiner Tumbler",
-            "description": "Eine kleinere Variante des klassischen Tumblers. Perfekt für hochkonzentrierte Drinks oder Spirituosen, die pur mit wenig Eis serviert werden.",
-            "volume": "150 - 200 ml"
+            "description": "Eine kleinere Variante des klassischen Tumblers. Perfekt für hochkonzentrierte Drinks oder Spirituosen, die pur mit wenig Eis serviert werden.Typische Cocktail-Füllmengen betragen zwischen 220 ml und 300 ml. Das Glas wird in der Regel mit Eis befüllt.",
+            "volume": "330 ml"
           },
           {
             "id": "gin-glas",
             "name": "Gin-Glas (Copa-Glas)",
-            "description": "Ein großes, bauchiges Glas auf einem Stiel. Bietet viel Platz für Eis und Botanicals, wodurch sich die Aromen des Gins ideal entfalten können.",
-            "volume": "500 - 700 ml"
+            "description": "Ein großes, bauchiges Glas auf einem Stiel. Bietet viel Platz für Eis und Botanicals, wodurch sich die Aromen des Gins ideal entfalten können. Typische Cocktail-Füllmengen betragen zwischen 200 ml und 500 ml.",
+            "volume": "600 ml"
           },
           {
             "id": "gin-glas-stillos",
             "name": "Gin-Glas (Stillos)",
-            "description": "Eine bauchige Glasform ähnlich dem klassischen Copa-Glas, jedoch ohne Stiel. Liegt kompakt in der Hand und bringt den Gin & Tonic modern zur Geltung.",
-            "volume": "400 - 550 ml"
+            "description": "Eine bauchige Glasform ähnlich dem klassischen Copa-Glas, jedoch ohne Stiel. Liegt kompakt in der Hand und bringt den Gin & Tonic modern zur Geltung. Typische Cocktail-Füllmengen betragen zwischen 200 ml und 500 ml.",
+            "volume": "650 ml"
           },
           {
             "id": "likoerglas",
             "name": "Likörglas / Kelchglas",
-            "description": "Ein kleines, elegantes Glas auf einem Stiel. Ideal für pure Liköre, kleine Aperitifs oder Digestifs nach dem Essen.",
-            "volume": "50 - 100 ml"
+            "description": "Ein kleines, elegantes Glas auf einem Stiel. Ideal für pure Liköre, kleine Aperitifs oder Digestifs nach dem Essen. Typische Cocktail-Füllmengen betragen zwischen 150 ml und 180 ml.",
+            "volume": "220 ml"
           }
         ]
       },
@@ -228,17 +228,17 @@
           {
             "id": "mirabellenschnaps",
             "name": "Mirabellenschnaps",
-            "description": "Ein feiner, hausgemachter Schnaps aus handverlesenen Mirabellen. Besticht durch sein fruchtiges Aroma und seinen weichen Abgang."
+            "description": "Ein feiner, hausgemachter Schnaps aus handverlesenen Mirabellen. Gehört zu den intensivsten Alkoholen dieser Bar und ist keineswegs für subtile Zungen gemacht."
           },
           {
             "id": "caramellized-whiskey",
             "name": "Caramellized Whiskey",
-            "description": "Ein kräftiger Whiskey, der durch eine spezielle Karamellisierung eine einzigartige, süßliche und leicht rauchige Note erhält."
+            "description": "Ein kräftiger Whiskey, der durch eine spezielle Karamellisierung eine einzigartig runde und leicht süßliche Note erhält. Es handelt sich hierbei um karamellisierte, weiße Schokolade, die für mehrere Tage in den Whiskey gemischt wird. Um den klaren und farblich warmen, ansprechenden Ton eines Whiskeys zurück zu erhalten, wird die Spirituose anschließend sorgfältig filtriert."
           },
           {
             "id": "limoncello",
             "name": "Limoncello",
-            "description": "Unser klassischer italienischer Zitronenlikör, hausgemacht mit frischen Bio-Zitronen für die perfekte Balance aus Süße und Säure."
+            "description": "Unser klassischer italienischer Zitronenlikör, hausgemacht mit frischen Bio-Zitronen aus Norditalien, für die perfekte Balance aus Süße und Säure. Sehr authentisch und intensiv im Geschmack."
           }
         ]
       }
