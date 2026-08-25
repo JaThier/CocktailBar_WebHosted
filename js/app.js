@@ -1,4 +1,4 @@
-import { createFirebaseClient, listenToCocktails, listenToInventory, listenToOrders, addOrder } from './firebase.js?v=3';
+import { createFirebaseClient, listenToCocktails, listenToInventory, listenToOrders, addOrder, signInGuest } from './firebase.js?v=3';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
 import { parseBarKey, loadConfig, normalizeCocktailProperties, getIngredientNames, isCocktailAvailable, sortCocktailsByName } from './shared.js?v=3';
 
@@ -607,6 +607,7 @@ async function init() {
     const config = await loadConfig(barKey);
     state.config = config;
     createFirebaseClient(config);
+    await signInGuest();
 
     document.title = config.barName || 'Cocktail Bar';
     barEyebrowElement.textContent = config.barName || 'Cocktail Bar';

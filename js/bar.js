@@ -12,6 +12,8 @@ import {
   addEvent,
   updateEvent,
   listenToEvents,
+  signInBartender,
+  checkAdminAccess,
 } from './firebase.js?v=3';
 import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
 import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName, getIngredientNames } from './shared.js?v=3';
@@ -62,6 +64,7 @@ const barLink = document.querySelector('#bar-link');
 const accessPanelElement = document.querySelector('#access-panel');
 const unlockButton = document.querySelector('#unlock-bar');
 const passwordInput = document.querySelector('#bar-password');
+const emailInput = document.querySelector('#bar-email');
 const dashboardElement = document.querySelector('#bar-dashboard');
 const tabContentElement = document.querySelector('#tab-content');
 let tabButtons = Array.from(document.querySelectorAll('.tab-button'));
@@ -222,19 +225,35 @@ function ensureAccess() {
   return false;
 }
 
-function unlockBar() {
+async function unlockBar() {
   const sessionKey = getStorageKey('access');
   const enteredPassword = passwordInput?.value || '';
-  const expectedPassword = state.config?.barPassword || '';
+  const enteredEmail = emailInput?.value || '';
 
-  if (enteredPassword === expectedPassword || !expectedPassword) {
-    sessionStorage.setItem(sessionKey, 'true');
-    setAccessState(true);
-    init();
+  if (!enteredEmail || !enteredPassword) {
+    alert('Bitte E-Mail und Passwort eingeben.');
     return;
   }
 
-  alert('Falsches Passwort.');
+  try {
+    await signInBartender(enteredEmail, enteredPassword);
+    
+    // Prüfen, ob die E-Mail auch wirklich zur Bar gehört
+    try {
+      await checkAdminAccess(state.config?.barId || state.barKey);
+    } catch (dbError) {
+      // Wenn das fehlschlägt, ist der User nicht der Admin dieser Bar
+      alert('Diese E-Mail ist nicht als Barkeeper für diese Bar berechtigt.');
+      return;
+    }
+
+    sessionStorage.setItem(sessionKey, 'true');
+    setAccessState(true);
+    init();
+  } catch (error) {
+    console.error(error);
+    alert('Anmeldung fehlgeschlagen. Bitte E-Mail und Passwort überprüfen.');
+  }
 }
 
 function setActiveTab(tab) {
@@ -1706,6 +1725,14 @@ if (unlockButton) {
 
 if (passwordInput) {
   passwordInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      unlockBar();
+    }
+  });
+}
+
+if (emailInput) {
+  emailInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       unlockBar();
     }

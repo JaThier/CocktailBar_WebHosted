@@ -7,11 +7,21 @@ import {
   update,
   remove,
   onValue,
+  query,
+  orderByChild,
+  equalTo,
+  get,
 } from 'https://www.gstatic.com/firebasejs/12.17.0/firebase-database.js';
+import {
+  getAuth,
+  signInAnonymously,
+  signInWithEmailAndPassword
+} from 'https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js';
 
 let activeFirebaseConfig = null;
 let cachedApp = null;
 let cachedDatabase = null;
+let cachedAuth = null;
 
 function buildClient(config) {
   const firebaseConfig = config?.firebase || config || {};
@@ -24,12 +34,14 @@ function buildClient(config) {
       isConfigured: false,
       app: null,
       database: null,
+      auth: null,
     };
   }
 
   if (!cachedApp || cachedApp.options?.databaseURL !== databaseURL) {
     cachedApp = initializeApp(firebaseConfig, `cocktailbar-${databaseURL}`);
     cachedDatabase = getDatabase(cachedApp);
+    cachedAuth = getAuth(cachedApp);
   }
 
   return {
@@ -37,6 +49,7 @@ function buildClient(config) {
     isConfigured: true,
     app: cachedApp,
     database: cachedDatabase,
+    auth: cachedAuth,
   };
 }
 
@@ -47,6 +60,35 @@ export function createFirebaseClient(config) {
 
 function getActiveClient() {
   return buildClient(activeFirebaseConfig || {});
+}
+
+export async function signInGuest() {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.auth) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+  return signInAnonymously(client.auth);
+}
+
+export async function signInBartender(email, password) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.auth) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+  return signInWithEmailAndPassword(client.auth, email, password);
+}
+
+export async function checkAdminAccess(barId) {
+  const client = getActiveClient();
+  if (!client.isConfigured || !client.database) {
+    throw new Error('Firebase ist nicht konfiguriert.');
+  }
+  
+  // Wir versuchen, /orders ohne Filter zu lesen.
+  // Das darf laut Regeln nur der Admin. Schlägt dies fehl, ist der User nicht berechtigt.
+  const testRef = ref(client.database, getOrdersPath(barId));
+  await get(testRef);
+  return true;
 }
 
 function getCocktailsPath(barId) {
@@ -176,6 +218,7 @@ export async function addOrder(barId, orderData) {
   const nextOrder = {
     ...orderData,
     id: newOrderRef.key,
+    userId: client.auth?.currentUser?.uid || null,
     createdAt: orderData?.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     status: orderData?.status || 'pending',
@@ -220,7 +263,13 @@ export function listenToOrders(barId, callback) {
   }
 
   const ordersRef = ref(client.database, getOrdersPath(barId));
-  return onValue(ordersRef, (snapshot) => {
+  let ordersQuery = ordersRef;
+  
+  if (client.auth?.currentUser && client.auth.currentUser.isAnonymous) {
+    ordersQuery = query(ordersRef, orderByChild('userId'), equalTo(client.auth.currentUser.uid));
+  }
+
+  return onValue(ordersQuery, (snapshot) => {
     const orders = [];
 
     if (snapshot.exists()) {

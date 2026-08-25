@@ -1,7 +1,7 @@
 {
   "barId": "daniel",
   "barName": "Daniel's Bar",
-  "barPassword": "PNIBar",
+
   "firebase": {
     "apiKey": "AIzaSyDc3QdnrioPTS22h010cEfe5TS_hdbunqs",
     "databaseURL": "https://test-abf47-default-rtdb.europe-west1.firebasedatabase.app"
