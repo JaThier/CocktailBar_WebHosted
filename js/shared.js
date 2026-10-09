@@ -167,7 +167,7 @@ if (typeof document !== 'undefined') {
     document.addEventListener('click', (e) => {
       const item = e.target.closest('.cocktail-list-item');
       const isListItem = !!item;
-      if (isListItem) {
+      if (isListItem || e.target.closest('#surprise-button')) {
         document.body.classList.add('overlay-open');
       }
 
