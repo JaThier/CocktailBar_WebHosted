@@ -52,6 +52,7 @@ const cocktailSectionTitleElement = document.querySelector('#cocktail-section-ti
 const guestViewTabButtons = Array.from(document.querySelectorAll('[data-guest-view-tab]'));
 const barLink = document.querySelector('#bar-link');
 const museumLink = document.querySelector('#museum-link');
+const surpriseButton = document.querySelector('#surprise-button');
 
 function getStorageKey(key, barKey = state.barKey) {
   return `cocktailbar-${key}-${barKey}`;
@@ -631,6 +632,20 @@ async function init() {
       filterSearchInput.addEventListener('input', (event) => {
         state.searchQuery = event.target.value;
         renderCocktails();
+      });
+    }
+
+    if (surpriseButton) {
+      surpriseButton.addEventListener('click', () => {
+        if (state.filteredCocktails && state.filteredCocktails.length > 0) {
+          const randomIndex = Math.floor(Math.random() * state.filteredCocktails.length);
+          state.selectedCocktailId = state.filteredCocktails[randomIndex].id;
+          renderCocktails();
+          
+          if (cocktailDetailElement) {
+            cocktailDetailElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
       });
     }
 
