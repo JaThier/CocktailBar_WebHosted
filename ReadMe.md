@@ -31,6 +31,7 @@ Diese Web-App ist eine einfache, clientseitige Cocktailbar-Anwendung für den pr
 - Die Stärke-Kategorie `alkoholfrei` ist Teil des `strength`-Feldes und ersetzt die frühere separate Alkohol-Checkbox in der Oberfläche.
 - Die vollständige Karte zeigt alle Cocktails mit den vorhandenen Filtern.
 - Das Bild-Namensschema liegt in `config/images/NAMING_CONVENTION.txt` und sollte beim Hinzufügen neuer Bilder beachtet werden.
+- Das Seitenverhältnis der Cocktail-Bilder kann in der Bar-Konfiguration (`config/<bar>.json`) über das Feld `cocktailImageAspectRatio` definiert werden (z. B. `"9:16"`, `"1:1"`, `"4:3"`, `"16:9"`). Standardwert ist `"9:16"`.
 
 ## Lokales Testen
 Öffne die Datei index.html direkt im Browser oder starte einen lokalen Webserver im Projektordner.

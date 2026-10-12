@@ -8,6 +8,7 @@
   --color-surface-border: var(--color-surface-border);
   --color-text: var(--color-text);
   --color-text-muted: var(--color-text-muted);
+  --cocktail-image-aspect-ratio: 9 / 16;
   --bg-image: linear-gradient(135deg, var(--color-background) 0%, #efe7dc 100%);
   color-scheme: light;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -353,7 +354,7 @@ h3 {
 
 .cocktail-detail-panel img {
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: var(--cocktail-image-aspect-ratio, 9 / 16);
   object-fit: contain;
   object-position: center;
   border-radius: 0.75rem;
@@ -474,7 +475,7 @@ h3 {
 .editor-image {
   width: 100%;
   max-width: 140px;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: var(--cocktail-image-aspect-ratio, 9 / 16);
   object-fit: contain;
   object-position: center;
   border-radius: 0.9rem;
@@ -749,6 +750,16 @@ h3 {
 .order-image-host,
 .cocktail-image-host {
   min-height: 1px;
+}
+
+.order-image-host img,
+.cocktail-image-host img {
+  width: 100%;
+  aspect-ratio: var(--cocktail-image-aspect-ratio, 9 / 16);
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0.75rem;
+  display: block;
 }
 
 .order-detail-content,

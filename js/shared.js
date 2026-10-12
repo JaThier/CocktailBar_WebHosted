@@ -21,6 +21,20 @@ function getConfigCandidates(barKey) {
   ];
 }
 
+export function normalizeAspectRatio(ratio) {
+  if (!ratio) return '9 / 16';
+  const str = String(ratio).trim();
+  if (str.includes(':')) {
+    const parts = str.split(':').map((s) => s.trim());
+    return parts.length === 2 && parts[0] && parts[1] ? `${parts[0]} / ${parts[1]}` : str;
+  }
+  if (str.includes('/')) {
+    const parts = str.split('/').map((s) => s.trim());
+    return parts.length === 2 && parts[0] && parts[1] ? `${parts[0]} / ${parts[1]}` : str;
+  }
+  return str;
+}
+
 export function applyTheme(config, barKey) {
   if (config.theme) {
     const root = document.documentElement;
@@ -35,6 +49,14 @@ export function applyTheme(config, barKey) {
     if (config.theme.border) root.style.setProperty('--color-surface-border', config.theme.border);
     if (config.theme.pantrySurface) root.style.setProperty('--color-pantry-surface', config.theme.pantrySurface);
   }
+
+  // Set cocktail image aspect ratio
+  const rawRatio = config.cocktailImageAspectRatio ??
+    config.imageAspectRatio ??
+    config.theme?.cocktailImageAspectRatio ??
+    config.theme?.imageAspectRatio ??
+    '9 / 16';
+  document.documentElement.style.setProperty('--cocktail-image-aspect-ratio', normalizeAspectRatio(rawRatio));
 
   // Set background image
   const bgUrl = new URL(`./config/images/${barKey}/background.png`, window.location.href).toString();
