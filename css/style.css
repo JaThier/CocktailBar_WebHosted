@@ -360,7 +360,7 @@ h3 {
   border-radius: 0.75rem;
   margin: 0;
   display: block;
-  background: #f7f3ea;
+  background: transparent;
 }
 
 .cocktail-detail-title {
@@ -481,8 +481,7 @@ h3 {
   border-radius: 0.9rem;
   display: block;
   margin: 0;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-  background: #f7f3ea;
+  background: transparent;
 }
 
 .editor-image-host {
@@ -760,6 +759,7 @@ h3 {
   object-position: center;
   border-radius: 0.75rem;
   display: block;
+  background: transparent;
 }
 
 .order-detail-content,
