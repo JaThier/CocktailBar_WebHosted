@@ -1,22 +1,23 @@
+import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
+import { mountCocktailDbTab } from './cocktaildb.js?v=13';
 import {
-  createFirebaseClient,
   addCocktail,
-  updateCocktail,
+  addEvent,
+  checkAdminAccess,
+  createFirebaseClient,
   deleteCocktail,
+  deleteOrder,
   listenToCocktails,
+  listenToEvents,
   listenToInventory,
   listenToOrders,
+  signInBartender,
+  updateCocktail,
+  updateEvent,
   updateInventory,
   updateOrder,
-  deleteOrder,
-  addEvent,
-  updateEvent,
-  listenToEvents,
-  signInBartender,
-  checkAdminAccess,
 } from './firebase.js?v=3';
-import { generateCocktailId, normalizeStrength } from './cocktail-utils.js?v=3';
-import { parseBarKey, loadConfig, normalizeCocktailProperties, isCocktailAvailable, escapeHtml, getCocktailImageCandidates, sortCocktailsByName, getIngredientNames } from './shared.js?v=3';
+import { escapeHtml, getCocktailImageCandidates, getIngredientNames, isCocktailAvailable, loadConfig, normalizeCocktailProperties, parseBarKey, sortCocktailsByName } from './shared.js?v=3';
 
 const state = {
   barKey: 'default',
@@ -1144,6 +1145,18 @@ function renderContent(options = {}) {
     renderMuseumEventsTab();
   } else if (state.activeTab === 'archive') {
     renderMuseumArchiveTab(options);
+  } else if (state.activeTab === 'cocktaildb') {
+    // Nicht neu rendern, sonst gehen Eingabe und Ergebnis bei jedem Firebase-Update verloren
+    if (!tabContentElement.querySelector('#cocktaildb-form')) {
+      const glassTab = (state.config?.museum?.customTabs || []).find((tab) => tab.id === 'glaeser');
+      mountCocktailDbTab(tabContentElement, {
+        glasses: glassTab?.items || [],
+        onOpenGlass: (glassId) => {
+          state.museumSelectedCustomItemId = glassId;
+          setActiveTab(`custom-${glassTab.id}`);
+        },
+      });
+    }
   } else if (state.activeTab.startsWith('custom-')) {
     renderMuseumCustomTab();
   }
@@ -1673,19 +1686,21 @@ async function init() {
     loadStoredState();
     state.filterDefinitions = loadFilterDefinitions();
     if (isMuseumView) {
-      if (state.config?.museum?.customTabs) {
-        const tabList = document.querySelector('.tab-list');
-        if (tabList) {
-          state.config.museum.customTabs.forEach(tab => {
-            const btn = document.createElement('button');
-            btn.className = 'tab-button';
-            btn.dataset.tab = `custom-${tab.id}`;
-            btn.type = 'button';
-            btn.textContent = tab.title;
-            tabList.appendChild(btn);
-          });
-          tabButtons = Array.from(document.querySelectorAll('.tab-button'));
-        }
+      const tabList = document.querySelector('.tab-list');
+      if (tabList) {
+        const extraTabs = [
+          ...(state.config?.museum?.customTabs || []).map((tab) => ({ id: `custom-${tab.id}`, title: tab.title })),
+          { id: 'cocktaildb', title: 'CocktailDB' },
+        ];
+        extraTabs.forEach(({ id, title }) => {
+          const btn = document.createElement('button');
+          btn.className = 'tab-button';
+          btn.dataset.tab = id;
+          btn.type = 'button';
+          btn.textContent = title;
+          tabList.appendChild(btn);
+        });
+        tabButtons = Array.from(document.querySelectorAll('.tab-button'));
       }
       state.activeTab = 'filterdefinitions';
       state.museumSelectedFilterKey = getFilterDefinitionKeys()[0] || null;
