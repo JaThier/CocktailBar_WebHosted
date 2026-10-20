@@ -911,8 +911,13 @@ h3 {
   border-radius: 0.8rem;
   padding: 0.85rem 1rem;
   font: inherit;
-  color: var(--color-text);
+  color: #000000;
   background: #fffdf9;
+}
+
+.cocktaildb-input::placeholder {
+  color: #6b7280;
+  opacity: 1;
 }
 
 .cocktaildb-input:focus {
